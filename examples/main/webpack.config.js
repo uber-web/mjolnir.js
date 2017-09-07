@@ -1,4 +1,4 @@
-// NOTE: To use this example standalone (e.g. outside of deck.gl repo)
+// NOTE: To use this example standalone (e.g. outside of mjolnir.js repo)
 // delete the local development overrides at the bottom of this file
 
 // avoid destructuring for older Node version support
@@ -13,7 +13,7 @@ const config = {
 
   module: {
     rules: [{
-      // Compile ES2015 using bable
+      // Compile ES2015 using Babel
       test: /\.js$/,
       loader: 'babel-loader',
       include: [resolve('.')],

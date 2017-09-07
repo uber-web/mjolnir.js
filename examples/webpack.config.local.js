@@ -1,8 +1,8 @@
 // This file contains webpack configuration settings that allow
-// examples to be built against the deck.gl source code in this repo instead
-// of building against their installed version of deck.gl.
+// examples to be built against the mjolnir.js source code in this repo instead
+// of building against their installed version of mjolnir.js.
 //
-// This enables using the examples to debug the main deck.gl library source
+// This enables using the examples to debug the main mjolnir.js library source
 // without publishing or npm linking, with conveniences such hot reloading etc.
 
 const {resolve} = require('path');
@@ -10,7 +10,7 @@ const {resolve} = require('path');
 const LIB_DIR = resolve(__dirname, '..');
 const SRC_DIR = resolve(LIB_DIR, './src');
 
-// Support for hot reloading changes to the deck.gl library:
+// Support for hot reloading changes to the mjolnir.js library:
 const LOCAL_DEVELOPMENT_CONFIG = {
   // suppress warnings about bundle size
   devServer: {
@@ -21,7 +21,7 @@ const LOCAL_DEVELOPMENT_CONFIG = {
 
   resolve: {
     alias: {
-      // Imports the deck.gl library from the src directory in this repo
+      // Imports the mjolnir.js library from the src directory in this repo
       'mjolnir.js': SRC_DIR
     }
   },

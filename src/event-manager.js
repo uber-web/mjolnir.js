@@ -154,7 +154,7 @@ export default class EventManager {
       };
 
       // Calculate center relative to the root element
-      // TODO/xiaoji - avoid using getBoundingClientRect for perf?
+      // TODO - avoid using getBoundingClientRect for perf?
       const rect = element.getBoundingClientRect();
 
       // Fix scale for map affected by a CSS transform.
