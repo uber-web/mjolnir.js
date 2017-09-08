@@ -6,11 +6,8 @@ Provides a unified API for subscribing to events about both basic input events (
 
 ## Usage
 
-TBD: Module packaging (npm?)
-
-
 ```
-import EventManager from 'event-manager';
+import EventManager from 'mjolnir.js';
 
 const eventManager = new EventManager(domElement);
 function onClick (event) {}
