@@ -68,13 +68,14 @@ export default class EventManager {
   }
 
   // Register an event handler function to be called on `event`.
-  on(event, handler) {
+  on(event, handler, srcElement) {
     if (typeof event === 'string') {
-      this._addEventHandler(event, handler);
+      this._addEventHandler(event, handler, srcElement);
     } else {
+      srcElement = handler;
       // If `event` is a map, call `on()` for each entry.
       for (const eventName in event) {
-        this._addEventHandler(eventName, event[eventName]);
+        this._addEventHandler(eventName, event[eventName], srcElement);
       }
     }
   }
@@ -111,8 +112,8 @@ export default class EventManager {
   /**
    * Process the event registration for a single event + handler.
    */
-  _addEventHandler(event, handler) {
-    const wrappedHandler = this._wrapEventHandler(event, handler);
+  _addEventHandler(event, handler, srcElement = null) {
+    const wrappedHandler = this._wrapEventHandler(event, handler, srcElement);
     // Alias to a recognized gesture as necessary.
     const eventAlias = GESTURE_EVENT_ALIASES[event] || event;
     // Get recognizer for this event
@@ -120,10 +121,22 @@ export default class EventManager {
     // Enable recognizer for this event.
     this._toggleRecognizer(recognizerName, true);
 
-    // Save wrapped handler
-    this.eventHandlers.push({event, eventAlias, recognizerName, handler, wrappedHandler});
+    // Find ancestors
+    const ancestorEventHandlers = this.eventHandlers.filter(entry => {
+      return entry.eventAlias === eventAlias &&
+        entry.srcElement !== srcElement &&
+        (!entry.srcElement || entry.srcElement.contains(srcElement));
+    });
 
+    // Save wrapped handler
+    this.eventHandlers.push({event, eventAlias, recognizerName, srcElement,
+      handler, wrappedHandler});
+
+    // Sort handlers by DOM hierarchy
+    // So the event will always fire first on child nodes
+    ancestorEventHandlers.forEach(entry => this.manager.off(eventAlias, entry.wrappedHandler));
     this.manager.on(eventAlias, wrappedHandler);
+    ancestorEventHandlers.forEach(entry => this.manager.on(eventAlias, entry.wrappedHandler));
   }
 
   /**
@@ -163,38 +176,61 @@ export default class EventManager {
    * Returns an event handler that aliases events and add props before passing
    * to the real handler.
    */
-  _wrapEventHandler(type, handler) {
+  _wrapEventHandler(type, handler, srcElement) {
     return event => {
-      const {element} = this;
-      const {srcEvent} = event;
+      if (!event.mjolnirEvent) {
+        event.mjolnirEvent = this._processEvent(event);
+      }
 
-      const center = event.center || {
-        x: srcEvent.clientX,
-        y: srcEvent.clientY
-      };
-
-      // Calculate center relative to the root element
-      // TODO - avoid using getBoundingClientRect for perf?
-      const rect = element.getBoundingClientRect();
-
-      // Fix scale for map affected by a CSS transform.
-      // See https://stackoverflow.com/a/26893663/3528533
-      const scaleX = rect.width / element.offsetWidth;
-      const scaleY = rect.height / element.offsetHeight;
-
-      // Calculate center relative to the root element
-      const offsetCenter = {
-        x: (center.x - rect.left - element.clientLeft) / scaleX,
-        y: (center.y - rect.top - element.clientTop) / scaleY
-      };
-
-      handler(Object.assign({}, event, {
-        type,
-        center,
-        offsetCenter,
-        rootElement: element
-      }));
+      if (event.mjolnirEvent.handled) {
+        return;
+      }
+      if (srcElement && !srcElement.contains(event.srcEvent.target)) {
+        return;
+      }
+      handler(Object.assign({}, event.mjolnirEvent, {type}));
     };
+  }
+
+  /**
+   * Normalizes hammerjs and custom events to have predictable fields.
+   */
+  _processEvent(event) {
+    const {element} = this;
+    const {srcEvent} = event;
+
+    const center = event.center || {
+      x: srcEvent.clientX,
+      y: srcEvent.clientY
+    };
+
+    // Calculate center relative to the root element
+    // TODO - avoid using getBoundingClientRect for perf?
+    const rect = element.getBoundingClientRect();
+
+    // Fix scale for map affected by a CSS transform.
+    // See https://stackoverflow.com/a/26893663/3528533
+    const scaleX = rect.width / element.offsetWidth;
+    const scaleY = rect.height / element.offsetHeight;
+
+    // Calculate center relative to the root element
+    const offsetCenter = {
+      x: (center.x - rect.left - element.clientLeft) / scaleX,
+      y: (center.y - rect.top - element.clientTop) / scaleY
+    };
+
+    const processedEvent = Object.assign({}, event, {
+      handled: false,
+      center,
+      offsetCenter,
+      rootElement: element
+    });
+
+    processedEvent.stopPropagation = () => {
+      processedEvent.handled = true;
+    };
+
+    return processedEvent;
   }
 
   /**
@@ -209,7 +245,7 @@ export default class EventManager {
     const alias = BASIC_EVENT_ALIASES[srcEvent.type];
     if (alias) {
       // fire all events aliased to srcEvent.type
-      const emitEvent = Object.assign({}, event, {isDown: true, type: alias});
+      const emitEvent = Object.assign({}, event, {isDown: true});
       this.manager.emit(alias, emitEvent);
     }
   }

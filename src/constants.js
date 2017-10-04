@@ -25,7 +25,7 @@ import Hammer from './utils/hammer';
 export const RECOGNIZERS = Hammer ? [
   [Hammer.Rotate, {enable: false}],
   [Hammer.Pinch, {enable: false}, ['rotate']],
-  [Hammer.Pan, {threshold: 10, enable: false}],
+  [Hammer.Pan, {threshold: 0, enable: false}],
   [Hammer.Swipe, {enable: false}],
   [Hammer.Press, {enable: false}],
   [Hammer.Tap, {event: 'doubletap', taps: 2, enable: false}],
@@ -117,6 +117,7 @@ export const EVENT_RECOGNIZER_MAP = {
  */
 export const GESTURE_EVENT_ALIASES = {
   click: 'tap',
+  dblclick: 'doubletap',
   mousedown: 'pointerdown',
   mousemove: 'pointermove',
   mouseup: 'pointerup',
