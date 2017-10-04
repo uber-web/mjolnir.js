@@ -6,9 +6,6 @@ Provides a unified API for subscribing to events about both basic input events (
 
 ## Usage
 
-TBD: Module packaging (npm?)
-
-
 ```
 import EventManager from 'mjolnir.js';
 
@@ -96,22 +93,14 @@ Additionally, event objects for different event types contain a subset of the fo
 
 ## Supported Events and Gestures
 
-### Native input events
+### Basic input events
 - `'keydown'`
 - `'keyup'`
-- `'mousedown'`
-- `'mousemove'`
-- `'mouseup'`
-- `'mouseleave'`
-- `'pointerdown'`
-- `'pointermove'`
-- `'pointerup'`
-- `'touchstart'`
-- `'touchmove'`
-- `'touchend'`
+- `'mousedown'` | `pointerdown`
+- `'mousemove'` | `pointermove`
+- `'mouseup'` | `pointerup`
+- `'mouseleave'` | `pointerleave`
 - `'wheel'`
-- `'mousewheel'`
-- `'DOMMouseScroll'`
 
 
 ### Gesture events
