@@ -6,6 +6,9 @@ Provides a unified API for subscribing to events about both basic input events (
 
 ## Usage
 
+TBD: Module packaging (npm?)
+
+
 ```
 import EventManager from 'mjolnir.js';
 
@@ -57,7 +60,7 @@ Register an event handler function to be called on `event`.
 
 * `event` {string|Object} - An event name (`String`) or map of event names to handlers.
 * `[handler]` {Function} - The function to be called on `event`.
-* `[srcElement]` {Node} - The source element of this event. If provided, only events that are targeting this element or its decendants will invoke the handler. If ignored, handler will always be invoked for the specified `event`.
+* `[srcElement]` {Node} - The source element of this event. If provided, only events that are targeting this element or its decendants will invoke the handler. If ignored, handler will always be invoked for the specified `event`. Events are propagated up the DOM tree.
 
 
 ### off
@@ -94,7 +97,6 @@ Additionally, event objects for different event types contain a subset of the fo
 ## Supported Events and Gestures
 
 ### Native input events
-- `'click'`
 - `'keydown'`
 - `'keyup'`
 - `'mousedown'`
@@ -113,8 +115,8 @@ Additionally, event objects for different event types contain a subset of the fo
 
 
 ### Gesture events
-- `'tap'`
-- `'doubletap'`
+- `'tap'` | `click`
+- `'doubletap'` | `dblclick`
 - `'press'`
 - `'pan'`
 - `'panstart'`
