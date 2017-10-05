@@ -57,8 +57,9 @@ Register an event handler function to be called on `event`.
 
 * `event` {string|Object} - An event name (`String`) or map of event names to handlers.
 * `[handler]` {Function} - The function to be called on `event`.
-* `[srcElement]` {Node} - The source element of this event. If provided, only events that are targeting this element or its decendants will invoke the handler. If ignored, handler will always be invoked for the specified `event`. Events are propagated up the DOM tree.
+* `[srcElement]` {Node} - The source element of this event. If provided, only events that are targeting this element or its decendants will invoke the handler. If ignored, default to the whole document. Events are propagated up the DOM tree.
 
+** Note: Unlike the DOM event system, developers are responsible of deregistering event handlers when `srcElement` is removed. **
 
 ### off
 
@@ -80,7 +81,7 @@ Event handlers subscribed via [`EventManager.on()`](#user-content-on) will be ca
 * `offsetCenter` (Object `{x, y}`) - The center of the event location (e.g. the centroid of a touch)
 * `target` (Object) - The target of the event, as specified by the original `srcEvent`
 * `srcEvent` (Object) - The original event object dispatched by the browser to the JS runtime
-* `stopPropagation` (Function) - Mark the event as handled and do not invoke other handlers in the queue.
+* `stopPropagation` (Function) - Do not invoke handlers registered for any ancestors in the DOM tree.
 
 Additionally, event objects for different event types contain a subset of the following properties:
 

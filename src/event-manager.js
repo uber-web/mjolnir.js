@@ -39,7 +39,10 @@ export default class EventManager {
   constructor(element, options = {}) {
     this.element = element;
     this._onBasicInput = this._onBasicInput.bind(this);
-    this.manager = new Manager(element, {recognizers: options.recognizers || RECOGNIZERS})
+
+    const ManagerClass = options.Manager || Manager;
+
+    this.manager = new ManagerClass(element, {recognizers: options.recognizers || RECOGNIZERS})
       .on('hammer.input', this._onBasicInput);
 
     this.eventHandlers = [];
@@ -178,24 +181,35 @@ export default class EventManager {
    */
   _wrapEventHandler(type, handler, srcElement) {
     return event => {
-      if (!event.mjolnirEvent) {
-        event.mjolnirEvent = this._processEvent(event);
+      let {mjolnirEvent} = event;
+
+      if (!mjolnirEvent) {
+        mjolnirEvent = this._normalizeEvent(event);
+        event.mjolnirEvent = mjolnirEvent;
       }
 
-      if (event.mjolnirEvent.handled) {
-        return;
+      const isStopped = mjolnirEvent.handled && mjolnirEvent.handled !== srcElement;
+
+      if (!isStopped) {
+        const isFromDecendant = !srcElement || srcElement.contains(event.srcEvent.target);
+        if (isFromDecendant) {
+          handler(Object.assign({}, mjolnirEvent, {
+            type,
+            stopPropagation: () => {
+              if (!mjolnirEvent.handled) {
+                mjolnirEvent.handled = srcElement;
+              }
+            }
+          }));
+        }
       }
-      if (srcElement && !srcElement.contains(event.srcEvent.target)) {
-        return;
-      }
-      handler(Object.assign({}, event.mjolnirEvent, {type}));
     };
   }
 
   /**
    * Normalizes hammerjs and custom events to have predictable fields.
    */
-  _processEvent(event) {
+  _normalizeEvent(event) {
     const {element} = this;
     const {srcEvent} = event;
 
@@ -205,7 +219,6 @@ export default class EventManager {
     };
 
     // Calculate center relative to the root element
-    // TODO - avoid using getBoundingClientRect for perf?
     const rect = element.getBoundingClientRect();
 
     // Fix scale for map affected by a CSS transform.
@@ -219,18 +232,12 @@ export default class EventManager {
       y: (center.y - rect.top - element.clientTop) / scaleY
     };
 
-    const processedEvent = Object.assign({}, event, {
+    return Object.assign({}, event, {
       handled: false,
       center,
       offsetCenter,
       rootElement: element
     });
-
-    processedEvent.stopPropagation = () => {
-      processedEvent.handled = true;
-    };
-
-    return processedEvent;
   }
 
   /**

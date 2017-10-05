@@ -18,9 +18,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-export function createEventRegistrarMock() {
-  return {
-    addEventListener: () => {},
-    removeEventListener: () => {}
-  };
+class NodeMock {
+
+  constructor({id, children = []}, parentNode = null) {
+    this.id = id;
+    this.parentNode = parentNode;
+    this.children = children.map(child => new NodeMock(child, this));
+  }
+
+  contains(otherNode) {
+    if (this === otherNode) {
+      return true;
+    }
+    return this.children.some(child => child.contains(otherNode));
+  }
+
+  find(id) {
+    if (this.id === id) {
+      return this;
+    }
+    for (let i = 0; i < this.children.length; i++) {
+      const node = this.children[i].find(id);
+      if (node) {
+        return node;
+      }
+    }
+    return undefined;
+  }
+
+  addEventListener() {}
+
+  removeEventListener() {}
+
+  getBoundingClientRect() {
+    return {left: 0, top: 0, width: 1, height: 1};
+  }
+}
+
+export function createEventRegistrarMock(tree = {id: ''}) {
+  return new NodeMock(tree);
 }

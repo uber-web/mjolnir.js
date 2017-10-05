@@ -40,7 +40,7 @@
 
 import test from 'tape-catch';
 import EventManager from 'mjolnir.js/event-manager';
-import {spy, createEventRegistrarMock} from './test-utils';
+import {spy, createEventRegistrarMock, HammerManagerMock} from './test-utils';
 
 test('eventManager#constructor', t => {
   const eventRegistrar = createEventRegistrarMock();
@@ -127,4 +127,80 @@ test('eventManager#eventHandling', t => {
   //   '...and should be called with correct params');
 
   t.end();
+});
+
+test('eventManager#normalizeEvent', t => {
+  const eventRegistrar = createEventRegistrarMock();
+  const eventMock = {
+    type: 'foo',
+    srcEvent: {
+      target: {}
+    }
+  };
+  const eventManager = new EventManager(eventRegistrar, {Manager: HammerManagerMock});
+
+  let normalizedEvent;
+
+  eventManager.on('foo', evt => {
+    normalizedEvent = evt;
+  });
+
+  eventManager._onOtherEvent(eventMock);
+
+  t.is(normalizedEvent.rootElement, eventRegistrar, 'rootElement is set');
+  t.ok(normalizedEvent.center, 'center is populated');
+  t.ok(normalizedEvent.offsetCenter, 'offsetCenter is populated');
+  t.notok(normalizedEvent.handled, 'event is not handled');
+
+  t.end();
+});
+
+test('eventManager#propagation', t => {
+  const rootNode = createEventRegistrarMock({
+    id: 'root', children: [
+      {id: 'child-0', children: [
+        {id: 'grandchild-00'},
+        {id: 'grandchild-01'}
+      ]},
+      {id: 'child-1'}
+    ]
+  });
+  const eventManager = new EventManager(rootNode, {Manager: HammerManagerMock});
+
+  const handlerCalls = [];
+
+  const fooHandler = (message, stopPropagation = false) => evt => {
+    handlerCalls.push(message);
+    if (stopPropagation) {
+      evt.stopPropagation();
+    }
+  };
+
+  // Should not be called (propagation stopped)
+  eventManager.on('foo', fooHandler('foo@root'), rootNode);
+  // Should be called
+  eventManager.on('foo', fooHandler('foo@child-0', true), rootNode.find('child-0'));
+  eventManager.on('foo', fooHandler('foo@grandchild-00'), rootNode.find('grandchild-00'));
+  // Should not be called (not on propagation path)
+  eventManager.on('foo', fooHandler('foo@grandchild-01'), rootNode.find('grandchild-01'));
+
+  eventManager.on({
+    // Should be called
+    foo: fooHandler('foo@child-0:2'),
+    // Should not be called (wrong event type)
+    bar: fooHandler('bar@child-0')
+  }, rootNode.find('child-0'));
+
+  const eventMock = {
+    type: 'foo',
+    srcEvent: {
+      target: rootNode.find('grandchild-00')
+    }
+  };
+  eventManager._onOtherEvent(eventMock);
+
+  t.deepEquals(handlerCalls, ['foo@grandchild-00', 'foo@child-0', 'foo@child-0:2'],
+    'propagated correctly');
+  t.end();
+
 });
