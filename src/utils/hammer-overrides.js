@@ -19,7 +19,7 @@ const MOUSE_INPUT_MAP = {
  * @params array {Array}
  * @params predict {Function}
  */
-function inArray(array, predict) {
+function some(array, predict) {
   for (let i = 0; i < array.length; i++) {
     if (predict(array[i])) {
       return true;
@@ -38,7 +38,7 @@ export function enhancePointerEventInput(PointerEventInput) {
 
     // Allow non-left mouse buttons through
     if (ev.button > 0) {
-      if (!inArray(store, e => e.pointerId === ev.pointerId)) {
+      if (!some(store, e => e.pointerId === ev.pointerId)) {
         store.push(ev);
       }
     }
