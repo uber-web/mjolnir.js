@@ -1,3 +1,5 @@
+const noop = () => {};
+
 // Hammer.Manager mock for use in environments without `document` / `window`.
 export class HammerManagerMock {
 
@@ -6,7 +8,13 @@ export class HammerManagerMock {
   }
 
   get() {
-    return null;
+    return {
+      set: noop,
+      recognizeWith: noop,
+      dropRecognizeWith: noop,
+      requireFailure: noop,
+      dropRequireFailure: noop
+    };
   }
 
   set() {

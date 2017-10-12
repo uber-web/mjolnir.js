@@ -24,13 +24,23 @@ import Hammer from './utils/hammer';
 // due to `window`/`document` references downstream.
 export const RECOGNIZERS = Hammer ? [
   [Hammer.Rotate, {enable: false}],
-  [Hammer.Pinch, {enable: false}, ['rotate']],
-  [Hammer.Pan, {threshold: 0, enable: false}],
+  [Hammer.Pinch, {enable: false}],
   [Hammer.Swipe, {enable: false}],
+  [Hammer.Pan, {threshold: 0, enable: false}],
   [Hammer.Press, {enable: false}],
   [Hammer.Tap, {event: 'doubletap', taps: 2, enable: false}],
   [Hammer.Tap, {enable: false}]
 ] : null;
+
+// Recognize the following gestures even if a given recognizer succeeds
+export const RECOGNIZER_COMPATIBLE_MAP = {
+  rotate: ['pinch']
+};
+
+// Recognize the folling gestures only if a given recognizer fails
+export const RECOGNIZER_FALLBACK_MAP = {
+  doubletap: ['tap']
+};
 
 /**
  * Only one set of basic input events will be fired by Hammer.js:

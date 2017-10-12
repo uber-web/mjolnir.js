@@ -44,7 +44,7 @@ import {spy, createEventRegistrarMock, HammerManagerMock} from './test-utils';
 
 test('eventManager#constructor', t => {
   const eventRegistrar = createEventRegistrarMock();
-  let eventManager = new EventManager(eventRegistrar);
+  let eventManager = new EventManager(eventRegistrar, {Manager: HammerManagerMock});
   const onSpy = spy();
   const origOn = EventManager.prototype.on;
   EventManager.prototype.on = onSpy;
@@ -55,7 +55,8 @@ test('eventManager#constructor', t => {
   t.notOk(onSpy.called, 'on() not called if options.events not passed');
 
   eventManager = new EventManager(eventRegistrar, {
-    events: {foo: () => {}}
+    events: {foo: () => {}},
+    Manager: HammerManagerMock
   });
   t.ok(onSpy.called, 'on() is called if options.events is passed');
   EventManager.prototype.on = origOn;
@@ -63,7 +64,7 @@ test('eventManager#constructor', t => {
 });
 
 test('eventManager#destroy', t => {
-  const eventManager = new EventManager(createEventRegistrarMock());
+  const eventManager = new EventManager(createEventRegistrarMock(), {Manager: HammerManagerMock});
   spy(eventManager.manager, 'destroy');
   spy(eventManager.moveInput, 'destroy');
   spy(eventManager.wheelInput, 'destroy');
@@ -79,7 +80,7 @@ test('eventManager#destroy', t => {
 });
 
 test('eventManager#on', t => {
-  const eventManager = new EventManager(createEventRegistrarMock());
+  const eventManager = new EventManager(createEventRegistrarMock(), {Manager: HammerManagerMock});
   const addEHSpy = spy(eventManager, '_addEventHandler');
 
   eventManager.on('foo', () => {});
@@ -97,7 +98,7 @@ test('eventManager#on', t => {
 });
 
 test('eventManager#off', t => {
-  const eventManager = new EventManager(createEventRegistrarMock());
+  const eventManager = new EventManager(createEventRegistrarMock(), {Manager: HammerManagerMock});
   const removeEHSpy = spy(eventManager, '_removeEventHandler');
 
   eventManager.off('foo', () => {});
@@ -117,7 +118,7 @@ test('eventManager#off', t => {
 test('eventManager#eventHandling', t => {
   const eventRegistrar = createEventRegistrarMock();
   const eventMock = {type: 'foo'};
-  const eventManager = new EventManager(eventRegistrar);
+  const eventManager = new EventManager(eventRegistrar, {Manager: HammerManagerMock});
   const emitSpy = spy(eventManager.manager, 'emit');
 
   eventManager._onOtherEvent(eventMock);
