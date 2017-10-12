@@ -81,15 +81,15 @@ export default class MoveInput {
     if (this.enableMoveEvent) {
       switch (event.type) {
       case 'mousedown':
-        if (event.button === 0) {
-          // Left button is down
+        if (event.button >= 0) {
+          // Button is down
           this.pressed = true;
         }
         break;
       case 'mousemove':
         // Move events use `which` to track the button being pressed
-        if (event.which !== 1) {
-          // Left button is not down
+        if (event.which === 0) {
+          // Button is not down
           this.pressed = false;
         }
         if (!this.pressed) {
