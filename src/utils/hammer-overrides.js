@@ -29,10 +29,11 @@ function inArray(array, predict) {
 }
 
 /* eslint-disable no-invalid-this */
-// overrides PointerEventInput.handler to accept right mouse button
-export function enhancePointerEventHandler(oldHandler) {
+export function enhancePointerEventInput(PointerEventInput) {
+  const oldHandler = PointerEventInput.prototype.handler;
 
-  return function handler(ev) {
+  // overrides PointerEventInput.handler to accept right mouse button
+  PointerEventInput.prototype.handler = function handler(ev) {
     const store = this.store;
 
     // Allow non-left mouse buttons through
@@ -46,8 +47,9 @@ export function enhancePointerEventHandler(oldHandler) {
   };
 }
 
-export function enhanceMouseEventHandler(oldHandler) {
-  return function handler(ev) {
+// overrides MouseInput.handler to accept right mouse button
+export function enhanceMouseInput(MouseInput) {
+  MouseInput.prototype.handler = function handler(ev) {
     let eventType = MOUSE_INPUT_MAP[ev.type];
 
     // on start we want to have the mouse button down
