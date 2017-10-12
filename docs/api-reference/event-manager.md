@@ -38,6 +38,7 @@ Creates a new `EventManager` instance.
 *  `options` {Object} -  Options
 *  `options.events` {Object} -  Map of {event name: handler} to register on init.
 *  `options.recognizers` - {Object}  Gesture recognizers from Hammer.js to register, as an Array in [Hammer.Recognizer format](http://hammerjs.github.io/api/#hammermanager)
+*  `options.rightButton` - {Boolean}  Recognizes click and drag from pressing the right mouse button. Default `false`.
 
 
 ### destroy

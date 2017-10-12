@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 import {isBrowser} from './globals';
+import {enhancePointerEventHandler} from './hammer-overrides';
 
 let hammerjs;
 if (isBrowser) {
@@ -36,6 +37,11 @@ function HammerManagerMock(m) {
   instance.destroy = chainedNoop;
   instance.emit = chainedNoop;
   return instance;
+}
+
+if (hammerjs) {
+  const PointerEventInput = hammerjs.PointerEventInput.prototype;
+  PointerEventInput.handler = enhancePointerEventHandler(PointerEventInput.handler);
 }
 
 export const Manager = hammerjs ? hammerjs.Manager : HammerManagerMock;

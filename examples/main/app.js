@@ -55,7 +55,7 @@ class Root extends Component {
         }
       });
 
-      this._eventManager = new EventManager(ref, {events: eventListeners});
+      this._eventManager = new EventManager(ref, {events: eventListeners, rightButton: true});
     }
   }
 

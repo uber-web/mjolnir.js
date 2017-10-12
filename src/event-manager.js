@@ -31,6 +31,10 @@ import {
   RECOGNIZERS
 } from './constants';
 
+function preventDefault(evt) {
+  evt.preventDefault();
+}
+
 // Unified API for subscribing to events about both
 // basic input events (e.g. 'mousemove', 'touchstart', 'wheel')
 // and gestural input (e.g. 'click', 'tap', 'panstart').
@@ -55,6 +59,11 @@ export default class EventManager {
     this.moveInput = new MoveInput(element, this._onOtherEvent, {enable: false});
     this.keyInput = new KeyInput(element, this._onOtherEvent, {enable: false});
 
+    if (options.rightButton) {
+      // Block right click
+      element.addEventListener('contextmenu', preventDefault);
+    }
+
     // Register all passed events.
     const {events} = options;
     if (events) {
@@ -64,6 +73,8 @@ export default class EventManager {
 
   // Tear down internal event management implementations.
   destroy() {
+    this.element.removeEventListener('contextmenu', preventDefault);
+
     this.wheelInput.destroy();
     this.moveInput.destroy();
     this.keyInput.destroy();
