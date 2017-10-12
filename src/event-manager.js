@@ -28,7 +28,9 @@ import {
   BASIC_EVENT_ALIASES,
   EVENT_RECOGNIZER_MAP,
   GESTURE_EVENT_ALIASES,
-  RECOGNIZERS
+  RECOGNIZERS,
+  RECOGNIZER_COMPATIBLE_MAP,
+  RECOGNIZER_FALLBACK_MAP
 } from './constants';
 
 function preventDefault(evt) {
@@ -42,12 +44,24 @@ function preventDefault(evt) {
 export default class EventManager {
   constructor(element, options = {}) {
     this.element = element;
+    this.options = options;
     this._onBasicInput = this._onBasicInput.bind(this);
 
     const ManagerClass = options.Manager || Manager;
 
     this.manager = new ManagerClass(element, {recognizers: options.recognizers || RECOGNIZERS})
       .on('hammer.input', this._onBasicInput);
+
+    if (!options.recognizers) {
+      // Set default recognize withs
+      // http://hammerjs.github.io/recognize-with/
+      Object.keys(RECOGNIZER_COMPATIBLE_MAP).forEach(name => {
+        const recognizer = this.manager.get(name);
+        RECOGNIZER_COMPATIBLE_MAP[name].forEach(otherName => {
+          recognizer.recognizeWith(otherName);
+        });
+      });
+    }
 
     this.eventHandlers = [];
 
@@ -117,6 +131,22 @@ export default class EventManager {
     const recognizer = this.manager.get(name);
     if (recognizer) {
       recognizer.set({enable: enabled});
+
+      const fallbackRecognizers = RECOGNIZER_FALLBACK_MAP[name];
+      if (fallbackRecognizers && !this.options.recognizers) {
+        // Set default require failures
+        // http://hammerjs.github.io/require-failure/
+        fallbackRecognizers.forEach(otherName => {
+          const otherRecognizer = this.manager.get(otherName);
+          if (enabled) {
+            // Wait for this recognizer to fail
+            otherRecognizer.requireFailure(name);
+          } else {
+            // Do not wait for this recognizer to fail
+            otherRecognizer.dropRequireFailure(name);
+          }
+        });
+      }
     }
     this.wheelInput.enableEventType(name, enabled);
     this.moveInput.enableEventType(name, enabled);
