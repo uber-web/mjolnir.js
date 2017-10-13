@@ -38,10 +38,7 @@ export default class KeyInput {
     this.handleEvent = this.handleEvent.bind(this);
 
     element.tabIndex = 1;
-    // May be a mock element
-    if (element.style) {
-      element.style.outline = 'none';
-    }
+    element.style.outline = 'none';
     this.events.forEach(event => element.addEventListener(event, this.handleEvent));
   }
 

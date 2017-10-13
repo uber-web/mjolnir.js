@@ -22,6 +22,7 @@ class NodeMock {
 
   constructor({id, children = []}, parentNode = null) {
     this.id = id;
+    this.style = {};
     this.parentNode = parentNode;
     this.children = children.map(child => new NodeMock(child, this));
   }
