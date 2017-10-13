@@ -135,6 +135,8 @@ test('eventManager#normalizeEvent', t => {
   const eventMock = {
     type: 'foo',
     srcEvent: {
+      clientX: 0,
+      clientY: 0,
       target: {}
     }
   };
@@ -151,7 +153,7 @@ test('eventManager#normalizeEvent', t => {
   t.is(normalizedEvent.rootElement, eventRegistrar, 'rootElement is set');
   t.ok(normalizedEvent.center, 'center is populated');
   t.ok(normalizedEvent.offsetCenter, 'offsetCenter is populated');
-  t.notok(normalizedEvent.handled, 'event is not handled');
+  t.is(normalizedEvent.handled, false, 'event marked as not handled');
 
   t.end();
 });
