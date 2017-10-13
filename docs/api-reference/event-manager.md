@@ -87,7 +87,9 @@ Event handlers subscribed via [`EventManager.on()`](#user-content-on) will be ca
 Additionally, event objects for different event types contain a subset of the following properties:
 
 * `key` (number) - The keycode of the keyboard event
-* `isDown` (boolean) - Flag indicating whether an input button is down during the event
+* `leftButton` (boolean) - Flag indicating whether the left button is involved during the event
+* `middleButton` (boolean) - Flag indicating whether the middle button is involved during the event
+* `rightButton` (boolean) - Flag indicating whether the right button is involved during the event
 * `pointerType` (string) - A string indicating the type of input (e.g. `'mouse'`, `'touch'`, `'pointer'`)
 * `delta` (number) - The scroll magnitude/distance of a wheel event
 

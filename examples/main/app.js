@@ -90,11 +90,19 @@ class Root extends Component {
   }
 
   _renderEvent(evt, index) {
+    const fields = [
+      evt.type,
+      evt.offsetCenter && evt.offsetCenter.x.toFixed(0),
+      evt.offsetCenter && evt.offsetCenter.y.toFixed(0),
+      evt.key,
+      evt.leftButton && 'left',
+      evt.middleButton && 'middle',
+      evt.rightButton && 'right'
+    ].filter(Boolean);
+
     return (
       <tr key={index}>
-        <td>{evt.type}</td>
-        <td>{evt.offsetCenter.x.toFixed(0)}</td>
-        <td>{evt.offsetCenter.y}</td>
+        {fields.map((f, i) => <td key={i}>{f}</td>)}
       </tr>
     );
   }

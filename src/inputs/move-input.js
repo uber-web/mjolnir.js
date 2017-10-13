@@ -98,7 +98,6 @@ export default class MoveInput {
           this.callback({
             type: MOVE_EVENT_TYPE,
             srcEvent: event,
-            isDown: this.pressed,
             pointerType: 'mouse',
             target: event.target
           });

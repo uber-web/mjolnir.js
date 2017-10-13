@@ -33,6 +33,8 @@ import {
   RECOGNIZER_FALLBACK_MAP
 } from './constants';
 
+import {whichButtons, getOffsetPosition} from './utils/event-utils';
+
 function preventDefault(evt) {
   evt.preventDefault();
 }
@@ -252,33 +254,14 @@ export default class EventManager {
    */
   _normalizeEvent(event) {
     const {element} = this;
-    const {srcEvent} = event;
 
-    const center = event.center || {
-      x: srcEvent.clientX,
-      y: srcEvent.clientY
-    };
-
-    // Calculate center relative to the root element
-    const rect = element.getBoundingClientRect();
-
-    // Fix scale for map affected by a CSS transform.
-    // See https://stackoverflow.com/a/26893663/3528533
-    const scaleX = rect.width / element.offsetWidth;
-    const scaleY = rect.height / element.offsetHeight;
-
-    // Calculate center relative to the root element
-    const offsetCenter = {
-      x: (center.x - rect.left - element.clientLeft) / scaleX,
-      y: (center.y - rect.top - element.clientTop) / scaleY
-    };
-
-    return Object.assign({}, event, {
-      handled: false,
-      center,
-      offsetCenter,
-      rootElement: element
-    });
+    return Object.assign({}, event,
+      whichButtons(event),
+      getOffsetPosition(event, element),
+      {
+        handled: false,
+        rootElement: element
+      });
   }
 
   /**
@@ -293,8 +276,7 @@ export default class EventManager {
     const alias = BASIC_EVENT_ALIASES[srcEvent.type];
     if (alias) {
       // fire all events aliased to srcEvent.type
-      const emitEvent = Object.assign({}, event, {isDown: true});
-      this.manager.emit(alias, emitEvent);
+      this.manager.emit(alias, event);
     }
   }
 
