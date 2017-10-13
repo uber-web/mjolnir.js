@@ -276,8 +276,7 @@ export default class EventManager {
     const alias = BASIC_EVENT_ALIASES[srcEvent.type];
     if (alias) {
       // fire all events aliased to srcEvent.type
-      const emitEvent = Object.assign({}, event, {isDown: true});
-      this.manager.emit(alias, emitEvent);
+      this.manager.emit(alias, event);
     }
   }
 
