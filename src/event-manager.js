@@ -33,7 +33,7 @@ import {
   RECOGNIZER_FALLBACK_MAP
 } from './constants';
 
-import {whichButton, getOffsetPosition} from './utils/event-utils';
+import {whichButtons, getOffsetPosition} from './utils/event-utils';
 
 function preventDefault(evt) {
   evt.preventDefault();
@@ -256,7 +256,7 @@ export default class EventManager {
     const {element} = this;
 
     return Object.assign({}, event,
-      whichButton(event),
+      whichButtons(event),
       getOffsetPosition(event, element),
       {
         handled: false,
