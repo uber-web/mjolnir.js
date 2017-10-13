@@ -18,9 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-/* global window */
 import {INPUT_EVENT_TYPES} from '../constants';
-import {isBrowser} from '../utils/globals';
 
 const {KEY_EVENTS} = INPUT_EVENT_TYPES;
 const DOWN_EVENT_TYPE = 'keydown';
@@ -39,14 +37,16 @@ export default class KeyInput {
 
     this.handleEvent = this.handleEvent.bind(this);
 
-    // Use mock in test environment
-    const parent = isBrowser ? window : element;
-    this.events.forEach(event => parent.addEventListener(event, this.handleEvent));
+    element.tabIndex = 1;
+    // May be a mock element
+    if (element.style) {
+      element.style.outline = 'none';
+    }
+    this.events.forEach(event => element.addEventListener(event, this.handleEvent));
   }
 
   destroy() {
-    const parent = isBrowser ? window : this.element;
-    this.events.forEach(event => parent.removeEventListener(event, this.handleEvent));
+    this.events.forEach(event => this.element.removeEventListener(event, this.handleEvent));
   }
 
   /**
