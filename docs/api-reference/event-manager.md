@@ -98,8 +98,11 @@ Additionally, event objects for different event types contain a subset of the fo
 ## Supported Events and Gestures
 
 ### Basic input events
+Keyboard events are fired when focus is on the EventManager's target element or its decendants, unless typing into a text input.
 - `'keydown'`
 - `'keyup'`
+
+Mouse event and pointer event names are interchangeable.
 - `'mousedown'` | `pointerdown`
 - `'mousemove'` | `pointermove`
 - `'mouseup'` | `pointerup`
@@ -108,6 +111,7 @@ Additionally, event objects for different event types contain a subset of the fo
 
 
 ### Gesture events
+See [hammer.js](http://hammerjs.github.io/) for documentation of the following events.
 - `'tap'` | `click`
 - `'doubletap'` | `dblclick`
 - `'press'`

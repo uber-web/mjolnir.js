@@ -47,7 +47,9 @@ export const EVENTS = [
   'swipeleft',
   'swiperight',
   'swipeup',
-  'swipedown'
+  'swipedown',
+  'keydown',
+  'keyup'
 ];
 
 export const INITIAL_OPTIONS = {
