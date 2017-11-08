@@ -59,9 +59,11 @@ export default class EventManager {
       // http://hammerjs.github.io/recognize-with/
       Object.keys(RECOGNIZER_COMPATIBLE_MAP).forEach(name => {
         const recognizer = this.manager.get(name);
-        RECOGNIZER_COMPATIBLE_MAP[name].forEach(otherName => {
-          recognizer.recognizeWith(otherName);
-        });
+        if (recognizer) {
+          RECOGNIZER_COMPATIBLE_MAP[name].forEach(otherName => {
+            recognizer.recognizeWith(otherName);
+          });
+        }
       });
     }
 

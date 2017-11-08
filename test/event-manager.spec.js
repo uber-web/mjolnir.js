@@ -44,7 +44,7 @@ import {spy, createEventRegistrarMock, HammerManagerMock} from './test-utils';
 
 test('eventManager#constructor', t => {
   const eventRegistrar = createEventRegistrarMock();
-  let eventManager = new EventManager(eventRegistrar, {Manager: HammerManagerMock});
+  let eventManager = new EventManager(eventRegistrar);
   const onSpy = spy();
   const origOn = EventManager.prototype.on;
   EventManager.prototype.on = onSpy;
@@ -64,7 +64,7 @@ test('eventManager#constructor', t => {
 });
 
 test('eventManager#destroy', t => {
-  const eventManager = new EventManager(createEventRegistrarMock(), {Manager: HammerManagerMock});
+  const eventManager = new EventManager(createEventRegistrarMock());
   spy(eventManager.manager, 'destroy');
   spy(eventManager.moveInput, 'destroy');
   spy(eventManager.wheelInput, 'destroy');
@@ -80,7 +80,7 @@ test('eventManager#destroy', t => {
 });
 
 test('eventManager#on', t => {
-  const eventManager = new EventManager(createEventRegistrarMock(), {Manager: HammerManagerMock});
+  const eventManager = new EventManager(createEventRegistrarMock());
   const addEHSpy = spy(eventManager, '_addEventHandler');
 
   eventManager.on('foo', () => {});
@@ -98,7 +98,7 @@ test('eventManager#on', t => {
 });
 
 test('eventManager#off', t => {
-  const eventManager = new EventManager(createEventRegistrarMock(), {Manager: HammerManagerMock});
+  const eventManager = new EventManager(createEventRegistrarMock());
   const removeEHSpy = spy(eventManager, '_removeEventHandler');
 
   eventManager.off('foo', () => {});
