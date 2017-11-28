@@ -34,7 +34,7 @@ Creates a new `EventManager` instance.
 
 `new EventManager(element, {events, recognizers})`
 
-*  `element` {DOM Element, optional} - DOM element on which event handlers will be registered.
+*  `element` {DOM Element, optional} - DOM element on which event handlers will be registered. Default `null`.
 *  `options` {Object, optional} -  Options
 *  `options.events` {Object} -  Map of {event name: handler} to register on init.
 *  `options.recognizers` - {Object}  Gesture recognizers from Hammer.js to register, as an Array in [Hammer.Recognizer format](http://hammerjs.github.io/api/#hammermanager)

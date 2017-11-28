@@ -44,7 +44,7 @@ function preventDefault(evt) {
 // and gestural input (e.g. 'click', 'tap', 'panstart').
 // Delegates gesture related event registration and handling to Hammer.js.
 export default class EventManager {
-  constructor(element, options = {}) {
+  constructor(element = null, options = {}) {
     this.options = options;
     this.eventHandlers = [];
 
@@ -58,21 +58,6 @@ export default class EventManager {
     if (events) {
       this.on(events);
     }
-  }
-
-  // Tear down internal event management implementations.
-  destroy() {
-    this.element.removeEventListener('contextmenu', preventDefault);
-
-    this.wheelInput.destroy();
-    this.moveInput.destroy();
-    this.keyInput.destroy();
-    this.manager.destroy();
-
-    this.wheelInput = null;
-    this.moveInput = null;
-    this.keyInput = null;
-    this.manager = null;
   }
 
   setElement(element) {
@@ -122,6 +107,21 @@ export default class EventManager {
       this._toggleRecognizer(recognizerName, true);
       this.manager.on(eventAlias, wrappedHandler);
     });
+  }
+
+  // Tear down internal event management implementations.
+  destroy() {
+    this.element.removeEventListener('contextmenu', preventDefault);
+
+    this.wheelInput.destroy();
+    this.moveInput.destroy();
+    this.keyInput.destroy();
+    this.manager.destroy();
+
+    this.wheelInput = null;
+    this.moveInput = null;
+    this.keyInput = null;
+    this.manager = null;
   }
 
   // Register an event handler function to be called on `event`.
