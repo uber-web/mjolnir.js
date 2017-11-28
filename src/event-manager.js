@@ -45,10 +45,47 @@ function preventDefault(evt) {
 // Delegates gesture related event registration and handling to Hammer.js.
 export default class EventManager {
   constructor(element, options = {}) {
-    this.element = element;
     this.options = options;
-    this._onBasicInput = this._onBasicInput.bind(this);
+    this.eventHandlers = [];
 
+    this._onBasicInput = this._onBasicInput.bind(this);
+    this._onOtherEvent = this._onOtherEvent.bind(this);
+
+    this.setElement(element);
+
+    // Register all passed events.
+    const {events} = options;
+    if (events) {
+      this.on(events);
+    }
+  }
+
+  // Tear down internal event management implementations.
+  destroy() {
+    this.element.removeEventListener('contextmenu', preventDefault);
+
+    this.wheelInput.destroy();
+    this.moveInput.destroy();
+    this.keyInput.destroy();
+    this.manager.destroy();
+
+    this.wheelInput = null;
+    this.moveInput = null;
+    this.keyInput = null;
+    this.manager = null;
+  }
+
+  setElement(element) {
+    if (this.element) {
+      // unregister all events
+      this.destroy();
+    }
+    this.element = element;
+    if (!element) {
+      return;
+    }
+
+    const {options} = this;
     const ManagerClass = options.Manager || Manager;
 
     this.manager = new ManagerClass(element, {recognizers: options.recognizers || RECOGNIZERS})
@@ -67,12 +104,9 @@ export default class EventManager {
       });
     }
 
-    this.eventHandlers = [];
-
     // Handle events not handled by Hammer.js:
     // - mouse wheel
     // - pointer/touch/mouse move
-    this._onOtherEvent = this._onOtherEvent.bind(this);
     this.wheelInput = new WheelInput(element, this._onOtherEvent, {enable: false});
     this.moveInput = new MoveInput(element, this._onOtherEvent, {enable: false});
     this.keyInput = new KeyInput(element, this._onOtherEvent, {enable: false});
@@ -82,21 +116,12 @@ export default class EventManager {
       element.addEventListener('contextmenu', preventDefault);
     }
 
-    // Register all passed events.
-    const {events} = options;
-    if (events) {
-      this.on(events);
-    }
-  }
-
-  // Tear down internal event management implementations.
-  destroy() {
-    this.element.removeEventListener('contextmenu', preventDefault);
-
-    this.wheelInput.destroy();
-    this.moveInput.destroy();
-    this.keyInput.destroy();
-    this.manager.destroy();
+    // Register all existing events
+    this.eventHandlers.forEach(({recognizerName, eventAlias, wrappedHandler}) => {
+      // Enable recognizer for this event.
+      this._toggleRecognizer(recognizerName, true);
+      this.manager.on(eventAlias, wrappedHandler);
+    });
   }
 
   // Register an event handler function to be called on `event`.
@@ -132,7 +157,11 @@ export default class EventManager {
    * Enable/disable recognizer for the given event
    */
   _toggleRecognizer(name, enabled) {
-    const recognizer = this.manager.get(name);
+    const {manager} = this;
+    if (!manager) {
+      return;
+    }
+    const recognizer = manager.get(name);
     if (recognizer) {
       recognizer.set({enable: enabled});
 
@@ -141,7 +170,7 @@ export default class EventManager {
         // Set default require failures
         // http://hammerjs.github.io/require-failure/
         fallbackRecognizers.forEach(otherName => {
-          const otherRecognizer = this.manager.get(otherName);
+          const otherRecognizer = manager.get(otherName);
           if (enabled) {
             // Wait for this recognizer to fail
             otherRecognizer.requireFailure(name);
@@ -161,6 +190,7 @@ export default class EventManager {
    * Process the event registration for a single event + handler.
    */
   _addEventHandler(event, handler, srcElement = null) {
+    const {manager, eventHandlers} = this;
     const wrappedHandler = this._wrapEventHandler(event, handler, srcElement);
     // Alias to a recognized gesture as necessary.
     const eventAlias = GESTURE_EVENT_ALIASES[event] || event;
@@ -170,37 +200,42 @@ export default class EventManager {
     this._toggleRecognizer(recognizerName, true);
 
     // Find ancestors
-    const ancestorEventHandlers = this.eventHandlers.filter(entry => {
+    const ancestorEventHandlers = eventHandlers.filter(entry => {
       return entry.eventAlias === eventAlias &&
         entry.srcElement !== srcElement &&
         (!entry.srcElement || entry.srcElement.contains(srcElement));
     });
 
     // Save wrapped handler
-    this.eventHandlers.push({event, eventAlias, recognizerName, srcElement,
+    eventHandlers.push({event, eventAlias, recognizerName, srcElement,
       handler, wrappedHandler});
 
     // Sort handlers by DOM hierarchy
     // So the event will always fire first on child nodes
-    ancestorEventHandlers.forEach(entry => this.manager.off(eventAlias, entry.wrappedHandler));
-    this.manager.on(eventAlias, wrappedHandler);
-    ancestorEventHandlers.forEach(entry => this.manager.on(eventAlias, entry.wrappedHandler));
+    ancestorEventHandlers.forEach(entry => manager.off(eventAlias, entry.wrappedHandler));
+    if (manager) {
+      manager.on(eventAlias, wrappedHandler);
+    }
+    ancestorEventHandlers.forEach(entry => manager.on(eventAlias, entry.wrappedHandler));
   }
 
   /**
    * Process the event deregistration for a single event + handler.
    */
   _removeEventHandler(event, handler) {
+    const {manager, eventHandlers} = this;
     let eventHandlerRemoved = false;
 
     // Find saved handler if any.
-    for (let i = this.eventHandlers.length; i--;) {
-      const entry = this.eventHandlers[i];
+    for (let i = eventHandlers.length; i--;) {
+      const entry = eventHandlers[i];
       if (entry.event === event && entry.handler === handler) {
         // Deregister event handler.
-        this.manager.off(entry.eventAlias, entry.wrappedHandler);
+        if (manager) {
+          manager.off(entry.eventAlias, entry.wrappedHandler);
+        }
         // Delete saved handler
-        this.eventHandlers.splice(i, 1);
+        eventHandlers.splice(i, 1);
         eventHandlerRemoved = true;
       }
     }
@@ -211,7 +246,7 @@ export default class EventManager {
       // Get recognizer for this event
       const recognizerName = EVENT_RECOGNIZER_MAP[eventAlias] || eventAlias;
       // Disable recognizer if no more handlers are attached to its events
-      const isRecognizerUsed = this.eventHandlers.find(
+      const isRecognizerUsed = eventHandlers.find(
         entry => entry.recognizerName === recognizerName
       );
       if (!isRecognizerUsed) {
