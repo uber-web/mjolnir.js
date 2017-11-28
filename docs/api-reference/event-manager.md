@@ -34,8 +34,8 @@ Creates a new `EventManager` instance.
 
 `new EventManager(element, {events, recognizers})`
 
-*  `element` {DOM Element} - DOM element on which event handlers will be registered.
-*  `options` {Object} -  Options
+*  `element` {DOM Element, optional} - DOM element on which event handlers will be registered.
+*  `options` {Object, optional} -  Options
 *  `options.events` {Object} -  Map of {event name: handler} to register on init.
 *  `options.recognizers` - {Object}  Gesture recognizers from Hammer.js to register, as an Array in [Hammer.Recognizer format](http://hammerjs.github.io/api/#hammermanager)
 *  `options.rightButton` - {Boolean}  Recognizes click and drag from pressing the right mouse button. Default `false`. If turned on, the context menu will be disabled.
@@ -48,6 +48,15 @@ Tears down internal event management implementations.
 `eventManager.destroy()`
 
 Note: It is important to call `destroy` when done since `EventManager` adds event listeners to `window`.
+
+
+### setElement
+
+Set the DOM element on which event handlers will be registered. If element has been set, events will be unregistered from the previous element.
+
+`eventManager.setElement(element)`
+
+*  `element` {DOM Element, optional} - DOM element on which event handlers will be registered.
 
 
 ### on
