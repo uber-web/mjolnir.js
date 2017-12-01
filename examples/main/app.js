@@ -35,7 +35,15 @@ class Root extends Component {
     this._handleEvent = this._handleEvent.bind(this);
     this._renderCheckbox = this._renderCheckbox.bind(this);
 
-    this._eventManager = null;
+    const eventListeners = {};
+    EVENTS.forEach(eventName => {
+      if (INITIAL_OPTIONS[eventName]) {
+        eventListeners[eventName] = this._handleEvent;
+      }
+    });
+
+    this._eventManager = new EventManager(null, {events: eventListeners, rightButton: true});
+
     this.state = {
       events: [],
       options: INITIAL_OPTIONS
@@ -43,20 +51,7 @@ class Root extends Component {
   }
 
   _onLoad(ref) {
-    if (this._eventManager) {
-      this._eventManager.destroy();
-    }
-    if (ref) {
-      const eventListeners = {};
-
-      EVENTS.forEach(eventName => {
-        if (INITIAL_OPTIONS[eventName]) {
-          eventListeners[eventName] = this._handleEvent;
-        }
-      });
-
-      this._eventManager = new EventManager(ref, {events: eventListeners, rightButton: true});
-    }
+    this._eventManager.setElement(ref);
   }
 
   _onUpdateOption(evt) {
