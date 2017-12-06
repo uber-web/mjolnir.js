@@ -89,6 +89,11 @@ test('eventManager#destroy', t => {
     'WheelInput.destroy() should be called once');
   t.equal(keyInput.destroy.callCount, 1,
     'KeyInput.destroy() should be called once');
+
+  const emptyEventManager = new EventManager();
+  emptyEventManager.destroy();
+  t.pass('EventManager without elements can be destroyed');
+
   t.end();
 });
 
