@@ -111,17 +111,22 @@ export default class EventManager {
 
   // Tear down internal event management implementations.
   destroy() {
-    this.element.removeEventListener('contextmenu', preventDefault);
+    if (this.element) {
+      this.element.removeEventListener('contextmenu', preventDefault);
 
-    this.wheelInput.destroy();
-    this.moveInput.destroy();
-    this.keyInput.destroy();
-    this.manager.destroy();
+      // wheelInput etc. are created in setElement() and therefore
+      // cannot exist if there is no element
+      this.wheelInput.destroy();
+      this.moveInput.destroy();
+      this.keyInput.destroy();
+      this.manager.destroy();
 
-    this.wheelInput = null;
-    this.moveInput = null;
-    this.keyInput = null;
-    this.manager = null;
+      this.wheelInput = null;
+      this.moveInput = null;
+      this.keyInput = null;
+      this.manager = null;
+      this.element = null;
+    }
   }
 
   // Register an event handler function to be called on `event`.
