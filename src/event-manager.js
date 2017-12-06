@@ -114,6 +114,8 @@ export default class EventManager {
     if (this.element) {
       this.element.removeEventListener('contextmenu', preventDefault);
 
+      // wheelInput etc. are created in setElement() and therefore
+      // cannot exist if there is no element
       this.wheelInput.destroy();
       this.moveInput.destroy();
       this.keyInput.destroy();
