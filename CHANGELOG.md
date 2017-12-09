@@ -1,5 +1,8 @@
 # Change Log
 
+#### [1.0.0-alpha.2] - Dec 9
+- FIX: EventManager.destroy throws error if element is empty (#9)
+
 #### [1.0.0-alpha.1] - Dec 4
 - NEW: Make DOM element optional in EventManager constructor  (#8)
 
