@@ -35,6 +35,19 @@ import {
 
 import {whichButtons, getOffsetPosition} from './utils/event-utils';
 
+const DEFAULT_OPTIONS = {
+  // event handlers
+  events: null,
+  // custom recognizers
+  recognizers: null,
+  // Manager class
+  Manager,
+  // recognize right button gestures
+  rightButton: false,
+  // block scrolling - this is a legacy behavior and will be removed in the next version
+  legacyBlockScroll: true
+};
+
 function preventDefault(evt) {
   evt.preventDefault();
 }
@@ -45,7 +58,7 @@ function preventDefault(evt) {
 // Delegates gesture related event registration and handling to Hammer.js.
 export default class EventManager {
   constructor(element = null, options = {}) {
-    this.options = options;
+    this.options = Object.assign({}, DEFAULT_OPTIONS, options);
     this.eventHandlers = [];
 
     this._onBasicInput = this._onBasicInput.bind(this);
@@ -71,7 +84,7 @@ export default class EventManager {
     }
 
     const {options} = this;
-    const ManagerClass = options.Manager || Manager;
+    const ManagerClass = options.Manager;
 
     this.manager = new ManagerClass(element, {recognizers: options.recognizers || RECOGNIZERS})
       .on('hammer.input', this._onBasicInput);
@@ -92,7 +105,10 @@ export default class EventManager {
     // Handle events not handled by Hammer.js:
     // - mouse wheel
     // - pointer/touch/mouse move
-    this.wheelInput = new WheelInput(element, this._onOtherEvent, {enable: false});
+    this.wheelInput = new WheelInput(element, this._onOtherEvent, {
+      enable: false,
+      legacyBlockScroll: options.legacyBlockScroll
+    });
     this.moveInput = new MoveInput(element, this._onOtherEvent, {enable: false});
     this.keyInput = new KeyInput(element, this._onOtherEvent, {enable: false});
 

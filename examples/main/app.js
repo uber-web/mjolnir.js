@@ -42,7 +42,11 @@ class Root extends Component {
       }
     });
 
-    this._eventManager = new EventManager(null, {events: eventListeners, rightButton: true});
+    this._eventManager = new EventManager(null, {
+      events: eventListeners,
+      rightButton: true,
+      legacyBlockScroll: false
+    });
 
     this.state = {
       events: [],
@@ -67,6 +71,7 @@ class Root extends Component {
   }
 
   _handleEvent(evt) {
+    evt.preventDefault();
     const events = this.state.events.slice(0, 30);
     events.unshift(evt);
     this.setState({events});
