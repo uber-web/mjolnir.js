@@ -1,5 +1,11 @@
 # Change Log
 
+#### [TBD]
+- NEW: A new option `legacyBlockScroll` to EventManager that allows users to restore the default scroll behavior on wheel events
+
+#### [1.0.1] - Jan 29, 2018
+- FIX: Missing `dist-es6` in package
+
 #### [1.0.0] - Jan 9, 2018
 
 #### [1.0.0-alpha.2] - Dec 9, 2017
