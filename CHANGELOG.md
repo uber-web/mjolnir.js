@@ -1,6 +1,6 @@
 # Change Log
 
-#### [TBD]
+#### [1.1.0] - Apr 18, 2018
 - NEW: A new option `legacyBlockScroll` to EventManager that allows users to restore the default scroll behavior on wheel events
 
 #### [1.0.1] - Jan 29, 2018
