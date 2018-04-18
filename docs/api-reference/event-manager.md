@@ -39,6 +39,7 @@ Creates a new `EventManager` instance.
 *  `options.events` {Object} -  Map of {event name: handler} to register on init.
 *  `options.recognizers` - {Object}  Gesture recognizers from Hammer.js to register, as an Array in [Hammer.Recognizer format](http://hammerjs.github.io/api/#hammermanager)
 *  `options.rightButton` - {Boolean}  Recognizes click and drag from pressing the right mouse button. Default `false`. If turned on, the context menu will be disabled.
+*  `options.legacyBlockScroll` - {Boolean}  Blocks default page scroll behavior on wheel events. Default `true`. Set to `false` to enable scrolling. This option is for backward compatibility and will be removed in the next major release.
 
 
 ### destroy

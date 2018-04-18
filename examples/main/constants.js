@@ -49,7 +49,8 @@ export const EVENTS = [
   'swipeup',
   'swipedown',
   'keydown',
-  'keyup'
+  'keyup',
+  'wheel'
 ];
 
 export const INITIAL_OPTIONS = {
@@ -65,5 +66,6 @@ export const INITIAL_OPTIONS = {
   rotateend: true,
   panstart: true,
   panmove: true,
-  panend: true
+  panend: true,
+  wheel: true
 };
