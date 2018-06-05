@@ -41,11 +41,8 @@
 // Purpose: include this in your module to avoids adding dependencies on
 // micro modules like 'global' and 'is-browser';
 
-/* global process, window, global, document, navigator */
-const isBrowser =
-  typeof process !== 'object' ||
-  String(process) !== '[object process]' ||
-  process.browser;
+/* global window, global, document, navigator */
+import isBrowser from './is-browser';
 
 const userAgent = typeof navigator !== 'undefined' ?
   navigator.userAgent.toLowerCase() : '';
