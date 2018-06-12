@@ -18,7 +18,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import './key-input.spec';
-import './move-input.spec';
-import './wheel-input.spec';
-import './contextmenu-input.spec';
+const EVENT_TYPE = 'contextmenu';
+
+export default class ContextmenuInput {
+
+  constructor(element, callback, options = {}) {
+    this.element = element;
+    this.callback = callback;
+
+    this.options = Object.assign({enable: true}, options);
+
+    this.handleEvent = this.handleEvent.bind(this);
+    element.addEventListener('contextmenu', this.handleEvent);
+  }
+
+  destroy() {
+    this.element.removeEventListener('contextmenu', this.handleEvent);
+  }
+
+  handleEvent(event) {
+    this.callback({
+      type: EVENT_TYPE,
+      center: {
+        x: event.clientX,
+        y: event.clientY
+      },
+      srcEvent: event,
+      pointerType: 'mouse',
+      target: event.target
+    });
+
+    if (this.options.rightButton) {
+      event.preventDefault();
+    }
+  }
+}

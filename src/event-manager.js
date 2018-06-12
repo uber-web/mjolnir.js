@@ -23,6 +23,7 @@ import {Manager} from './utils/hammer';
 import WheelInput from './inputs/wheel-input';
 import MoveInput from './inputs/move-input';
 import KeyInput from './inputs/key-input';
+import ContextmenuInput from './inputs/contextmenu-input';
 
 import {
   BASIC_EVENT_ALIASES,
@@ -47,10 +48,6 @@ const DEFAULT_OPTIONS = {
   // block scrolling - this is a legacy behavior and will be removed in the next version
   legacyBlockScroll: true
 };
-
-function preventDefault(evt) {
-  evt.preventDefault();
-}
 
 // Unified API for subscribing to events about both
 // basic input events (e.g. 'mousemove', 'touchstart', 'wheel')
@@ -111,11 +108,9 @@ export default class EventManager {
     });
     this.moveInput = new MoveInput(element, this._onOtherEvent, {enable: false});
     this.keyInput = new KeyInput(element, this._onOtherEvent, {enable: false});
-
-    if (options.rightButton) {
-      // Block right click
-      element.addEventListener('contextmenu', preventDefault);
-    }
+    this.contextmenuInput = new ContextmenuInput(element, this._onOtherEvent, {
+      rightButton: options.rightButton
+    });
 
     // Register all existing events
     this.eventHandlers.forEach(({recognizerName, eventAlias, wrappedHandler}) => {
@@ -128,18 +123,18 @@ export default class EventManager {
   // Tear down internal event management implementations.
   destroy() {
     if (this.element) {
-      this.element.removeEventListener('contextmenu', preventDefault);
-
       // wheelInput etc. are created in setElement() and therefore
       // cannot exist if there is no element
       this.wheelInput.destroy();
       this.moveInput.destroy();
       this.keyInput.destroy();
+      this.contextmenuInput.destroy();
       this.manager.destroy();
 
       this.wheelInput = null;
       this.moveInput = null;
       this.keyInput = null;
+      this.contextmenuInput = null;
       this.manager = null;
       this.element = null;
     }

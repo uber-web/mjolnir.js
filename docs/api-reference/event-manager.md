@@ -118,6 +118,7 @@ Mouse event and pointer event names are interchangeable.
 - `'mouseup'` | `pointerup`
 - `'mouseleave'` | `pointerleave`
 - `'wheel'`
+- `'contextmenu'`
 
 
 ### Gesture events
