@@ -44,6 +44,8 @@ const DEFAULT_OPTIONS = {
   Manager,
   // recognize right button gestures
   rightButton: false,
+  // allow browser default touch action
+  touchAction: 'none',
   // block scrolling - this is a legacy behavior and will be removed in the next version
   legacyBlockScroll: true
 };
@@ -86,7 +88,10 @@ export default class EventManager {
     const {options} = this;
     const ManagerClass = options.Manager;
 
-    this.manager = new ManagerClass(element, {recognizers: options.recognizers || RECOGNIZERS})
+    this.manager = new ManagerClass(element, {
+      touchAction: options.touchAction,
+      recognizers: options.recognizers || RECOGNIZERS
+    })
       .on('hammer.input', this._onBasicInput);
 
     if (!options.recognizers) {
