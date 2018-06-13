@@ -42,7 +42,7 @@
 // micro modules like 'global' and 'is-browser';
 
 /* global window, global, document, navigator */
-import isBrowser from './is-browser';
+const isBrowser = require('./is-browser').default;
 
 const userAgent = typeof navigator !== 'undefined' ?
   navigator.userAgent.toLowerCase() : '';
