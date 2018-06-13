@@ -45,6 +45,7 @@ const DEFAULT_OPTIONS = {
   // recognize right button gestures
   rightButton: false,
   // allow browser default touch action
+  // https://github.com/uber/react-map-gl/issues/506
   touchAction: 'none',
   // block scrolling - this is a legacy behavior and will be removed in the next version
   legacyBlockScroll: true
