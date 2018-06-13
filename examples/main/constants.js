@@ -20,6 +20,7 @@
 
 export const EVENTS = [
   'click',
+  'contextmenu',
   'pointerdown',
   'pointermove',
   'pointerup',
