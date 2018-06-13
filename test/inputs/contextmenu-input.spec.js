@@ -25,10 +25,10 @@ import {spy, createEventRegistrarMock} from '../test-utils';
 test('contextmenuInput#constructor', t => {
   const eventRegistrar = createEventRegistrarMock();
   let contextmenuInput = new ContextmenuInput(eventRegistrar);
-  t.ok(contextmenuInput, 'WheelInput created without optional params');
+  t.ok(contextmenuInput, 'ContextmenuInput created without optional params');
 
   const addELSpy = spy(eventRegistrar, 'addEventListener');
-  contextmenuInput = new ContextmenuInput(eventRegistrar);
+  contextmenuInput = new ContextmenuInput(eventRegistrar, {rightButton: true});
   t.equal(addELSpy.callCount, 1,
     'should call addEventListener once');
   t.end();
