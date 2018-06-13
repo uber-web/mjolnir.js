@@ -1,5 +1,9 @@
 # Change Log
 
+#### [1.2.0] - Jun 13, 2018
+- NEW: A new option `touchAction` to EventManager that allows users to customize browser touch actions
+- NEW: Supports new event `contextmenu`
+
 #### [1.1.0] - Apr 18, 2018
 - NEW: A new option `legacyBlockScroll` to EventManager that allows users to restore the default scroll behavior on wheel events
 
