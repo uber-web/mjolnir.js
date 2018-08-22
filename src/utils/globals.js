@@ -42,15 +42,17 @@
 // micro modules like 'global' and 'is-browser';
 
 /* global window, global, document, navigator */
-const isBrowser = require('./is-browser').default;
+export {default as isBrowser} from './is-browser';
 
-const userAgent = typeof navigator !== 'undefined' ?
+export const userAgent = typeof navigator !== 'undefined' ?
   navigator.userAgent.toLowerCase() : '';
 
-module.exports = {
-  window: typeof window !== 'undefined' ? window : global,
-  global: typeof global !== 'undefined' ? global : window,
-  document: typeof document !== 'undefined' ? document : {},
-  isBrowser,
-  userAgent
+const window_ = typeof window !== 'undefined' ? window : global;
+const global_ = typeof global !== 'undefined' ? global : window;
+const document_ = typeof document !== 'undefined' ? document : {};
+
+export {
+  window_ as window,
+  global_ as global,
+  document_ as document
 };
