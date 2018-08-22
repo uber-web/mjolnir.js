@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {isBrowser} from './globals';
+import isBrowser from './is-browser';
 import {enhancePointerEventInput, enhanceMouseInput} from './hammer-overrides';
 
 let hammerjs;
