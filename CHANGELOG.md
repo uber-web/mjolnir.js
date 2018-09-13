@@ -1,5 +1,8 @@
 # Change Log
 
+#### [1.2.2] - Sep 12, 2018
+- FIX: Remove commonjs to fix the problem with cjs/esm interop (#20)
+
 #### [1.2.0] - Jun 13, 2018
 - NEW: A new option `touchAction` to EventManager that allows users to customize browser touch actions
 - NEW: Supports new event `contextmenu`
