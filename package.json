@@ -15,19 +15,18 @@
     "url": "https://github.com/uber-web/mjolnir.js"
   },
   "license": "MIT",
-  "main": "dist/index.js",
-  "module": "dist-es6/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "files": [
     "src",
-    "dist",
-    "dist-es6"
+    "dist"
   ],
   "scripts": {
     "start": "(cd examples/main && (path-exists node_modules || npm i) && npm run start-local)",
-    "build": "npm run clean && npm run build-es5 && npm run build-es6",
-    "build-es5": "mkdir -p dist && babel src --out-dir dist --plugins=transform-es2015-modules-commonjs,transform-runtime --source-maps inline",
-    "build-es6": "mkdir -p dist-es6 && babel src --out-dir dist-es6 --source-maps inline",
-    "clean": "rm -fr dist/* dist-es6/*",
+    "build": "npm run clean && npm run build-cjs && npm run build-esm",
+    "build-cjs": "mkdir -p dist/cjs && NODE_ENV=cjs babel src --out-dir dist/cjs",
+    "build-esm": "mkdir -p dist/esm && NODE_ENV=esm babel src --out-dir dist/esm",
+    "clean": "rm -fr dist/*",
     "lint": "eslint src examples test",
     "test": "npm run lint && node test/node.js",
     "publish-prod": "npm run build && npm run test && npm publish",
@@ -37,19 +36,19 @@
     "test"
   ],
   "dependencies": {
+    "@babel/runtime": "^7.0.0",
     "hammerjs": "^2.0.8"
   },
   "devDependencies": {
-    "babel-cli": "^6.22.2",
-    "babel-core": "^6.22.1",
-    "babel-eslint": "^6.0.0",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.24.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-es2015": "^6.18",
-    "eslint": "^3.0.0",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.1",
+    "@babel/plugin-transform-runtime": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "babel-eslint": "^9.0.0",
+    "eslint": "^5.5.0",
     "eslint-config-uber-es2015": "^3.0.0",
     "eslint-config-uber-jsx": "^3.0.0",
-    "eslint-plugin-react": "~6.7.0",
+    "eslint-plugin-react": "~7.11.1",
     "module-alias": "^2.0.0",
     "pre-commit": "^1.2.2",
     "reify": "^0.4.4",
