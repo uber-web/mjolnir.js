@@ -28,7 +28,7 @@ test('moveInput#constructor', t => {
   t.ok(moveInput, 'MoveInput created without optional params');
 
   const events = ['foo', 'bar'];
-  const numMouseEvents = 4;   // MOUSE_EVENTS.length
+  const numMouseEvents = 4; // MOUSE_EVENTS.length
   const addELSpy = spy(eventRegistrar, 'addEventListener');
   moveInput = new MoveInput(eventRegistrar, () => {}, {events});
   t.equal(addELSpy.callCount, events.length + numMouseEvents,
@@ -39,7 +39,7 @@ test('moveInput#constructor', t => {
 test('moveInput#destroy', t => {
   const eventRegistrar = createEventRegistrarMock();
   const events = ['foo', 'bar'];
-  const numMouseEvents = 4;   // MOUSE_EVENTS.length
+  const numMouseEvents = 4; // MOUSE_EVENTS.length
   const removeELSpy = spy(eventRegistrar, 'removeEventListener');
   const moveInput = new MoveInput(eventRegistrar, () => {}, {events});
   moveInput.destroy();

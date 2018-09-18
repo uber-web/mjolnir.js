@@ -28,7 +28,7 @@ test('keyInput#constructor', t => {
   t.ok(keyInput, 'KeyInput created without optional params');
 
   const events = ['foo', 'bar'];
-  const numKeyEvents = 2;   // KEY_EVENTS.length
+  const numKeyEvents = 2; // KEY_EVENTS.length
   const addELSpy = spy(eventRegistrar, 'addEventListener');
   keyInput = new KeyInput(eventRegistrar, () => {}, {events});
   t.equal(addELSpy.callCount, events.length + numKeyEvents,
@@ -39,7 +39,7 @@ test('keyInput#constructor', t => {
 test('keyInput#destroy', t => {
   const eventRegistrar = createEventRegistrarMock();
   const events = ['foo', 'bar'];
-  const numKeyEvents = 2;   // KEY_EVENTS.length
+  const numKeyEvents = 2; // KEY_EVENTS.length
   const removeELSpy = spy(eventRegistrar, 'removeEventListener');
   const keyInput = new KeyInput(eventRegistrar, () => {}, {events});
   keyInput.destroy();
