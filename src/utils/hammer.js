@@ -18,14 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import isBrowser from './is-browser';
-import {enhancePointerEventInput, enhanceMouseInput} from './hammer-overrides';
-
-let hammerjs;
-if (isBrowser) {
-  hammerjs = require('hammerjs');
-}
-
 // Hammer.Manager mock for use in environments without `document` / `window`.
 function HammerManagerMock(m) {
   const instance = {};
@@ -39,11 +31,6 @@ function HammerManagerMock(m) {
   return instance;
 }
 
-if (hammerjs) {
-  enhancePointerEventInput(hammerjs.PointerEventInput);
-  enhanceMouseInput(hammerjs.MouseInput);
-}
+export const Manager = HammerManagerMock;
 
-export const Manager = hammerjs ? hammerjs.Manager : HammerManagerMock;
-
-export default hammerjs;
+export default null;

@@ -39,7 +39,7 @@
 // THE SOFTWARE.
 
 // Purpose: include this in your module to avoids adding dependencies on
-// micro modules like 'global' and 'is-browser';
+// micro modules like 'global'
 
 /* global window, global, document, navigator */
 export const userAgent = typeof navigator !== 'undefined' ?
