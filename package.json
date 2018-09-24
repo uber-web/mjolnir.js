@@ -17,6 +17,10 @@
   "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
+  "browser": {
+    "./dist/cjs/utils/hammer.js": "./dist/cjs/utils/hammer.browser.js",
+    "./dist/esm/utils/hammer.js": "./dist/esm/utils/hammer.browser.js"
+  },
   "files": [
     "src",
     "dist"
