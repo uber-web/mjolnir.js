@@ -1,5 +1,8 @@
 # Change Log
 
+#### [2.0.0-alpha.1] - Sep 24, 2018
+- NEW: Provide static browser/node targets (#22)
+
 #### [1.2.2] - Sep 12, 2018
 - FIX: Remove commonjs to fix the problem with cjs/esm interop (#20)
 
