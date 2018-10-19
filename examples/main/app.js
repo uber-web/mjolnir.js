@@ -31,20 +31,21 @@ class Root extends Component {
     super(props);
 
     this._onLoad = this._onLoad.bind(this);
+    this._onLoadRedBox = this._onLoadRedBox.bind(this);
     this._onUpdateOption = this._onUpdateOption.bind(this);
     this._handleEvent = this._handleEvent.bind(this);
     this._renderCheckbox = this._renderCheckbox.bind(this);
 
-    const eventListeners = {};
+    this.eventListeners = {};
     EVENTS.forEach(eventName => {
       if (INITIAL_OPTIONS[eventName]) {
-        eventListeners[eventName] = this._handleEvent;
+        this.eventListeners[eventName] = this._handleEvent;
       }
     });
 
     this._eventManager = new EventManager(null, {
-      events: eventListeners,
-      rightButton: false,
+      events: this.eventListeners,
+      rightButton: true,
       legacyBlockScroll: false
     });
 
@@ -58,12 +59,23 @@ class Root extends Component {
     this._eventManager.setElement(ref);
   }
 
+  _onLoadRedBox(ref) {
+    if (ref) {
+      this._eventManager.on(this.eventListeners, ref);
+    }
+    this._redBox = ref;
+  }
+
   _onUpdateOption(evt) {
     const {name, checked} = evt.target;
     if (checked) {
+      this.eventListeners[name] = this._handleEvent;
       this._eventManager.on(name, this._handleEvent);
+      this._eventManager.on(name, this._handleEvent, this._redBox);
     } else {
+      delete this.eventListeners[name];
       this._eventManager.off(name, this._handleEvent);
+      this._eventManager.off(name, this._handleEvent, this._redBox);
     }
     this.setState({
       options: Object.assign({}, this.state.options, {[name]: checked})
@@ -72,6 +84,7 @@ class Root extends Component {
 
   _handleEvent(evt) {
     evt.preventDefault();
+    evt.stopPropagation();
     const events = this.state.events.slice(0, 30);
     events.unshift(evt);
     this.setState({events});
@@ -97,7 +110,8 @@ class Root extends Component {
       evt.key,
       evt.leftButton && 'left',
       evt.middleButton && 'middle',
-      evt.rightButton && 'right'
+      evt.rightButton && 'right',
+      evt.srcEvent.target.id
     ].filter(Boolean);
 
     return (
@@ -112,6 +126,9 @@ class Root extends Component {
 
     return (
       <div id="container" ref={this._onLoad}>
+
+        <div id="red-box" ref={this._onLoadRedBox} />
+
         <table>
           <tbody>
             {events.map(this._renderEvent)}

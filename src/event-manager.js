@@ -25,6 +25,8 @@ import MoveInput from './inputs/move-input';
 import KeyInput from './inputs/key-input';
 import ContextmenuInput from './inputs/contextmenu-input';
 
+import EventHandler from './utils/event-handler';
+
 import {
   BASIC_EVENT_ALIASES,
   EVENT_RECOGNIZER_MAP,
@@ -33,8 +35,6 @@ import {
   RECOGNIZER_COMPATIBLE_MAP,
   RECOGNIZER_FALLBACK_MAP
 } from './constants';
-
-import {whichButtons, getOffsetPosition} from './utils/event-utils';
 
 const DEFAULT_OPTIONS = {
   // event handlers
@@ -59,7 +59,7 @@ const DEFAULT_OPTIONS = {
 export default class EventManager {
   constructor(element = null, options = {}) {
     this.options = Object.assign({}, DEFAULT_OPTIONS, options);
-    this.eventHandlers = [];
+    this.eventHandlers = new Map();
 
     this._onBasicInput = this._onBasicInput.bind(this);
     this._onOtherEvent = this._onOtherEvent.bind(this);
@@ -119,11 +119,13 @@ export default class EventManager {
     });
 
     // Register all existing events
-    this.eventHandlers.forEach(({recognizerName, eventAlias, wrappedHandler}) => {
-      // Enable recognizer for this event.
-      this._toggleRecognizer(recognizerName, true);
-      this.manager.on(eventAlias, wrappedHandler);
-    });
+    for (const [eventAlias, eventHandler] of this.eventHandlers) {
+      if (!eventHandler.isEmpty()) {
+        // Enable recognizer for this event.
+        this._toggleRecognizer(eventHandler.recognizerName, true);
+        this.manager.on(eventAlias, eventHandler.handleEvent);
+      }
+    }
   }
 
   // Tear down internal event management implementations.
@@ -211,116 +213,57 @@ export default class EventManager {
   /**
    * Process the event registration for a single event + handler.
    */
-  _addEventHandler(event, handler, srcElement = null) {
+  _addEventHandler(event, handler, srcElement) {
     const {manager, eventHandlers} = this;
-    const wrappedHandler = this._wrapEventHandler(event, handler, srcElement);
     // Alias to a recognized gesture as necessary.
     const eventAlias = GESTURE_EVENT_ALIASES[event] || event;
-    // Get recognizer for this event
-    const recognizerName = EVENT_RECOGNIZER_MAP[eventAlias] || eventAlias;
-    // Enable recognizer for this event.
-    this._toggleRecognizer(recognizerName, true);
 
-    // Find ancestors
-    const ancestorEventHandlers = eventHandlers.filter(entry => {
-      return entry.eventAlias === eventAlias &&
-        entry.srcElement !== srcElement &&
-        (!entry.srcElement || entry.srcElement.contains(srcElement));
-    });
-
-    // Save wrapped handler
-    eventHandlers.push({event, eventAlias, recognizerName, srcElement,
-      handler, wrappedHandler});
-
-    // Sort handlers by DOM hierarchy
-    // So the event will always fire first on child nodes
-    ancestorEventHandlers.forEach(entry => manager.off(eventAlias, entry.wrappedHandler));
-    if (manager) {
-      manager.on(eventAlias, wrappedHandler);
+    let eventHandler = eventHandlers.get(eventAlias);
+    if (!eventHandler) {
+      eventHandler = new EventHandler(this);
+      eventHandlers.set(eventAlias, eventHandler);
+      // Enable recognizer for this event.
+      const recognizerName = EVENT_RECOGNIZER_MAP[eventAlias] || eventAlias;
+      eventHandler.recognizerName = recognizerName;
+      this._toggleRecognizer(recognizerName, true);
+      // Listen to the event
+      if (manager) {
+        manager.on(eventAlias, eventHandler.handleEvent);
+      }
     }
-    ancestorEventHandlers.forEach(entry => manager.on(eventAlias, entry.wrappedHandler));
+    eventHandler.add(event, handler, srcElement);
   }
 
   /**
    * Process the event deregistration for a single event + handler.
    */
   _removeEventHandler(event, handler) {
-    const {manager, eventHandlers} = this;
-    let eventHandlerRemoved = false;
+    const {eventHandlers} = this;
+    // Alias to a recognized gesture as necessary.
+    const eventAlias = GESTURE_EVENT_ALIASES[event] || event;
 
-    // Find saved handler if any.
-    for (let i = eventHandlers.length; i--;) {
-      const entry = eventHandlers[i];
-      if (entry.event === event && entry.handler === handler) {
-        // Deregister event handler.
-        if (manager) {
-          manager.off(entry.eventAlias, entry.wrappedHandler);
-        }
-        // Delete saved handler
-        eventHandlers.splice(i, 1);
-        eventHandlerRemoved = true;
-      }
+    const eventHandler = eventHandlers.get(eventAlias);
+
+    if (!eventHandler) {
+      return;
     }
 
-    if (eventHandlerRemoved) {
-      // Alias to a recognized gesture as necessary.
-      const eventAlias = GESTURE_EVENT_ALIASES[event] || event;
-      // Get recognizer for this event
-      const recognizerName = EVENT_RECOGNIZER_MAP[eventAlias] || eventAlias;
+    eventHandler.remove(event, handler);
+
+    if (eventHandler.isEmpty()) {
+      const {recognizerName} = eventHandler;
       // Disable recognizer if no more handlers are attached to its events
-      const isRecognizerUsed = eventHandlers.find(
-        entry => entry.recognizerName === recognizerName
-      );
+      let isRecognizerUsed = false;
+      for (const eh of eventHandlers.values()) {
+        if (eh.recognizerName === recognizerName && !eh.isEmpty()) {
+          isRecognizerUsed = true;
+          break;
+        }
+      }
       if (!isRecognizerUsed) {
         this._toggleRecognizer(recognizerName, false);
       }
     }
-  }
-
-  /**
-   * Returns an event handler that aliases events and add props before passing
-   * to the real handler.
-   */
-  _wrapEventHandler(type, handler, srcElement) {
-    return event => {
-      let {mjolnirEvent} = event;
-
-      if (!mjolnirEvent) {
-        mjolnirEvent = this._normalizeEvent(event);
-        event.mjolnirEvent = mjolnirEvent;
-      }
-
-      const isStopped = mjolnirEvent.handled && mjolnirEvent.handled !== srcElement;
-
-      if (!isStopped) {
-        const isFromDecendant = !srcElement || srcElement.contains(event.srcEvent.target);
-        if (isFromDecendant) {
-          handler(Object.assign({}, mjolnirEvent, {
-            type,
-            stopPropagation: () => {
-              if (!mjolnirEvent.handled) {
-                mjolnirEvent.handled = srcElement;
-              }
-            }
-          }));
-        }
-      }
-    };
-  }
-
-  /**
-   * Normalizes hammerjs and custom events to have predictable fields.
-   */
-  _normalizeEvent(event) {
-    const {element} = this;
-
-    return Object.assign({}, event,
-      whichButtons(event),
-      getOffsetPosition(event, element),
-      {
-        handled: false,
-        rootElement: element
-      });
   }
 
   /**
