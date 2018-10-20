@@ -111,7 +111,7 @@ class Root extends Component {
       evt.leftButton && 'left',
       evt.middleButton && 'middle',
       evt.rightButton && 'right',
-      evt.srcEvent.target.id
+      evt.target.id
     ].filter(Boolean);
 
     return (
