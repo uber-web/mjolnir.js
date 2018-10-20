@@ -198,6 +198,14 @@ export default class EventManager {
           if (enabled) {
             // Wait for this recognizer to fail
             otherRecognizer.requireFailure(name);
+            /**
+             * This seems to be a bug in hammerjs:
+             * requireFailure() adds both ways
+             * dropRequireFailure() only drops one way
+             * https://github.com/hammerjs/hammer.js/blob/master/src/recognizerjs/
+               recognizer-constructor.js#L136
+             */
+            recognizer.dropRequireFailure(otherName);
           } else {
             // Do not wait for this recognizer to fail
             otherRecognizer.dropRequireFailure(name);
