@@ -42,7 +42,8 @@ const LOCAL_DEVELOPMENT_CONFIG = {
   resolve: {
     alias: {
       // Imports the mjolnir.js library from the src directory in this repo
-      'mjolnir.js': SRC_DIR
+      'mjolnir.js': SRC_DIR,
+      './utils/hammer': resolve(SRC_DIR, './utils/hammer.browser')
     }
   },
   module: {
