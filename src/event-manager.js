@@ -186,7 +186,7 @@ export default class EventManager {
       return;
     }
     const recognizer = manager.get(name);
-    if (recognizer) {
+    if (recognizer && recognizer.options.enable !== enabled) {
       recognizer.set({enable: enabled});
 
       const fallbackRecognizers = RECOGNIZER_FALLBACK_MAP[name];
@@ -231,14 +231,13 @@ export default class EventManager {
       eventRegistrar = new EventRegistrar(this);
       events.set(eventAlias, eventRegistrar);
       // Enable recognizer for this event.
-      const recognizerName = EVENT_RECOGNIZER_MAP[eventAlias] || eventAlias;
-      eventRegistrar.recognizerName = recognizerName;
-      this._toggleRecognizer(recognizerName, true);
+      eventRegistrar.recognizerName = EVENT_RECOGNIZER_MAP[eventAlias] || eventAlias;
       // Listen to the event
       if (manager) {
         manager.on(eventAlias, eventRegistrar.handleEvent);
       }
     }
+    this._toggleRecognizer(eventRegistrar.recognizerName, true);
     eventRegistrar.add(event, handler, srcElement);
   }
 

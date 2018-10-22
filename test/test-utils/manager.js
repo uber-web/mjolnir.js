@@ -9,6 +9,7 @@ export class HammerManagerMock {
 
   get() {
     return {
+      options: {},
       set: noop,
       recognizeWith: noop,
       dropRecognizeWith: noop,
