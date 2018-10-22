@@ -1,1 +1,1 @@
-import './event-handler.spec';
+import './event-registrar.spec';

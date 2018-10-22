@@ -1,6 +1,6 @@
 import {whichButtons, getOffsetPosition} from './event-utils';
 
-export default class EventHandler {
+export default class EventRegistrar {
   constructor(eventManager) {
     this.eventManager = eventManager;
     this.handlers = [];

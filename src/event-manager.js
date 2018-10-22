@@ -25,7 +25,7 @@ import MoveInput from './inputs/move-input';
 import KeyInput from './inputs/key-input';
 import ContextmenuInput from './inputs/contextmenu-input';
 
-import EventHandler from './utils/event-handler';
+import EventRegistrar from './utils/event-registrar';
 
 import {
   BASIC_EVENT_ALIASES,
@@ -59,7 +59,7 @@ const DEFAULT_OPTIONS = {
 export default class EventManager {
   constructor(element = null, options = {}) {
     this.options = Object.assign({}, DEFAULT_OPTIONS, options);
-    this.eventHandlers = new Map();
+    this.events = new Map();
 
     this._onBasicInput = this._onBasicInput.bind(this);
     this._onOtherEvent = this._onOtherEvent.bind(this);
@@ -119,11 +119,11 @@ export default class EventManager {
     });
 
     // Register all existing events
-    for (const [eventAlias, eventHandler] of this.eventHandlers) {
-      if (!eventHandler.isEmpty()) {
+    for (const [eventAlias, eventRegistrar] of this.events) {
+      if (!eventRegistrar.isEmpty()) {
         // Enable recognizer for this event.
-        this._toggleRecognizer(eventHandler.recognizerName, true);
-        this.manager.on(eventAlias, eventHandler.handleEvent);
+        this._toggleRecognizer(eventRegistrar.recognizerName, true);
+        this.manager.on(eventAlias, eventRegistrar.handleEvent);
       }
     }
   }
@@ -214,47 +214,47 @@ export default class EventManager {
    * Process the event registration for a single event + handler.
    */
   _addEventHandler(event, handler, srcElement) {
-    const {manager, eventHandlers} = this;
+    const {manager, events} = this;
     // Alias to a recognized gesture as necessary.
     const eventAlias = GESTURE_EVENT_ALIASES[event] || event;
 
-    let eventHandler = eventHandlers.get(eventAlias);
-    if (!eventHandler) {
-      eventHandler = new EventHandler(this);
-      eventHandlers.set(eventAlias, eventHandler);
+    let eventRegistrar = events.get(eventAlias);
+    if (!eventRegistrar) {
+      eventRegistrar = new EventRegistrar(this);
+      events.set(eventAlias, eventRegistrar);
       // Enable recognizer for this event.
       const recognizerName = EVENT_RECOGNIZER_MAP[eventAlias] || eventAlias;
-      eventHandler.recognizerName = recognizerName;
+      eventRegistrar.recognizerName = recognizerName;
       this._toggleRecognizer(recognizerName, true);
       // Listen to the event
       if (manager) {
-        manager.on(eventAlias, eventHandler.handleEvent);
+        manager.on(eventAlias, eventRegistrar.handleEvent);
       }
     }
-    eventHandler.add(event, handler, srcElement);
+    eventRegistrar.add(event, handler, srcElement);
   }
 
   /**
    * Process the event deregistration for a single event + handler.
    */
   _removeEventHandler(event, handler) {
-    const {eventHandlers} = this;
+    const {events} = this;
     // Alias to a recognized gesture as necessary.
     const eventAlias = GESTURE_EVENT_ALIASES[event] || event;
 
-    const eventHandler = eventHandlers.get(eventAlias);
+    const eventRegistrar = events.get(eventAlias);
 
-    if (!eventHandler) {
+    if (!eventRegistrar) {
       return;
     }
 
-    eventHandler.remove(event, handler);
+    eventRegistrar.remove(event, handler);
 
-    if (eventHandler.isEmpty()) {
-      const {recognizerName} = eventHandler;
+    if (eventRegistrar.isEmpty()) {
+      const {recognizerName} = eventRegistrar;
       // Disable recognizer if no more handlers are attached to its events
       let isRecognizerUsed = false;
-      for (const eh of eventHandlers.values()) {
+      for (const eh of events.values()) {
         if (eh.recognizerName === recognizerName && !eh.isEmpty()) {
           isRecognizerUsed = true;
           break;

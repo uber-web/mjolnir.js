@@ -19,67 +19,67 @@
 // THE SOFTWARE.
 
 import test from 'tape-catch';
-import EventHandler from 'mjolnir.js/utils/event-handler';
+import EventRegistrar from 'mjolnir.js/utils/event-registrar';
 import {createEventRegistrarMock} from '../test-utils';
 
-test('EventHandler#add, remove', t => {
-  const eventHandler = new EventHandler();
+test('EventRegistrar#add, remove', t => {
+  const eventRegistrar = new EventRegistrar();
   const handler1 = () => {};
   const handler2 = () => {};
 
-  t.ok(eventHandler.handlers, 'event handler is created');
-  t.ok(eventHandler.isEmpty(), 'event handler is empty');
-  t.is(eventHandler.handlersByElement.size, 0, 'event elements map is empty');
+  t.ok(eventRegistrar.handlers, 'event handler is created');
+  t.ok(eventRegistrar.isEmpty(), 'event handler is empty');
+  t.is(eventRegistrar.handlersByElement.size, 0, 'event elements map is empty');
 
-  eventHandler.add('click', handler1);
+  eventRegistrar.add('click', handler1);
 
-  t.notOk(eventHandler.isEmpty(), 'event handler is not empty');
-  t.is(eventHandler.handlers.length, 1, 'event handler is added');
+  t.notOk(eventRegistrar.isEmpty(), 'event handler is not empty');
+  t.is(eventRegistrar.handlers.length, 1, 'event handler is added');
   t.deepEquals(
-    eventHandler.handlers[0],
+    eventRegistrar.handlers[0],
     {type: 'click', handler: handler1, srcElement: 'root'},
     'event handler is added'
   );
   t.deepEquals(
-    eventHandler.handlersByElement.get('root'),
+    eventRegistrar.handlersByElement.get('root'),
     [{type: 'click', handler: handler1, srcElement: 'root'}],
     'event elements map is updated'
   );
 
-  eventHandler.add('click', handler2, 'child-0');
+  eventRegistrar.add('click', handler2, 'child-0');
 
-  t.is(eventHandler.handlers.length, 2, 'event handler is added');
+  t.is(eventRegistrar.handlers.length, 2, 'event handler is added');
   t.deepEquals(
-    eventHandler.handlers[1],
+    eventRegistrar.handlers[1],
     {type: 'click', handler: handler2, srcElement: 'child-0'},
     'event handler is added'
   );
   t.deepEquals(
-    eventHandler.handlersByElement.get('child-0'),
+    eventRegistrar.handlersByElement.get('child-0'),
     [{type: 'click', handler: handler2, srcElement: 'child-0'}],
     'event elements map is updated'
   );
 
-  eventHandler.remove('click', handler1);
+  eventRegistrar.remove('click', handler1);
 
-  t.is(eventHandler.handlers.length, 1, 'event handler is removed');
+  t.is(eventRegistrar.handlers.length, 1, 'event handler is removed');
   t.deepEquals(
-    eventHandler.handlers[0],
+    eventRegistrar.handlers[0],
     {type: 'click', handler: handler2, srcElement: 'child-0'},
     'event handler is removed'
   );
-  t.notOk(eventHandler.handlersByElement.has('root'), 'event elements map is updated');
+  t.notOk(eventRegistrar.handlersByElement.has('root'), 'event elements map is updated');
 
-  eventHandler.remove('click', handler2);
+  eventRegistrar.remove('click', handler2);
 
-  t.ok(eventHandler.isEmpty(), 'event handler is empty');
-  t.notOk(eventHandler.handlersByElement.has('child-0'), 'event elements map is updated');
+  t.ok(eventRegistrar.isEmpty(), 'event handler is empty');
+  t.notOk(eventRegistrar.handlersByElement.has('child-0'), 'event elements map is updated');
 
   t.end();
 });
 
-test('EventHandler#normalizeEvent', t => {
-  const eventRegistrar = createEventRegistrarMock();
+test('EventRegistrar#normalizeEvent', t => {
+  const elementMock = createEventRegistrarMock();
   const eventMock = {
     type: 'foo',
     srcEvent: {
@@ -90,14 +90,14 @@ test('EventHandler#normalizeEvent', t => {
   };
 
   let normalizedEvent;
-  const eventHandler = new EventHandler({element: eventRegistrar});
-  eventHandler.add('foo', evt => {
+  const eventRegistrar = new EventRegistrar({element: elementMock});
+  eventRegistrar.add('foo', evt => {
     normalizedEvent = evt;
   });
 
-  eventHandler.handleEvent(eventMock);
+  eventRegistrar.handleEvent(eventMock);
 
-  t.is(normalizedEvent.rootElement, eventRegistrar, 'rootElement is set');
+  t.is(normalizedEvent.rootElement, elementMock, 'rootElement is set');
   t.ok(normalizedEvent.center, 'center is populated');
   t.ok(normalizedEvent.offsetCenter, 'offsetCenter is populated');
   t.is(normalizedEvent.handled, false, 'event marked as not handled');
@@ -105,7 +105,7 @@ test('EventHandler#normalizeEvent', t => {
   t.end();
 });
 
-test('EventHandler#propagation', t => {
+test('EventRegistrar#propagation', t => {
   const rootNode = createEventRegistrarMock({
     id: 'root', children: [
       {id: 'child-0', children: [
@@ -115,7 +115,7 @@ test('EventHandler#propagation', t => {
       {id: 'child-1'}
     ]
   });
-  const eventHandler = new EventHandler({element: rootNode});
+  const eventRegistrar = new EventRegistrar({element: rootNode});
 
   const handlerCalls = [];
 
@@ -127,13 +127,13 @@ test('EventHandler#propagation', t => {
   };
 
   // Should not be called (propagation stopped)
-  eventHandler.add('foo', fooHandler('foo@root'));
+  eventRegistrar.add('foo', fooHandler('foo@root'));
   // Should be called
-  eventHandler.add('foo', fooHandler('foo@child-0', true), rootNode.find('child-0'));
-  eventHandler.add('foo', fooHandler('foo@grandchild-00'), rootNode.find('grandchild-00'));
-  eventHandler.add('foo', fooHandler('foo@child-0:2'), rootNode.find('child-0'));
+  eventRegistrar.add('foo', fooHandler('foo@child-0', true), rootNode.find('child-0'));
+  eventRegistrar.add('foo', fooHandler('foo@grandchild-00'), rootNode.find('grandchild-00'));
+  eventRegistrar.add('foo', fooHandler('foo@child-0:2'), rootNode.find('child-0'));
   // Should not be called (not on propagation path)
-  eventHandler.add('foo', fooHandler('foo@grandchild-01'), rootNode.find('grandchild-01'));
+  eventRegistrar.add('foo', fooHandler('foo@grandchild-01'), rootNode.find('grandchild-01'));
 
   const eventMock = {
     type: 'foo',
@@ -141,7 +141,7 @@ test('EventHandler#propagation', t => {
       target: rootNode.find('grandchild-00')
     }
   };
-  eventHandler.handleEvent(eventMock);
+  eventRegistrar.handleEvent(eventMock);
 
   t.deepEquals(handlerCalls, ['foo@grandchild-00', 'foo@child-0', 'foo@child-0:2'],
     'propagated correctly');
