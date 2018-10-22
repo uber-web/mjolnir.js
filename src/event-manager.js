@@ -186,7 +186,7 @@ export default class EventManager {
       return;
     }
     const recognizer = manager.get(name);
-    if (recognizer) {
+    if (recognizer && recognizer.options.enable !== enabled) {
       recognizer.set({enable: enabled});
 
       const fallbackRecognizers = RECOGNIZER_FALLBACK_MAP[name];
@@ -198,6 +198,14 @@ export default class EventManager {
           if (enabled) {
             // Wait for this recognizer to fail
             otherRecognizer.requireFailure(name);
+            /**
+             * This seems to be a bug in hammerjs:
+             * requireFailure() adds both ways
+             * dropRequireFailure() only drops one way
+             * https://github.com/hammerjs/hammer.js/blob/master/src/recognizerjs/
+               recognizer-constructor.js#L136
+             */
+            recognizer.dropRequireFailure(otherName);
           } else {
             // Do not wait for this recognizer to fail
             otherRecognizer.dropRequireFailure(name);
@@ -223,14 +231,13 @@ export default class EventManager {
       eventRegistrar = new EventRegistrar(this);
       events.set(eventAlias, eventRegistrar);
       // Enable recognizer for this event.
-      const recognizerName = EVENT_RECOGNIZER_MAP[eventAlias] || eventAlias;
-      eventRegistrar.recognizerName = recognizerName;
-      this._toggleRecognizer(recognizerName, true);
+      eventRegistrar.recognizerName = EVENT_RECOGNIZER_MAP[eventAlias] || eventAlias;
       // Listen to the event
       if (manager) {
         manager.on(eventAlias, eventRegistrar.handleEvent);
       }
     }
+    this._toggleRecognizer(eventRegistrar.recognizerName, true);
     eventRegistrar.add(event, handler, srcElement);
   }
 
