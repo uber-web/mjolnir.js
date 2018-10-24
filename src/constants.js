@@ -70,6 +70,8 @@ export const INPUT_EVENT_TYPES = {
     'mousedown',
     'mousemove',
     'mouseup',
+    'mouseover',
+    'mouseout',
     'mouseleave'
   ],
   WHEEL_EVENTS: [
@@ -131,5 +133,7 @@ export const GESTURE_EVENT_ALIASES = {
   mousedown: 'pointerdown',
   mousemove: 'pointermove',
   mouseup: 'pointerup',
+  mouseover: 'pointerover',
+  mouseout: 'pointerout',
   mouseleave: 'pointerleave'
 };

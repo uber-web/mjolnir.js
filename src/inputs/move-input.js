@@ -22,6 +22,8 @@ import {INPUT_EVENT_TYPES} from '../constants';
 
 const {MOUSE_EVENTS} = INPUT_EVENT_TYPES;
 const MOVE_EVENT_TYPE = 'pointermove';
+const OVER_EVENT_TYPE = 'pointerover';
+const OUT_EVENT_TYPE = 'pointerout';
 const LEAVE_EVENT_TYPE = 'pointerleave';
 
 /**
@@ -42,6 +44,8 @@ export default class MoveInput {
     this.options = Object.assign({enable: true}, options);
     this.enableMoveEvent = this.options.enable;
     this.enableLeaveEvent = this.options.enable;
+    this.enableOutEvent = this.options.enable;
+    this.enableOverEvent = this.options.enable;
 
     this.events = MOUSE_EVENTS.concat(options.events || []);
 
@@ -61,12 +65,51 @@ export default class MoveInput {
     if (eventType === MOVE_EVENT_TYPE) {
       this.enableMoveEvent = enabled;
     }
+    if (eventType === OVER_EVENT_TYPE) {
+      this.enableOverEvent = enabled;
+    }
+    if (eventType === OUT_EVENT_TYPE) {
+      this.enableOutEvent = enabled;
+    }
     if (eventType === LEAVE_EVENT_TYPE) {
       this.enableLeaveEvent = enabled;
     }
   }
 
   handleEvent(event) {
+    this.handleOverEvent(event);
+    this.handleOutEvent(event);
+    this.handleLeaveEvent(event);
+    this.handleMoveEvent(event);
+  }
+
+  handleOverEvent(event) {
+    if (this.enableOverEvent) {
+      if (event.type === 'mouseover') {
+        this.callback({
+          type: OVER_EVENT_TYPE,
+          srcEvent: event,
+          pointerType: 'mouse',
+          target: event.target
+        });
+      }
+    }
+  }
+
+  handleOutEvent(event) {
+    if (this.enableOutEvent) {
+      if (event.type === 'mouseout') {
+        this.callback({
+          type: OUT_EVENT_TYPE,
+          srcEvent: event,
+          pointerType: 'mouse',
+          target: event.target
+        });
+      }
+    }
+  }
+
+  handleLeaveEvent(event) {
     if (this.enableLeaveEvent) {
       if (event.type === 'mouseleave') {
         this.callback({
@@ -77,7 +120,9 @@ export default class MoveInput {
         });
       }
     }
+  }
 
+  handleMoveEvent(event) {
     if (this.enableMoveEvent) {
       switch (event.type) {
       case 'mousedown':
@@ -87,7 +132,7 @@ export default class MoveInput {
         }
         break;
       case 'mousemove':
-        // Move events use `which` to track the button being pressed
+      // Move events use `which` to track the button being pressed
         if (event.which === 0) {
           // Button is not down
           this.pressed = false;
@@ -109,6 +154,5 @@ export default class MoveInput {
       default:
       }
     }
-
   }
 }

@@ -7,7 +7,7 @@ mjolnir.js is a JavaScript event and gesture handling module. It is built on top
 
 On top of the pointer gestures that Hammer.js offers, mjolnir.js adds support for the following events:
 * Right mouse button Gestures
-* Generic mouse events such as pointermove and pointerleave without requiring button down
+* Generic mouse events such as pointermove, pointerover, pointerout, and pointerleave without requiring button down
 * Mouse wheel events
 * Keyboard events
 * Event propagation without firing [DOM events](http://hammerjs.github.io/api/#domevents-false).
