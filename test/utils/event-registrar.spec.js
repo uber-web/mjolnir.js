@@ -101,6 +101,9 @@ test('EventRegistrar#normalizeEvent', t => {
   t.ok(normalizedEvent.center, 'center is populated');
   t.ok(normalizedEvent.offsetCenter, 'offsetCenter is populated');
   t.is(normalizedEvent.handled, false, 'event marked as not handled');
+  t.is(typeof normalizedEvent.stopPropagation, 'function', 'event.stopPropagation is a function');
+  t.is(typeof normalizedEvent.stopImmediatePropagation, 'function',
+    'event.stopImmediatePropagation is a function');
 
   t.end();
 });
