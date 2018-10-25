@@ -1,5 +1,9 @@
 # Change Log
 
+#### [2.0.0-alpha.2] - Sep 24, 2018
+- Refactor event handling (#23)
+- Fix dblclick delay (#24)
+
 #### [2.0.0-alpha.1] - Sep 24, 2018
 - NEW: Provide static browser/node targets (#22)
 
