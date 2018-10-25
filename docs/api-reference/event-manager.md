@@ -93,7 +93,9 @@ Event handlers subscribed via [`EventManager.on()`](#user-content-on) will be ca
 * `offsetCenter` (Object `{x, y}`) - The center of the event location (e.g. the centroid of a touch)
 * `target` (Object) - The target of the event, as specified by the original `srcEvent`
 * `srcEvent` (Object) - The original event object dispatched by the browser to the JS runtime
+* `preventDefault` (Function) - Equivalent to `srcEvent.preventDefault`.
 * `stopPropagation` (Function) - Do not invoke handlers registered for any ancestors in the DOM tree.
+* `stopImmediatePropagation` (Function) - Do not invoke any other handlers registered for the same element or its ancestors.
 
 Additionally, event objects for different event types contain a subset of the following properties:
 
