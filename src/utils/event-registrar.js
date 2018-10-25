@@ -70,16 +70,27 @@ export default class EventRegistrar {
     const entries = this.handlersByElement.get(srcElement);
 
     if (entries) {
+      let immediatePropagationStopped = false;
+
+      // Prevents the current event from bubbling up
+      const stopPropagation = () => {
+        event.handled = true;
+      };
+      // Prevent any remaining listeners from being called
+      const stopImmediatePropagation = () => {
+        event.handled = true;
+        immediatePropagationStopped = true;
+      };
       for (let i = 0; i < entries.length; i++) {
         const {type, handler} = entries[i];
         handler(Object.assign({}, event, {
           type,
-          stopPropagation: () => {
-            if (!event.handled) {
-              event.handled = true;
-            }
-          }
+          stopPropagation,
+          stopImmediatePropagation
         }));
+        if (immediatePropagationStopped) {
+          break;
+        }
       }
     }
   }
