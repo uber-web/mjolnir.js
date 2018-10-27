@@ -1,5 +1,8 @@
 # Change Log
 
+#### [2.0.0-alpha.3] - Sep 26, 2018
+-  Add `event.stopImmediatePropagation` (#26)
+
 #### [2.0.0-alpha.2] - Sep 24, 2018
 - Refactor event handling (#23)
 - Fix dblclick delay (#24)
