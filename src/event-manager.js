@@ -43,13 +43,9 @@ const DEFAULT_OPTIONS = {
   recognizers: null,
   // Manager class
   Manager,
-  // recognize right button gestures
-  rightButton: false,
   // allow browser default touch action
   // https://github.com/uber/react-map-gl/issues/506
-  touchAction: 'none',
-  // block scrolling - this is a legacy behavior and will be removed in the next version
-  legacyBlockScroll: true
+  touchAction: 'none'
 };
 
 // Unified API for subscribing to events about both
@@ -108,15 +104,10 @@ export default class EventManager {
     // Handle events not handled by Hammer.js:
     // - mouse wheel
     // - pointer/touch/mouse move
-    this.wheelInput = new WheelInput(element, this._onOtherEvent, {
-      enable: false,
-      legacyBlockScroll: options.legacyBlockScroll
-    });
+    this.wheelInput = new WheelInput(element, this._onOtherEvent, {enable: false});
     this.moveInput = new MoveInput(element, this._onOtherEvent, {enable: false});
     this.keyInput = new KeyInput(element, this._onOtherEvent, {enable: false});
-    this.contextmenuInput = new ContextmenuInput(element, this._onOtherEvent, {
-      rightButton: options.rightButton
-    });
+    this.contextmenuInput = new ContextmenuInput(element, this._onOtherEvent, {enable: false});
 
     // Register all existing events
     for (const [eventAlias, eventRegistrar] of this.events) {
@@ -216,6 +207,7 @@ export default class EventManager {
     this.wheelInput.enableEventType(name, enabled);
     this.moveInput.enableEventType(name, enabled);
     this.keyInput.enableEventType(name, enabled);
+    this.contextmenuInput.enableEventType(name, enabled);
   }
 
   /**

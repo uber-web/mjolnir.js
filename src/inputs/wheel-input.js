@@ -65,9 +65,6 @@ export default class WheelInput {
     if (!this.options.enable) {
       return;
     }
-    if (this.options.legacyBlockScroll) {
-      event.preventDefault();
-    }
 
     let value = event.deltaY;
     if (window.WheelEvent) {

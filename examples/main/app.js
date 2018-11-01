@@ -44,9 +44,7 @@ class Root extends Component {
     });
 
     this._eventManager = new EventManager(null, {
-      events: this.eventListeners,
-      rightButton: true,
-      legacyBlockScroll: false
+      events: this.eventListeners
     });
 
     this.state = {

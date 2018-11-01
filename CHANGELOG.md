@@ -1,5 +1,8 @@
 # Change Log
 
+#### [2.0.0] - Oct 31, 2018
+- Deprecate `legacyBlockScroll` and `rightButton` options
+
 #### [2.0.0-alpha.3] - Sep 26, 2018
 -  Add `event.stopImmediatePropagation` (#26)
 
