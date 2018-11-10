@@ -1,5 +1,9 @@
 # Change Log
 
+#### [2.0.1] - Nov 9, 2018
+- add support for pointerover, pointerout events (#25)
+- fix node 9+ support (#27)
+
 #### [2.0.0] - Oct 31, 2018
 - Deprecate `legacyBlockScroll` and `rightButton` options
 
