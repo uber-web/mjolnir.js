@@ -119,6 +119,8 @@ Mouse event and pointer event names are interchangeable.
 - `'mousedown'` | `pointerdown`
 - `'mousemove'` | `pointermove`
 - `'mouseup'` | `pointerup`
+- `'mouseover'` | `pointerover`
+- `'mouseout'` | `pointerout`
 - `'mouseleave'` | `pointerleave`
 - `'wheel'`
 - `'contextmenu'`

@@ -286,6 +286,7 @@ export default class EventManager {
    * and pipe back out through same (Hammer) channel used by other events.
    */
   _onOtherEvent(event) {
+    // console.log('onotherevent', event.type, event)
     this.manager.emit(event.type, event);
   }
 }
