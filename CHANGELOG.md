@@ -1,5 +1,8 @@
 # Change Log
 
+#### [2.0.2] - Dec 18, 2018
+- Avoid crash if imported in a web worker (#29)
+
 #### [2.0.1] - Nov 9, 2018
 - add support for pointerover, pointerout events (#25)
 - fix node 9+ support (#27)
