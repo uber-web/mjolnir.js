@@ -18,4 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+// This is replaced with hammer.browser.js when bundled in a browser environment
+// See `browser` field in package.json
 export default null;
