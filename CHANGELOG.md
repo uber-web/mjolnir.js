@@ -1,5 +1,8 @@
 # Change Log
 
+#### [2.0.3] - Jan 8, 2018
+- Remove passive event listener warning in Chrome (#31)
+
 #### [2.0.2] - Dec 18, 2018
 - Avoid crash if imported in a web worker (#29)
 
