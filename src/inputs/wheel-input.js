@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 import {INPUT_EVENT_TYPES} from '../constants';
-import {window, userAgent} from '../utils/globals';
+import {window, userAgent, passiveSupported} from '../utils/globals';
 
 const firefox = userAgent.indexOf('firefox') !== -1;
 
@@ -43,7 +43,11 @@ export default class WheelInput {
     this.events = WHEEL_EVENTS.concat(options.events || []);
 
     this.handleEvent = this.handleEvent.bind(this);
-    this.events.forEach(event => element.addEventListener(event, this.handleEvent));
+    this.events.forEach(event => element.addEventListener(
+      event,
+      this.handleEvent,
+      passiveSupported ? {passive: false} : false
+    ));
   }
 
   destroy() {
