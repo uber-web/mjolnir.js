@@ -1,5 +1,8 @@
 # Change Log
 
+#### [2.1.0] - Feb 20, 2019
+- add anyclick event (#32)
+
 #### [2.0.3] - Jan 8, 2018
 - Remove passive event listener warning in Chrome (#31)
 
