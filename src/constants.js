@@ -29,12 +29,16 @@ export const RECOGNIZERS = Hammer ? [
   [Hammer.Pan, {threshold: 0, enable: false}],
   [Hammer.Press, {enable: false}],
   [Hammer.Tap, {event: 'doubletap', taps: 2, enable: false}],
+  // TODO - rename to 'tap' and 'singletap' in the next major release
+  [Hammer.Tap, {event: 'anytap', enable: false}],
   [Hammer.Tap, {enable: false}]
 ] : null;
 
 // Recognize the following gestures even if a given recognizer succeeds
 export const RECOGNIZER_COMPATIBLE_MAP = {
-  rotate: ['pinch']
+  rotate: ['pinch'],
+  doubletap: ['anytap'],
+  anytap: ['tap']
 };
 
 // Recognize the folling gestures only if a given recognizer fails
@@ -92,6 +96,7 @@ export const INPUT_EVENT_TYPES = {
  */
 export const EVENT_RECOGNIZER_MAP = {
   tap: 'tap',
+  anytap: 'anytap',
   doubletap: 'doubletap',
   press: 'press',
   pinch: 'pinch',
@@ -129,6 +134,7 @@ export const EVENT_RECOGNIZER_MAP = {
  */
 export const GESTURE_EVENT_ALIASES = {
   click: 'tap',
+  anyclick: 'anytap',
   dblclick: 'doubletap',
   mousedown: 'pointerdown',
   mousemove: 'pointermove',

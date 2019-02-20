@@ -20,6 +20,7 @@
 
 export const EVENTS = [
   'click',
+  'anyclick',
   'contextmenu',
   'pointerdown',
   'pointermove',
@@ -59,10 +60,6 @@ export const EVENTS = [
 export const INITIAL_OPTIONS = {
   click: true,
   doubletap: true,
-  pointermove: true,
-  pointerover: true,
-  pointerout: true,
-  pointerleave: true,
   pinchstart: true,
   pinchmove: true,
   pinchend: true,
