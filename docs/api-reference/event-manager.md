@@ -128,7 +128,8 @@ Mouse event and pointer event names are interchangeable.
 
 ### Gesture events
 See [hammer.js](http://hammerjs.github.io/) for documentation of the following events.
-- `'tap'` | `click`
+- `'tap'` | `click` - a single click. Not fired if double clicking.
+- `'anytap'` | `anyclick` - like `click`, but fired twice if double clicking.
 - `'doubletap'` | `dblclick`
 - `'press'`
 - `'pan'`
