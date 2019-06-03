@@ -37,7 +37,8 @@ Creates a new `EventManager` instance.
 *  `element` {DOM Element, optional} - DOM element on which event handlers will be registered. Default `null`.
 *  `options` {Object, optional} -  Options
 *  `options.events` {Object} -  Map of {event name: handler} to register on init.
-*  `options.recognizers` - {Object}  Gesture recognizers from Hammer.js to register, as an Array in [Hammer.Recognizer format](http://hammerjs.github.io/api/#hammermanager)
+*  `options.recognizers` - {Object}  Gesture recognizers from Hammer.js to register, as an Array in [Hammer.Recognizer format](http://hammerjs.github.io/api/#hammermanager). If not provided, a default set of recognizers will be used. See "Gesture Events" section below for more details.
+*  `options.recognizerOptions` - {Object}  Override the default options of `recognizers`. Keys are recognizer names and values are recognizer options. For a list of default recognizers, see "Gesture Events" section below.
 *  `options.rightButton` - {Boolean}  Recognizes click and drag from pressing the right mouse button. Default `false`. If turned on, the context menu will be disabled.
 *  `options.touchAction` - {String}  Allow browser default touch actions. Default `none`. See [hammer.js doc](http://hammerjs.github.io/touch-action/).
 *  `options.legacyBlockScroll` - {Boolean}  Blocks default page scroll behavior on wheel events. Default `true`. Set to `false` to enable scrolling. This option is for backward compatibility and will be removed in the next major release.
@@ -116,49 +117,60 @@ Keyboard events are fired when focus is on the EventManager's target element or 
 - `'keyup'`
 
 Mouse event and pointer event names are interchangeable.
-- `'mousedown'` | `pointerdown`
-- `'mousemove'` | `pointermove`
-- `'mouseup'` | `pointerup`
-- `'mouseover'` | `pointerover`
-- `'mouseout'` | `pointerout`
-- `'mouseleave'` | `pointerleave`
+- `'mousedown'` | `'pointerdown'`
+- `'mousemove'` | `'pointermove'`
+- `'mouseup'` | `'pointerup'`
+- `'mouseover'` | `'pointerover'`
+- `'mouseout'` | `'pointerout'`
+- `'mouseleave'` | `'pointerleave'`
 - `'wheel'`
 - `'contextmenu'`
 
 
 ### Gesture events
-See [hammer.js](http://hammerjs.github.io/) for documentation of the following events.
-- `'tap'` | `click` - a single click. Not fired if double clicking.
-- `'anytap'` | `anyclick` - like `click`, but fired twice if double clicking.
-- `'doubletap'` | `dblclick`
-- `'press'`
-- `'pan'`
-- `'panstart'`
-- `'panmove'`
-- `'panup'`
-- `'pandown'`
-- `'panleft'`
-- `'panright'`
-- `'panend'`
-- `'pancancel'`
-- `'pinch'`
-- `'pinchin'`
-- `'pinchout'`
-- `'pinchstart'`
-- `'pinchmove'`
-- `'pinchend'`
-- `'pinchcancel'`
-- `'rotate'`
-- `'rotatestart'`
-- `'rotatemove'`
-- `'rotateend'`
-- `'rotatecancel'`
-- `'swipe'`
-- `'swipeleft'`
-- `'swiperight'`
-- `'swipeup'`
-- `'swipedown'`
+The following events are generated with [hammer.js](http://hammerjs.github.io/)recognizers. You may fine-tune the behavior of these events by supplying `recognizerOptions` to the `EventManager` constructor.
 
+- The following events are controlled by the `rotate` ([Hammer.Rotate](https://hammerjs.github.io/recognizer-rotate/)) recognizer:
+  + `'rotate'`
+  + `'rotatestart'`
+  + `'rotatemove'`
+  + `'rotateend'`
+  + `'rotatecancel'`
+- The following events are controlled by the `pinch` ([Hammer.Pinch](https://hammerjs.github.io/recognizer-pinch/)) recognizer:
+  + `'pinch'`
+  + `'pinchin'`
+  + `'pinchout'`
+  + `'pinchstart'`
+  + `'pinchmove'`
+  + `'pinchend'`
+  + `'pinchcancel'`
+- The following events are controlled by the `swipe` ([Hammer.Swipe](https://hammerjs.github.io/recognizer-swipe/)) recognizer:
+  + `'swipe'`
+  + `'swipeleft'`
+  + `'swiperight'`
+  + `'swipeup'`
+  + `'swipedown'`
+- The following events are controlled by the `pan` ([Hammer.Pan](https://hammerjs.github.io/recognizer-pan/)) recognizer:
+  + `'pan'`
+  + `'panstart'`
+  + `'panmove'`
+  + `'panup'`
+  + `'pandown'`
+  + `'panleft'`
+  + `'panright'`
+  + `'panend'`
+  + `'pancancel'`
+- The following events are controlled by the `Press` ([Hammer.Pan](https://hammerjs.github.io/recognizer-press/)) recognizer:
+  + `'press'`
+- The following events are controlled by the `doubletap` ([Hammer.Pan](https://hammerjs.github.io/recognizer-tap/)) recognizer:
+  + `'doubletap'`
+  + `'dblclick'` - alias of `doubletap`
+- The following events are controlled by the `tap` ([Hammer.Pan](https://hammerjs.github.io/recognizer-tap/)) recognizer:
+  + `'tap'` - a single click. Not fired if double clicking.
+  + `'click'` - alias of `tap`
+- The following events are controlled by the `anytap` ([Hammer.Pan](https://hammerjs.github.io/recognizer-tap/)) recognizer:
+  + `'anytap'` - like `click`, but fired twice if double clicking.
+  + `'anyclick'` - alias of `anytap`
 
 
 ## Event handling shims

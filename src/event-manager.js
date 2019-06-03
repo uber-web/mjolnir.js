@@ -42,6 +42,7 @@ const DEFAULT_OPTIONS = {
   events: null,
   // custom recognizers
   recognizers: null,
+  recognizerOptions: {},
   // Manager class
   Manager: Hammer ? Hammer.Manager : HammerManagerMock,
   // allow browser default touch action
@@ -100,6 +101,17 @@ export default class EventManager {
           });
         }
       });
+    }
+
+    // Set recognizer options
+    for (const recognizerName in options.recognizerOptions) {
+      const recognizer = this.manager.get(recognizerName);
+      if (recognizer) {
+        const recognizerOption = options.recognizerOptions[recognizerName];
+        // `enable` is managed by the event registrations
+        delete recognizerOption.enable;
+        recognizer.set(recognizerOption);
+      }
     }
 
     // Handle events not handled by Hammer.js:
