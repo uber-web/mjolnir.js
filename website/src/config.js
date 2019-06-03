@@ -21,7 +21,7 @@
 export const PROJECT_TYPE = 'github';
 
 export const PROJECT_NAME = 'mjolnir.js';
-export const PROJECT_ORG = 'ibgreen';
+export const PROJECT_ORG = 'uber-web';
 export const PROJECT_URL = `https://github.com/${PROJECT_ORG}/${PROJECT_NAME}`;
 export const PROJECT_DESC = 'Event and Gesture Handling for Evergreen Browsers';
 
