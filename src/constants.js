@@ -37,6 +37,7 @@ export const RECOGNIZERS = Hammer ? [
 // Recognize the following gestures even if a given recognizer succeeds
 export const RECOGNIZER_COMPATIBLE_MAP = {
   rotate: ['pinch'],
+  pan: ['press', 'doubletap', 'anytap', 'tap'],
   doubletap: ['anytap'],
   anytap: ['tap']
 };
