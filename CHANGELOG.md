@@ -1,5 +1,8 @@
 # Change Log
 
+#### [2.1.1] - Jun 3, 2019
+- fix bug where tap threshold is not working (#36)
+
 #### [2.1.0] - Feb 20, 2019
 - add anyclick event (#32)
 
