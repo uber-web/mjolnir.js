@@ -1,7 +1,7 @@
 {
   "name": "mjolnir.js",
   "description": "An Event Manager",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "keywords": [
     "hammerjs",
     "touch",
