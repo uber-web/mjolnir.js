@@ -35,7 +35,6 @@ module.exports = {
   PROJECT_ORG: 'uber-web',
   PROJECT_URL: 'https://github.com/uber-web/mjolnir.gl',
   PROJECT_DESC: 'Event and Gesture Handling for Evergreen Browsers',
-  PATH_PREFIX: '/',
 
   FOOTER_LOGO: '',
 
