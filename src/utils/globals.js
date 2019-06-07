@@ -69,6 +69,7 @@ try {
     // attempts to access the passive property.
     get passive() {
       passiveSupported = true;
+      return true;
     }
   };
 

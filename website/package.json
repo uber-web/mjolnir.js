@@ -1,11 +1,32 @@
 {
+  "description": "A website built with ocular",
   "license": "MIT",
+  "keywords": [
+    "ocular"
+  ],
   "main": "index.js",
   "scripts": {
-    "start": "ocular start open",
-    "build": "ocular build"
+    "start": "yarn clean-examples && yarn clean && yarn develop",
+    "clean": "rm -rf ./.cache ./public",
+    "develop": "gatsby develop --port=8001 --no-uglify",
+    "debug": "node --inspect-brk --no-lazy node_modules/gatsby/dist/bin/gatsby develop",
+    "build": "yarn clean-examples && yarn clean && gatsby build --no-uglify",
+    "serve": "gatsby serve",
+    "deploy": "NODE_DEBUG=gh-pages gh-pages -d public",
+    "clean-examples": "rm -rf examples ; (find ../examples -name node_modules -exec rm -rf {} \\; || true)"
   },
   "dependencies": {
-    "ocular": "^0.2.1"
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-table": "^6.10.0"
+  },
+  "devDependencies": {
+    "gatsby": "^2.8.2",
+    "gh-pages": "^2.0.1",
+    "ocular-gatsby": "1.0.0-alpha.38",
+    "sharp": "^0.22.1"
+  },
+  "resolutions": {
+    "fsevents": "^1.2.9"
   }
 }

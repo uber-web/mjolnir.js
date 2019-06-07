@@ -26,19 +26,28 @@ const resolve = require('path').resolve;
 
 const config = {
   entry: {
-    app: resolve('./app.js')
+    app: './app.js'
+  },
+
+  output: {
+    library: 'App'
   },
 
   devtool: 'source-map',
 
   module: {
-    rules: [{
-      // Compile ES2015 using Babel
-      test: /\.js$/,
-      loader: 'babel-loader',
-      include: [resolve('.')],
-      exclude: [/node_modules/]
-    }]
+    rules: [
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        include: [resolve('.')],
+        exclude: [/node_modules/]
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
   },
 
   resolve: {
