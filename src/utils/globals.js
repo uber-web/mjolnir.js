@@ -42,7 +42,7 @@
 // micro modules like 'global'
 
 /* global window, global, document, navigator */
-export const userAgent = typeof navigator !== 'undefined' ?
+export const userAgent = (typeof navigator !== 'undefined' && navigator.userAgent) ?
   navigator.userAgent.toLowerCase() : '';
 
 const window_ = typeof window !== 'undefined' ? window : global;
