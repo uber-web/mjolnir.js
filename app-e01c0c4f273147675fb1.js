@@ -724,12 +724,12 @@ var fetchPageResourceMap = function fetchPageResourceMap() {
 };
 
 var createJsonURL = function createJsonURL(jsonName) {
-  return "" + "/static/d/" + jsonName + ".json";
+  return "/mjolnir.js" + "/static/d/" + jsonName + ".json";
 };
 
 var createComponentUrls = function createComponentUrls(componentChunkName) {
   return window.___chunkMapping[componentChunkName].map(function (chunk) {
-    return "" + chunk;
+    return "/mjolnir.js" + chunk;
   });
 };
 
@@ -872,7 +872,7 @@ var prefetchCompleted = {};
 var disableCorePrefetching = false;
 var queue = {
   addPagesArray: function addPagesArray(newPages) {
-    findPage = find_page(newPages, "");
+    findPage = find_page(newPages, "/mjolnir.js");
   },
   addDevRequires: function addDevRequires(devRequires) {
     syncRequires = devRequires;
@@ -3717,11 +3717,11 @@ var _parsePath = __webpack_require__(155);
 exports.parsePath = _parsePath.parsePath;
 
 function withPrefix(path) {
-  return normalizePath([ true ? "" : undefined, path].join("/"));
+  return normalizePath([ true ? "/mjolnir.js" : undefined, path].join("/"));
 }
 
 function withAssetPrefix(path) {
-  return [""].concat([path.replace(/^\//, "")]).join("/");
+  return ["/mjolnir.js"].concat([path.replace(/^\//, "")]).join("/");
 }
 
 function normalizePath(path) {
@@ -9813,7 +9813,7 @@ module.exports = exports["default"];
 /* 110 */
 /***/ (function(module) {
 
-module.exports = {"data":{"site":{"siteMetadata":{"config":{"PROJECT_NAME":"mjolnir.js","PROJECT_TYPE":"github","PROJECT_DESC":"Event and Gesture Handling for Evergreen Browsers","PROJECT_URL":"https://github.com/uber-web/mjolnir.gl","PROJECT_ORG":"uber-web","HOME_HEADING":"Event and Gesture Handling for Evergreen Browsers","HOME_BULLETS":[{"text":"Unifies Pointer Events","desc":"Work with modern point events across all browsers","img":"images/icon-high-precision.svg"},{"text":"Touch Support through Hammerjs","desc":"Proven cross platform touch events powered by hammer.js","img":"images/icon-high-precision.svg"}],"EXAMPLES":[{"title":"EventManager","path":"examples/main"}],"THEME_OVERRIDES":[{"key":"none","value":"none"}],"PROJECTS":[],"ADDITIONAL_LINKS":[]}}},"allMarkdown":{"edges":[{"node":{"id":"51784606-7a8d-51f1-8d6b-c4ba263eaf18","fields":{"slug":"docs"},"frontmatter":{"title":"Overview"}}},{"node":{"id":"1a1c920a-9fe2-57d7-8816-238417cdea29","fields":{"slug":"docs/get-started"},"frontmatter":{"title":"Get Started"}}},{"node":{"id":"86e9e812-cf5b-54eb-82d9-84aa5a086db9","fields":{"slug":"docs/upgrade-guide"},"frontmatter":{"title":"Upgrade Guide"}}},{"node":{"id":"27c135c5-74ee-58cc-b6f3-05956fdd5a13","fields":{"slug":"docs/whats-new"},"frontmatter":{"title":"What's New"}}},{"node":{"id":"920536f5-6535-5331-9180-b70cb7a809fb","fields":{"slug":"docs/advanced/integrating"},"frontmatter":{"title":"Integrating with Other Event Systems"}}},{"node":{"id":"fae04ab9-0e09-5cce-8cdc-375c8227b8ec","fields":{"slug":"docs/advanced/pointer-events"},"frontmatter":{"title":"Pointer Events"}}},{"node":{"id":"a8babfb2-127b-55c5-b7d0-57247d27b399","fields":{"slug":"docs/api-reference/event-manager"},"frontmatter":{"title":"EventManager"}}}]},"tableOfContents":{"chapters":[{"title":"Overview","level":1,"chapters":null,"entries":[{"childMarkdownRemark":{"frontmatter":{"title":"Overview"},"fields":{"slug":"docs"}}},{"childMarkdownRemark":{"frontmatter":{"title":"What's New"},"fields":{"slug":"docs/whats-new"}}},{"childMarkdownRemark":{"frontmatter":{"title":"Upgrade Guide"},"fields":{"slug":"docs/upgrade-guide"}}}]},{"title":"Developer Guide","level":1,"chapters":null,"entries":[{"childMarkdownRemark":{"frontmatter":{"title":"Get Started"},"fields":{"slug":"docs/get-started"}}},{"childMarkdownRemark":{"frontmatter":{"title":"Integrating with Other Event Systems"},"fields":{"slug":"docs/advanced/integrating"}}},{"childMarkdownRemark":{"frontmatter":{"title":"Pointer Events"},"fields":{"slug":"docs/advanced/pointer-events"}}}]},{"title":"API Reference","level":1,"chapters":null,"entries":[{"childMarkdownRemark":{"frontmatter":{"title":"EventManager"},"fields":{"slug":"docs/api-reference/event-manager"}}}]}]}}};
+module.exports = {"data":{"site":{"siteMetadata":{"config":{"PROJECT_NAME":"mjolnir.js","PROJECT_TYPE":"github","PROJECT_DESC":"Event and Gesture Handling for Evergreen Browsers","PROJECT_URL":"https://github.com/uber-web/mjolnir.gl","PROJECT_ORG":"uber-web","HOME_HEADING":"Event and Gesture Handling for Evergreen Browsers","HOME_BULLETS":[{"text":"Unifies Pointer Events","desc":"Work with modern point events across all browsers","img":"images/icon-high-precision.svg"},{"text":"Touch Support through Hammerjs","desc":"Proven cross platform touch events powered by hammer.js","img":"images/icon-high-precision.svg"}],"EXAMPLES":[{"title":"EventManager","path":"examples/main"}],"THEME_OVERRIDES":[{"key":"none","value":"none"}],"PROJECTS":[],"ADDITIONAL_LINKS":[]}}},"allMarkdown":{"edges":[{"node":{"id":"51784606-7a8d-51f1-8d6b-c4ba263eaf18","fields":{"slug":"docs"},"frontmatter":{"title":"Overview"}}},{"node":{"id":"86e9e812-cf5b-54eb-82d9-84aa5a086db9","fields":{"slug":"docs/upgrade-guide"},"frontmatter":{"title":"Upgrade Guide"}}},{"node":{"id":"27c135c5-74ee-58cc-b6f3-05956fdd5a13","fields":{"slug":"docs/whats-new"},"frontmatter":{"title":"What's New"}}},{"node":{"id":"1a1c920a-9fe2-57d7-8816-238417cdea29","fields":{"slug":"docs/get-started"},"frontmatter":{"title":"Get Started"}}},{"node":{"id":"fae04ab9-0e09-5cce-8cdc-375c8227b8ec","fields":{"slug":"docs/advanced/pointer-events"},"frontmatter":{"title":"Pointer Events"}}},{"node":{"id":"920536f5-6535-5331-9180-b70cb7a809fb","fields":{"slug":"docs/advanced/integrating"},"frontmatter":{"title":"Integrating with Other Event Systems"}}},{"node":{"id":"a8babfb2-127b-55c5-b7d0-57247d27b399","fields":{"slug":"docs/api-reference/event-manager"},"frontmatter":{"title":"EventManager"}}}]},"tableOfContents":{"chapters":[{"title":"Overview","level":1,"chapters":null,"entries":[{"childMarkdownRemark":{"frontmatter":{"title":"Overview"},"fields":{"slug":"docs"}}},{"childMarkdownRemark":{"frontmatter":{"title":"What's New"},"fields":{"slug":"docs/whats-new"}}},{"childMarkdownRemark":{"frontmatter":{"title":"Upgrade Guide"},"fields":{"slug":"docs/upgrade-guide"}}}]},{"title":"Developer Guide","level":1,"chapters":null,"entries":[{"childMarkdownRemark":{"frontmatter":{"title":"Get Started"},"fields":{"slug":"docs/get-started"}}},{"childMarkdownRemark":{"frontmatter":{"title":"Integrating with Other Event Systems"},"fields":{"slug":"docs/advanced/integrating"}}},{"childMarkdownRemark":{"frontmatter":{"title":"Pointer Events"},"fields":{"slug":"docs/advanced/pointer-events"}}}]},{"title":"API Reference","level":1,"chapters":null,"entries":[{"childMarkdownRemark":{"frontmatter":{"title":"EventManager"},"fields":{"slug":"docs/api-reference/event-manager"}}}]}]}}};
 
 /***/ }),
 /* 111 */
@@ -13538,7 +13538,7 @@ __webpack_require__.r(__webpack_exports__);
 if (window.location.protocol !== "https:" && window.location.hostname !== "localhost") {
   console.error("Service workers can only be used over HTTPS, or on localhost for development");
 } else if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("" + "/sw.js").then(function (reg) {
+  navigator.serviceWorker.register("/mjolnir.js" + "/sw.js").then(function (reg) {
     reg.addEventListener("updatefound", function () {
       Object(_api_runner_browser__WEBPACK_IMPORTED_MODULE_0__["apiRunner"])("onServiceWorkerUpdateFound", {
         serviceWorker: reg
@@ -15423,12 +15423,12 @@ Object(api_runner_browser["apiRunnerAsync"])("onClientEntry").then(function () {
 
   if ( // Make sure the window.page object is defined
   page && // The canonical path doesn't match the actual path (i.e. the address bar)
-  "" + page.path !== browserLoc.pathname && ( // ...and if matchPage is specified, it also doesn't match the actual path
-  !page.matchPath || !Object(utils["match"])("" + page.matchPath, browserLoc.pathname)) && // Ignore 404 pages, since we want to keep the same URL
+  "/mjolnir.js" + page.path !== browserLoc.pathname && ( // ...and if matchPage is specified, it also doesn't match the actual path
+  !page.matchPath || !Object(utils["match"])("/mjolnir.js" + page.matchPath, browserLoc.pathname)) && // Ignore 404 pages, since we want to keep the same URL
   page.path !== "/404.html" && !page.path.match(/^\/404\/?$/) && // Also ignore the offline shell (since when using the offline plugin, all
   // pages have this canonical path)
   !page.path.match(/^\/offline-plugin-app-shell-fallback\/?$/)) {
-    Object(es["navigate"])("" + page.path + browserLoc.search + browserLoc.hash, {
+    Object(es["navigate"])("/mjolnir.js" + page.path + browserLoc.search + browserLoc.hash, {
       replace: true
     });
   }
@@ -15436,7 +15436,7 @@ Object(api_runner_browser["apiRunnerAsync"])("onClientEntry").then(function () {
   loader["default"].getResourcesForPathname(browserLoc.pathname).then(function () {
     var Root = function Root() {
       return Object(react["createElement"])(es["Router"], {
-        basepath: ""
+        basepath: "/mjolnir.js"
       }, Object(react["createElement"])(RouteHandler, {
         path: "/*"
       }));
@@ -15467,4 +15467,4 @@ Object(api_runner_browser["apiRunnerAsync"])("onClientEntry").then(function () {
 
 /***/ })
 ],[[189,8,0]]]);
-//# sourceMappingURL=app-4a771ccdc085fbe4aeb4.js.map
+//# sourceMappingURL=app-e01c0c4f273147675fb1.js.map

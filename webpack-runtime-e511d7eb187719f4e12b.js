@@ -63,7 +63,7 @@
 /******/
 /******/ 	// script path function
 /******/ 	function jsonpScriptSrc(chunkId) {
-/******/ 		return __webpack_require__.p + "" + ({"2":"component---examples-main-app-js","3":"component---node-modules-ocular-gatsby-src-templates-doc-page-markdown-jsx","4":"component---node-modules-ocular-gatsby-src-templates-examples-jsx","5":"component---node-modules-ocular-gatsby-src-templates-index-jsx","6":"component---node-modules-ocular-gatsby-src-templates-search-jsx","7":"pages-manifest"}[chunkId]||chunkId) + "-" + {"2":"6ffe28bee85b66264728","3":"1336ae379fd7512b8deb","4":"8ca615a6b6b5e9dc425a","5":"1d22cd62ca1f3efd1030","6":"97472b8295b6b6041bb0","7":"2725ac391e1de79fa321"}[chunkId] + ".js"
+/******/ 		return __webpack_require__.p + "" + ({"2":"component---examples-main-app-js","3":"component---node-modules-ocular-gatsby-src-templates-doc-page-markdown-jsx","4":"component---node-modules-ocular-gatsby-src-templates-examples-jsx","5":"component---node-modules-ocular-gatsby-src-templates-index-jsx","6":"component---node-modules-ocular-gatsby-src-templates-search-jsx","7":"pages-manifest"}[chunkId]||chunkId) + "-" + {"2":"6ffe28bee85b66264728","3":"1336ae379fd7512b8deb","4":"8ca615a6b6b5e9dc425a","5":"1d22cd62ca1f3efd1030","6":"97472b8295b6b6041bb0","7":"9402ad6154feb6b5252a"}[chunkId] + ".js"
 /******/ 	}
 /******/
 /******/ 	// The require function
@@ -199,7 +199,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/";
+/******/ 	__webpack_require__.p = "/mjolnir.js/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -217,4 +217,4 @@
 /******/ })
 /************************************************************************/
 /******/ ([]);
-//# sourceMappingURL=webpack-runtime-eb18bccca655817bcb2d.js.map
+//# sourceMappingURL=webpack-runtime-e511d7eb187719f4e12b.js.map
