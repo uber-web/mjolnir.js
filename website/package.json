@@ -10,8 +10,8 @@
     "clean": "rm -rf ./.cache ./public",
     "develop": "gatsby develop --port=8001 --no-uglify",
     "debug": "node --inspect-brk --no-lazy node_modules/gatsby/dist/bin/gatsby develop",
-    "build": "yarn clean-examples && yarn clean && gatsby build --no-uglify",
-    "serve": "gatsby serve",
+    "build": "yarn clean-examples && yarn clean && gatsby build --no-uglify --prefix-paths",
+    "serve": "gatsby serve --prefix-paths",
     "deploy": "NODE_DEBUG=gh-pages gh-pages -d public",
     "clean-examples": "rm -rf examples ; (find ../examples -name node_modules -exec rm -rf {} \\; || true)"
   },

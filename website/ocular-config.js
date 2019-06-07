@@ -20,6 +20,8 @@ const DOCS = require('../docs/table-of-contents.json');
 module.exports = {
   logLevel: 4,
 
+  PATH_PREFIX: '/mjolnir.js',
+
   DOC_FOLDER: '../docs/',
   ROOT_FOLDER: '..',
   DIR_NAME: __dirname,
