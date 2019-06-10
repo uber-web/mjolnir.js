@@ -1,0 +1,11 @@
+{
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "start": "ocular start open",
+    "build": "ocular build"
+  },
+  "dependencies": {
+    "ocular": "^0.2.1"
+  }
+}

@@ -18,14 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-/* global document */
 import React, {Component} from 'react';
 import {render} from 'react-dom';
 import {EventManager} from 'mjolnir.js';
 
+import './style.css';
 import {EVENTS, INITIAL_OPTIONS} from './constants';
 
-class Root extends Component {
+export default class App extends Component {
 
   constructor(props) {
     super(props);
@@ -142,7 +142,6 @@ class Root extends Component {
 
 }
 
-const root = document.createElement('div');
-document.body.appendChild(root);
-
-render(<Root />, root);
+export function renderToDOM(container) {
+  render(<App />, container);
+}

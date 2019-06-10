@@ -10,7 +10,11 @@
     #red-box {position: absolute; width: 100px; height: 100px; left: 40%; top: 40%; background: red;}
     </style>
   </head>
-  <body>
-    <script src='bundle.js'></script>
+  <body/>
+    <div id="app"></div>
+    <script src='./app.js'></script>
   </body>
+  <script type="text/javascript">
+    App.renderToDOM(document.getElementById('app'));
+  </script>
 </html>
