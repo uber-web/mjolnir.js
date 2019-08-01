@@ -67,6 +67,16 @@ Register an event handler function to be called on `event`.
 
 ** Note: Unlike the DOM event system, developers are responsible of deregistering event handlers when `srcElement` is removed. **
 
+### once
+
+Register a one-time event handler function to be called on `event`. The handler is removed once it has been called.
+
+`eventManager.once(event, handler, srcElement)`
+
+- `event` {string|Object} - An event name (`String`) or map of event names to handlers.
+- `[handler]` {Function} - The function to be called on `event`.
+- `[srcElement]` {Node} - The source element of this event. If provided, only events that are targeting this element or its decendants will invoke the handler. If ignored, default to the whole document. Events are propagated up the DOM tree.
+
 ### off
 
 - Deregister a previously-registered event handler.

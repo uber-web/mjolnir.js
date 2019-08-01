@@ -37,12 +37,12 @@ test('EventRegistrar#add, remove', t => {
   t.is(eventRegistrar.handlers.length, 1, 'event handler is added');
   t.deepEquals(
     eventRegistrar.handlers[0],
-    {type: 'click', handler: handler1, srcElement: 'root'},
+    {type: 'click', handler: handler1, srcElement: 'root', once: false},
     'event handler is added'
   );
   t.deepEquals(
     eventRegistrar.handlersByElement.get('root'),
-    [{type: 'click', handler: handler1, srcElement: 'root'}],
+    [{type: 'click', handler: handler1, srcElement: 'root', once: false}],
     'event elements map is updated'
   );
 
@@ -51,12 +51,12 @@ test('EventRegistrar#add, remove', t => {
   t.is(eventRegistrar.handlers.length, 2, 'event handler is added');
   t.deepEquals(
     eventRegistrar.handlers[1],
-    {type: 'click', handler: handler2, srcElement: 'child-0'},
+    {type: 'click', handler: handler2, srcElement: 'child-0', once: false},
     'event handler is added'
   );
   t.deepEquals(
     eventRegistrar.handlersByElement.get('child-0'),
-    [{type: 'click', handler: handler2, srcElement: 'child-0'}],
+    [{type: 'click', handler: handler2, srcElement: 'child-0', once: false}],
     'event elements map is updated'
   );
 
@@ -65,7 +65,7 @@ test('EventRegistrar#add, remove', t => {
   t.is(eventRegistrar.handlers.length, 1, 'event handler is removed');
   t.deepEquals(
     eventRegistrar.handlers[0],
-    {type: 'click', handler: handler2, srcElement: 'child-0'},
+    {type: 'click', handler: handler2, srcElement: 'child-0', once: false},
     'event handler is removed'
   );
   t.notOk(eventRegistrar.handlersByElement.has('root'), 'event elements map is updated');
@@ -126,34 +126,72 @@ test('EventRegistrar#propagation', t => {
 
   const handlerCalls = [];
 
-  const fooHandler = (message, stopPropagation = false) => evt => {
+  const fooHandler = (
+    message,
+    stopPropagation = false,
+    stopImmediatePropagation = false
+  ) => evt => {
     handlerCalls.push(message);
     if (stopPropagation) {
       evt.stopPropagation();
     }
+    if (stopImmediatePropagation) {
+      evt.stopImmediatePropagation();
+    }
   };
 
   // Should not be called (propagation stopped)
-  eventRegistrar.add('foo', fooHandler('foo@root'));
+  eventRegistrar.add('foo', fooHandler('foo@root', false, true), 'root', true);
+  eventRegistrar.add('foo', fooHandler('foo@root:2'));
   // Should be called
   eventRegistrar.add('foo', fooHandler('foo@child-0', true), rootNode.find('child-0'));
-  eventRegistrar.add('foo', fooHandler('foo@grandchild-00'), rootNode.find('grandchild-00'));
+  eventRegistrar.add('foo', fooHandler('foo@grandchild-00'), rootNode.find('grandchild-00'), true);
   eventRegistrar.add('foo', fooHandler('foo@child-0:2'), rootNode.find('child-0'));
   // Should not be called (not on propagation path)
   eventRegistrar.add('foo', fooHandler('foo@grandchild-01'), rootNode.find('grandchild-01'));
 
-  const eventMock = {
+  eventRegistrar.handleEvent({
     type: 'foo',
     srcEvent: {
       target: rootNode.find('grandchild-00')
     }
-  };
-  eventRegistrar.handleEvent(eventMock);
-
+  });
   t.deepEquals(
     handlerCalls,
     ['foo@grandchild-00', 'foo@child-0', 'foo@child-0:2'],
     'propagated correctly'
   );
+
+  handlerCalls.length = 0; // clean
+  eventRegistrar.handleEvent({
+    type: 'foo',
+    srcEvent: {
+      target: rootNode.find('grandchild-00')
+    }
+  });
+  t.deepEquals(
+    handlerCalls,
+    ['foo@child-0', 'foo@child-0:2'],
+    'propagated correctly, one-time callback is removed'
+  );
+
+  handlerCalls.length = 0; // clean
+  eventRegistrar.handleEvent({
+    type: 'foo',
+    srcEvent: {
+      target: rootNode
+    }
+  });
+  t.deepEquals(handlerCalls, ['foo@root'], 'propagated correctly');
+
+  handlerCalls.length = 0; // clean
+  eventRegistrar.handleEvent({
+    type: 'foo',
+    srcEvent: {
+      target: rootNode
+    }
+  });
+  t.deepEquals(handlerCalls, ['foo@root:2'], 'propagated correctly, one-time callback is removed');
+
   t.end();
 });
