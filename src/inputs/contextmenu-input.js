@@ -21,7 +21,6 @@
 const EVENT_TYPE = 'contextmenu';
 
 export default class ContextmenuInput {
-
   constructor(element, callback, options = {}) {
     this.element = element;
     this.callback = callback;

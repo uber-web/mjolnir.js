@@ -31,8 +31,11 @@ test('moveInput#constructor', t => {
   const numMouseEvents = 6; // MOUSE_EVENTS.length
   const addELSpy = spy(eventRegistrar, 'addEventListener');
   moveInput = new MoveInput(eventRegistrar, () => {}, {events});
-  t.equal(addELSpy.callCount, events.length + numMouseEvents,
-    'should call addEventListener once for each passed event:handler pair');
+  t.equal(
+    addELSpy.callCount,
+    events.length + numMouseEvents,
+    'should call addEventListener once for each passed event:handler pair'
+  );
   t.end();
 });
 
@@ -43,8 +46,11 @@ test('moveInput#destroy', t => {
   const removeELSpy = spy(eventRegistrar, 'removeEventListener');
   const moveInput = new MoveInput(eventRegistrar, () => {}, {events});
   moveInput.destroy();
-  t.equal(removeELSpy.callCount, events.length + numMouseEvents,
-    'should call removeEventListener once for each passed event:handler pair');
+  t.equal(
+    removeELSpy.callCount,
+    events.length + numMouseEvents,
+    'should call removeEventListener once for each passed event:handler pair'
+  );
   t.end();
 });
 
@@ -70,7 +76,9 @@ test('moveInput#handleEvent', t => {
     type: 'mouseup',
     target: eventRegistrar
   };
-  const moveInput = new MoveInput(eventRegistrar, callbackSpy, {enable: true});
+  const moveInput = new MoveInput(eventRegistrar, callbackSpy, {
+    enable: true
+  });
 
   moveInput.handleEvent(mouseDownMock);
   t.notOk(callbackSpy.called, 'callback should not be called on mouse down');

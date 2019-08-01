@@ -28,9 +28,10 @@ test('contextmenuInput#constructor', t => {
   t.ok(contextmenuInput, 'ContextmenuInput created without optional params');
 
   const addELSpy = spy(eventRegistrar, 'addEventListener');
-  contextmenuInput = new ContextmenuInput(eventRegistrar, {rightButton: true});
-  t.equal(addELSpy.callCount, 1,
-    'should call addEventListener once');
+  contextmenuInput = new ContextmenuInput(eventRegistrar, {
+    rightButton: true
+  });
+  t.equal(addELSpy.callCount, 1, 'should call addEventListener once');
   t.end();
 });
 
@@ -39,8 +40,7 @@ test('contextmenuInput#destroy', t => {
   const removeELSpy = spy(eventRegistrar, 'removeEventListener');
   const contextmenuInput = new ContextmenuInput(eventRegistrar);
   contextmenuInput.destroy();
-  t.equal(removeELSpy.callCount, 1,
-    'should call removeEventListener once');
+  t.equal(removeELSpy.callCount, 1, 'should call removeEventListener once');
   t.end();
 });
 

@@ -26,7 +26,6 @@ import './style.css';
 import {EVENTS, INITIAL_OPTIONS} from './constants';
 
 export default class App extends Component {
-
   constructor(props) {
     super(props);
 
@@ -92,12 +91,18 @@ export default class App extends Component {
     const {options} = this.state;
     const id = `input-${eventName}`;
 
-    return (<div key={eventName}>
-      <input id={id} type="checkbox" name={eventName}
-        checked={options[eventName]}
-        onChange={this._onUpdateOption} />
-      <label htmlFor={id}>{eventName}</label>
-    </div>);
+    return (
+      <div key={eventName}>
+        <input
+          id={id}
+          type="checkbox"
+          name={eventName}
+          checked={options[eventName]}
+          onChange={this._onUpdateOption}
+        />
+        <label htmlFor={id}>{eventName}</label>
+      </div>
+    );
   }
 
   _renderEvent(evt, index) {
@@ -114,7 +119,9 @@ export default class App extends Component {
 
     return (
       <tr key={index}>
-        {fields.map((f, i) => <td key={i}>{f}</td>)}
+        {fields.map((f, i) => (
+          <td key={i}>{f}</td>
+        ))}
       </tr>
     );
   }
@@ -124,22 +131,16 @@ export default class App extends Component {
 
     return (
       <div id="container" ref={this._onLoad}>
-
         <div id="red-box" ref={this._onLoadRedBox} />
 
         <table>
-          <tbody>
-            {events.map(this._renderEvent)}
-          </tbody>
+          <tbody>{events.map(this._renderEvent)}</tbody>
         </table>
 
-        <div id="options">
-          {EVENTS.map(this._renderCheckbox)}
-        </div>
+        <div id="options">{EVENTS.map(this._renderCheckbox)}</div>
       </div>
     );
   }
-
 }
 
 export function renderToDOM(container) {

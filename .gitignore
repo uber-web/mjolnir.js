@@ -9,3 +9,5 @@ npm-debug.log
 yarn-error.log
 .DS_Store
 .idea
+.reify-cache
+.nyc_output

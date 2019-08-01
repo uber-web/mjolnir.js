@@ -62,8 +62,10 @@ export default class KeyInput {
   handleEvent(event) {
     // Ignore if focused on text input
     const targetElement = event.target || event.srcElement;
-    if ((targetElement.tagName === 'INPUT' && targetElement.type === 'text') ||
-      targetElement.tagName === 'TEXTAREA') {
+    if (
+      (targetElement.tagName === 'INPUT' && targetElement.type === 'text') ||
+      targetElement.tagName === 'TEXTAREA'
+    ) {
       return;
     }
 

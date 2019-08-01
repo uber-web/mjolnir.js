@@ -35,7 +35,6 @@ const LEAVE_EVENT_TYPE = 'pointerleave';
  * pointer/touch events, calculating speed/direction, etc.
  */
 export default class MoveInput {
-
   constructor(element, callback, options = {}) {
     this.element = element;
     this.callback = callback;
@@ -125,33 +124,33 @@ export default class MoveInput {
   handleMoveEvent(event) {
     if (this.enableMoveEvent) {
       switch (event.type) {
-      case 'mousedown':
-        if (event.button >= 0) {
-          // Button is down
-          this.pressed = true;
-        }
-        break;
-      case 'mousemove':
-      // Move events use `which` to track the button being pressed
-        if (event.which === 0) {
-          // Button is not down
+        case 'mousedown':
+          if (event.button >= 0) {
+            // Button is down
+            this.pressed = true;
+          }
+          break;
+        case 'mousemove':
+          // Move events use `which` to track the button being pressed
+          if (event.which === 0) {
+            // Button is not down
+            this.pressed = false;
+          }
+          if (!this.pressed) {
+            // Drag events are emitted by hammer already
+            // we just need to emit the move event on hover
+            this.callback({
+              type: MOVE_EVENT_TYPE,
+              srcEvent: event,
+              pointerType: 'mouse',
+              target: event.target
+            });
+          }
+          break;
+        case 'mouseup':
           this.pressed = false;
-        }
-        if (!this.pressed) {
-          // Drag events are emitted by hammer already
-          // we just need to emit the move event on hover
-          this.callback({
-            type: MOVE_EVENT_TYPE,
-            srcEvent: event,
-            pointerType: 'mouse',
-            target: event.target
-          });
-        }
-        break;
-      case 'mouseup':
-        this.pressed = false;
-        break;
-      default:
+          break;
+        default:
       }
     }
   }

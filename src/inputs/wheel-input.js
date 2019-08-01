@@ -33,7 +33,6 @@ const WHEEL_DELTA_PER_LINE = 40;
 const SHIFT_MULTIPLIER = 0.25;
 
 export default class WheelInput {
-
   constructor(element, callback, options = {}) {
     this.element = element;
     this.callback = callback;
@@ -43,11 +42,9 @@ export default class WheelInput {
     this.events = WHEEL_EVENTS.concat(options.events || []);
 
     this.handleEvent = this.handleEvent.bind(this);
-    this.events.forEach(event => element.addEventListener(
-      event,
-      this.handleEvent,
-      passiveSupported ? {passive: false} : false
-    ));
+    this.events.forEach(event =>
+      element.addEventListener(event, this.handleEvent, passiveSupported ? {passive: false} : false)
+    );
   }
 
   destroy() {

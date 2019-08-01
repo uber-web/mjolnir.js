@@ -83,11 +83,13 @@ export default class EventRegistrar {
       };
       for (let i = 0; i < entries.length; i++) {
         const {type, handler} = entries[i];
-        handler(Object.assign({}, event, {
-          type,
-          stopPropagation,
-          stopImmediatePropagation
-        }));
+        handler(
+          Object.assign({}, event, {
+            type,
+            stopPropagation,
+            stopImmediatePropagation
+          })
+        );
         if (immediatePropagationStopped) {
           break;
         }
@@ -101,13 +103,9 @@ export default class EventRegistrar {
   _normalizeEvent(event) {
     const rootElement = this.eventManager.element;
 
-    return Object.assign({}, event,
-      whichButtons(event),
-      getOffsetPosition(event, rootElement),
-      {
-        handled: false,
-        rootElement
-      });
+    return Object.assign({}, event, whichButtons(event), getOffsetPosition(event, rootElement), {
+      handled: false,
+      rootElement
+    });
   }
-
 }

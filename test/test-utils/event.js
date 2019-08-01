@@ -19,7 +19,6 @@
 // THE SOFTWARE.
 
 class NodeMock {
-
   constructor({id, children = []}, parentNode = null) {
     this.id = id;
     this.style = {};

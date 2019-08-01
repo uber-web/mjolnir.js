@@ -31,8 +31,11 @@ test('wheelInput#constructor', t => {
   const numWheelEvents = 3; // WHEEL_EVENTS.length
   const addELSpy = spy(eventRegistrar, 'addEventListener');
   wheelInput = new WheelInput(eventRegistrar, () => {}, {events});
-  t.equal(addELSpy.callCount, events.length + numWheelEvents,
-    'should call addEventListener once for each passed event:handler pair');
+  t.equal(
+    addELSpy.callCount,
+    events.length + numWheelEvents,
+    'should call addEventListener once for each passed event:handler pair'
+  );
   t.end();
 });
 
@@ -43,22 +46,30 @@ test('wheelInput#destroy', t => {
   const removeELSpy = spy(eventRegistrar, 'removeEventListener');
   const wheelInput = new WheelInput(eventRegistrar, () => {}, {events});
   wheelInput.destroy();
-  t.equal(removeELSpy.callCount, events.length + numWheelEvents,
-    'should call removeEventListener once for each passed event:handler pair');
+  t.equal(
+    removeELSpy.callCount,
+    events.length + numWheelEvents,
+    'should call removeEventListener once for each passed event:handler pair'
+  );
   t.end();
 });
 
 test('moveInput#enableEventType', t => {
-  const WHEEL_EVENT_TYPES = ['wheel'];	// wheel-input.EVENT_TYPE
-  const wheelInput = new WheelInput(createEventRegistrarMock(), null, {enable: false});
+  const WHEEL_EVENT_TYPES = ['wheel']; // wheel-input.EVENT_TYPE
+  const wheelInput = new WheelInput(createEventRegistrarMock(), null, {
+    enable: false
+  });
   wheelInput.enableEventType('foo', true);
   t.notOk(wheelInput.options.enable, 'should not enable for unsupported event');
 
-  t.ok(WHEEL_EVENT_TYPES.every(event => {
-    wheelInput.options.enable = false;
-    wheelInput.enableEventType(event, true);
-    return wheelInput.options.enable;
-  }), 'should enable for all supported events');
+  t.ok(
+    WHEEL_EVENT_TYPES.every(event => {
+      wheelInput.options.enable = false;
+      wheelInput.enableEventType(event, true);
+      return wheelInput.options.enable;
+    }),
+    'should enable for all supported events'
+  );
   t.end();
 });
 
@@ -73,7 +84,9 @@ test('wheelInput#handleEvent', t => {
     clientY: 456,
     target: eventRegistrar
   };
-  const wheelInput = new WheelInput(eventRegistrar, callbackSpy, {enable: false});
+  const wheelInput = new WheelInput(eventRegistrar, callbackSpy, {
+    enable: false
+  });
   t.notOk(callbackSpy.called, 'callback should not be called when disabled');
   wheelInput.options.enable = true;
   wheelInput.handleEvent(wheelEventMock);

@@ -2,7 +2,6 @@ const noop = () => {};
 
 // Hammer.Manager mock for use in environments without `document` / `window`.
 export class HammerManagerMock {
-
   constructor(element) {
     this.handlers = {};
   }
@@ -52,7 +51,6 @@ export class HammerManagerMock {
   }
 
   emit(event, data) {
-
     const handlersArray = this.handlers[event] && this.handlers[event].slice();
     if (!handlersArray || !handlersArray.length) {
       return;
@@ -60,5 +58,4 @@ export class HammerManagerMock {
 
     handlersArray.forEach(handler => handler(data));
   }
-
 }
