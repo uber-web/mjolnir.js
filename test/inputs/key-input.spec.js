@@ -31,8 +31,11 @@ test('keyInput#constructor', t => {
   const numKeyEvents = 2; // KEY_EVENTS.length
   const addELSpy = spy(eventRegistrar, 'addEventListener');
   keyInput = new KeyInput(eventRegistrar, () => {}, {events});
-  t.equal(addELSpy.callCount, events.length + numKeyEvents,
-    'should call addEventListener once for each passed event:handler pair');
+  t.equal(
+    addELSpy.callCount,
+    events.length + numKeyEvents,
+    'should call addEventListener once for each passed event:handler pair'
+  );
   t.end();
 });
 
@@ -43,8 +46,11 @@ test('keyInput#destroy', t => {
   const removeELSpy = spy(eventRegistrar, 'removeEventListener');
   const keyInput = new KeyInput(eventRegistrar, () => {}, {events});
   keyInput.destroy();
-  t.equal(removeELSpy.callCount, events.length + numKeyEvents,
-    'should call removeEventListener once for each passed event:handler pair');
+  t.equal(
+    removeELSpy.callCount,
+    events.length + numKeyEvents,
+    'should call removeEventListener once for each passed event:handler pair'
+  );
   t.end();
 });
 

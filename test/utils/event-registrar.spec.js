@@ -102,19 +102,23 @@ test('EventRegistrar#normalizeEvent', t => {
   t.ok(normalizedEvent.offsetCenter, 'offsetCenter is populated');
   t.is(normalizedEvent.handled, false, 'event marked as not handled');
   t.is(typeof normalizedEvent.stopPropagation, 'function', 'event.stopPropagation is a function');
-  t.is(typeof normalizedEvent.stopImmediatePropagation, 'function',
-    'event.stopImmediatePropagation is a function');
+  t.is(
+    typeof normalizedEvent.stopImmediatePropagation,
+    'function',
+    'event.stopImmediatePropagation is a function'
+  );
 
   t.end();
 });
 
 test('EventRegistrar#propagation', t => {
   const rootNode = createEventRegistrarMock({
-    id: 'root', children: [
-      {id: 'child-0', children: [
-        {id: 'grandchild-00'},
-        {id: 'grandchild-01'}
-      ]},
+    id: 'root',
+    children: [
+      {
+        id: 'child-0',
+        children: [{id: 'grandchild-00'}, {id: 'grandchild-01'}]
+      },
       {id: 'child-1'}
     ]
   });
@@ -146,8 +150,10 @@ test('EventRegistrar#propagation', t => {
   };
   eventRegistrar.handleEvent(eventMock);
 
-  t.deepEquals(handlerCalls, ['foo@grandchild-00', 'foo@child-0', 'foo@child-0:2'],
-    'propagated correctly');
+  t.deepEquals(
+    handlerCalls,
+    ['foo@grandchild-00', 'foo@child-0', 'foo@child-0:2'],
+    'propagated correctly'
+  );
   t.end();
-
 });

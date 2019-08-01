@@ -1,6 +1,7 @@
 # Change Log
 
 #### [2.2.2] - June 5, 2019
+
 - Fix undefind userAgent (#40)
 
 #### [2.1.1] - Jun 3, 2019

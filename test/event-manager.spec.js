@@ -61,14 +61,10 @@ test('eventManager#destroy', t => {
   spy(keyInput, 'destroy');
   eventManager.destroy();
 
-  t.equal(manager.destroy.callCount, 1,
-    'Manager.destroy() should be called once');
-  t.equal(moveInput.destroy.callCount, 1,
-    'MoveInput.destroy() should be called once');
-  t.equal(wheelInput.destroy.callCount, 1,
-    'WheelInput.destroy() should be called once');
-  t.equal(keyInput.destroy.callCount, 1,
-    'KeyInput.destroy() should be called once');
+  t.equal(manager.destroy.callCount, 1, 'Manager.destroy() should be called once');
+  t.equal(moveInput.destroy.callCount, 1, 'MoveInput.destroy() should be called once');
+  t.equal(wheelInput.destroy.callCount, 1, 'WheelInput.destroy() should be called once');
+  t.equal(keyInput.destroy.callCount, 1, 'KeyInput.destroy() should be called once');
 
   eventManager.destroy();
   t.pass('EventManager does not throw error on destroyed twice');
@@ -85,13 +81,15 @@ test('eventManager#setElement', t => {
     foo: () => {}
   };
   spy(events, 'foo');
-  const eventManager = new EventManager(null, {Manager: HammerManagerMock, events});
+  const eventManager = new EventManager(null, {
+    Manager: HammerManagerMock,
+    events
+  });
   spy(eventManager, 'destroy');
 
   eventManager.setElement(createEventRegistrarMock());
   t.ok(eventManager.manager, 'Hammer.Manager created');
-  t.equal(eventManager.destroy.callCount, 0,
-    'Manager.destroy() should not be called');
+  t.equal(eventManager.destroy.callCount, 0, 'Manager.destroy() should not be called');
   eventManager.manager.emit('foo', {type: 'foo', srcEvent: {}});
   t.equal(events.foo.callCount, 1, 'event is transfered');
 
@@ -99,8 +97,7 @@ test('eventManager#setElement', t => {
   eventManager.setElement(createEventRegistrarMock());
   t.ok(eventManager.manager, 'Hammer.Manager created');
   t.notEqual(eventManager.manager, oldManager, 'manager has changed');
-  t.equal(eventManager.destroy.callCount, 1,
-    'Manager.destroy() should be called once');
+  t.equal(eventManager.destroy.callCount, 1, 'Manager.destroy() should be called once');
   eventManager.manager.emit('foo', {type: 'foo', srcEvent: {}});
   t.equal(events.foo.callCount, 2, 'event is transfered');
 
@@ -112,16 +109,22 @@ test('eventManager#on', t => {
   const addEHSpy = spy(eventManager, '_addEventHandler');
 
   eventManager.on('foo', () => {});
-  t.equal(addEHSpy.callCount, 1,
-    '_addEventHandler should be called once when passing a single event and handler');
+  t.equal(
+    addEHSpy.callCount,
+    1,
+    '_addEventHandler should be called once when passing a single event and handler'
+  );
 
   addEHSpy.reset();
   eventManager.on({
     bar: () => {},
     baz: () => {}
   });
-  t.equal(addEHSpy.callCount, 2,
-    '_addEventHandler should be called once for each entry in an event:handler map');
+  t.equal(
+    addEHSpy.callCount,
+    2,
+    '_addEventHandler should be called once for each entry in an event:handler map'
+  );
   t.end();
 });
 
@@ -130,23 +133,31 @@ test('eventManager#off', t => {
   const removeEHSpy = spy(eventManager, '_removeEventHandler');
 
   eventManager.off('foo', () => {});
-  t.equal(removeEHSpy.callCount, 1,
-    '_removeEventHandler should be called once when passing a single event and handler');
+  t.equal(
+    removeEHSpy.callCount,
+    1,
+    '_removeEventHandler should be called once when passing a single event and handler'
+  );
 
   removeEHSpy.reset();
   eventManager.off({
     bar: () => {},
     baz: () => {}
   });
-  t.equal(removeEHSpy.callCount, 2,
-    '_removeEventHandler should be called once for each entry in an event:handler map');
+  t.equal(
+    removeEHSpy.callCount,
+    2,
+    '_removeEventHandler should be called once for each entry in an event:handler map'
+  );
   t.end();
 });
 
 test('eventManager#eventHandling', t => {
   const eventRegistrar = createEventRegistrarMock();
   const eventMock = {type: 'foo'};
-  const eventManager = new EventManager(eventRegistrar, {Manager: HammerManagerMock});
+  const eventManager = new EventManager(eventRegistrar, {
+    Manager: HammerManagerMock
+  });
   const emitSpy = spy(eventManager.manager, 'emit');
 
   eventManager._onOtherEvent(eventMock);
@@ -168,7 +179,9 @@ test('eventManager#normalizeEvent', t => {
       target: {}
     }
   };
-  const eventManager = new EventManager(eventRegistrar, {Manager: HammerManagerMock});
+  const eventManager = new EventManager(eventRegistrar, {
+    Manager: HammerManagerMock
+  });
 
   let normalizedEvent;
 
@@ -188,15 +201,18 @@ test('eventManager#normalizeEvent', t => {
 
 test('eventManager#propagation', t => {
   const rootNode = createEventRegistrarMock({
-    id: 'root', children: [
-      {id: 'child-0', children: [
-        {id: 'grandchild-00'},
-        {id: 'grandchild-01'}
-      ]},
+    id: 'root',
+    children: [
+      {
+        id: 'child-0',
+        children: [{id: 'grandchild-00'}, {id: 'grandchild-01'}]
+      },
       {id: 'child-1'}
     ]
   });
-  const eventManager = new EventManager(rootNode, {Manager: HammerManagerMock});
+  const eventManager = new EventManager(rootNode, {
+    Manager: HammerManagerMock
+  });
 
   const handlerCalls = [];
 
@@ -215,12 +231,15 @@ test('eventManager#propagation', t => {
   // Should not be called (not on propagation path)
   eventManager.on('foo', fooHandler('foo@grandchild-01'), rootNode.find('grandchild-01'));
 
-  eventManager.on({
-    // Should be called
-    foo: fooHandler('foo@child-0:2'),
-    // Should not be called (wrong event type)
-    bar: fooHandler('bar@child-0')
-  }, rootNode.find('child-0'));
+  eventManager.on(
+    {
+      // Should be called
+      foo: fooHandler('foo@child-0:2'),
+      // Should not be called (wrong event type)
+      bar: fooHandler('bar@child-0')
+    },
+    rootNode.find('child-0')
+  );
 
   const eventMock = {
     type: 'foo',
@@ -230,8 +249,10 @@ test('eventManager#propagation', t => {
   };
   eventManager._onOtherEvent(eventMock);
 
-  t.deepEquals(handlerCalls, ['foo@grandchild-00', 'foo@child-0', 'foo@child-0:2'],
-    'propagated correctly');
+  t.deepEquals(
+    handlerCalls,
+    ['foo@grandchild-00', 'foo@child-0', 'foo@child-0:2'],
+    'propagated correctly'
+  );
   t.end();
-
 });

@@ -87,8 +87,7 @@ export default class EventManager {
     this.manager = new ManagerClass(element, {
       touchAction: options.touchAction,
       recognizers: options.recognizers || RECOGNIZERS
-    })
-      .on('hammer.input', this._onBasicInput);
+    }).on('hammer.input', this._onBasicInput);
 
     if (!options.recognizers) {
       // Set default recognize withs
@@ -117,10 +116,18 @@ export default class EventManager {
     // Handle events not handled by Hammer.js:
     // - mouse wheel
     // - pointer/touch/mouse move
-    this.wheelInput = new WheelInput(element, this._onOtherEvent, {enable: false});
-    this.moveInput = new MoveInput(element, this._onOtherEvent, {enable: false});
-    this.keyInput = new KeyInput(element, this._onOtherEvent, {enable: false});
-    this.contextmenuInput = new ContextmenuInput(element, this._onOtherEvent, {enable: false});
+    this.wheelInput = new WheelInput(element, this._onOtherEvent, {
+      enable: false
+    });
+    this.moveInput = new MoveInput(element, this._onOtherEvent, {
+      enable: false
+    });
+    this.keyInput = new KeyInput(element, this._onOtherEvent, {
+      enable: false
+    });
+    this.contextmenuInput = new ContextmenuInput(element, this._onOtherEvent, {
+      enable: false
+    });
 
     // Register all existing events
     for (const [eventAlias, eventRegistrar] of this.events) {

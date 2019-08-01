@@ -22,17 +22,19 @@ import Hammer from './utils/hammer';
 
 // This module contains constants that must be conditionally required
 // due to `window`/`document` references downstream.
-export const RECOGNIZERS = Hammer ? [
-  [Hammer.Rotate, {enable: false}],
-  [Hammer.Pinch, {enable: false}],
-  [Hammer.Swipe, {enable: false}],
-  [Hammer.Pan, {threshold: 0, enable: false}],
-  [Hammer.Press, {enable: false}],
-  [Hammer.Tap, {event: 'doubletap', taps: 2, enable: false}],
-  // TODO - rename to 'tap' and 'singletap' in the next major release
-  [Hammer.Tap, {event: 'anytap', enable: false}],
-  [Hammer.Tap, {enable: false}]
-] : null;
+export const RECOGNIZERS = Hammer
+  ? [
+      [Hammer.Rotate, {enable: false}],
+      [Hammer.Pinch, {enable: false}],
+      [Hammer.Swipe, {enable: false}],
+      [Hammer.Pan, {threshold: 0, enable: false}],
+      [Hammer.Press, {enable: false}],
+      [Hammer.Tap, {event: 'doubletap', taps: 2, enable: false}],
+      // TODO - rename to 'tap' and 'singletap' in the next major release
+      [Hammer.Tap, {event: 'anytap', enable: false}],
+      [Hammer.Tap, {enable: false}]
+    ]
+  : null;
 
 // Recognize the following gestures even if a given recognizer succeeds
 export const RECOGNIZER_COMPATIBLE_MAP = {
@@ -67,18 +69,8 @@ export const BASIC_EVENT_ALIASES = {
 };
 
 export const INPUT_EVENT_TYPES = {
-  KEY_EVENTS: [
-    'keydown',
-    'keyup'
-  ],
-  MOUSE_EVENTS: [
-    'mousedown',
-    'mousemove',
-    'mouseup',
-    'mouseover',
-    'mouseout',
-    'mouseleave'
-  ],
+  KEY_EVENTS: ['keydown', 'keyup'],
+  MOUSE_EVENTS: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'mouseleave'],
   WHEEL_EVENTS: [
     // Chrome, Safari
     'wheel',
