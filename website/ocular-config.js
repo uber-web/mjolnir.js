@@ -28,7 +28,24 @@ module.exports = {
 
   DOCS,
 
-  PROJECTS: [], // Other linked projects
+  PROJECTS: [
+    {
+      name: 'deck.gl',
+      url: 'https://deck.gl'
+    },
+    {
+      name: 'luma.gl',
+      url: 'https://luma.gl'
+    },
+    {
+      name: 'react-map-gl',
+      url: 'https://uber.github.io/react-map-gl'
+    },
+    {
+      name: 'nebula.gl',
+      url: 'https://nebula.gl/'
+    }
+  ], // Other linked projects
 
   PROJECT_TYPE: 'github',
   PROJECT_NAME: 'mjolnir.js',

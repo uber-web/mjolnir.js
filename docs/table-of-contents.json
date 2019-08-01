@@ -5,22 +5,15 @@
       "title": "Overview",
       "entries": [
         {"entry": "docs/README"},
-        {"entry": "docs/whats-new"},
+        {"entry": "docs/get-started.md"},
         {"entry": "docs/upgrade-guide"}
-      ]
-    },
-    {
-      "title": "Developer Guide",
-      "entries": [
-        {"entry": "docs/get-started/README.md"},
-        {"entry": "docs/advanced/integrating.md"},
-        {"entry": "docs/advanced/pointer-events.md"}
       ]
     },
     {
       "title": "API Reference",
       "entries": [
-        {"entry": "docs/api-reference/event-manager.md"}
+        {"entry": "docs/api-reference/event-manager.md"},
+        {"entry": "docs/api-reference/event.md"}
       ]
     }
   ]
