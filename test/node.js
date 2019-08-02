@@ -21,12 +21,24 @@
 // Enables ES2015 import/export in Node.js
 require('reify');
 
-const {JSDOM} = require('jsdom');
-const dom = new JSDOM(`<!DOCTYPE html>`);
-/* global global */
-global.window = dom.window;
-global.navigator = dom.window.navigator;
-global.document = dom.window.document;
+// eslint-disable-next-line
+if (process.env.MOCK_BROWSER) {
+  // eslint-disable-next-line
+  console.log('Loading hammer.js with JSDOM...');
+
+  const {JSDOM} = require('jsdom');
+  const dom = new JSDOM('');
+  /* global global */
+  global.window = dom.window;
+  global.navigator = dom.window.navigator;
+  global.document = dom.window.document;
+
+  const moduleAlias = require('module-alias');
+  const {resolve} = require('path');
+  moduleAlias.addAliases({
+    './utils/hammer': resolve(__dirname, '../src/utils/hammer.browser.js')
+  });
+}
 
 // Run the tests
 require('./index');

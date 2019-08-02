@@ -38,7 +38,12 @@ test('eventManager#constructor', t => {
 
   eventManager = new EventManager(eventRegistrar, {
     events: {foo: () => {}},
-    Manager: HammerManagerMock
+    Manager: HammerManagerMock,
+    recognizerOptions: {
+      tap: {
+        threshold: 10
+      }
+    }
   });
   t.ok(onSpy.called, 'on() is called if options.events is passed');
   EventManager.prototype.on = origOn;
@@ -108,8 +113,8 @@ test('eventManager#on', t => {
   const eventManager = new EventManager(createEventRegistrarMock());
   const toggleRecSpy = spy(eventManager, '_toggleRecognizer');
 
-  eventManager.on('foo', () => {});
-  t.ok(eventManager.events.get('foo'), 'event foo is registered');
+  eventManager.on('dblclick', () => {});
+  t.ok(eventManager.events.get('doubletap'), 'event doubletap is registered');
   t.equal(
     toggleRecSpy.callCount,
     1,
@@ -118,8 +123,8 @@ test('eventManager#on', t => {
 
   toggleRecSpy.reset();
   eventManager.on({
-    bar: () => {},
-    baz: () => {}
+    click: () => {},
+    dblclick: () => {}
   });
   t.equal(
     toggleRecSpy.callCount,
@@ -133,8 +138,8 @@ test('eventManager#once', t => {
   const eventManager = new EventManager(createEventRegistrarMock());
   const toggleRecSpy = spy(eventManager, '_toggleRecognizer');
 
-  eventManager.once('foo', () => {});
-  t.ok(eventManager.events.get('foo'), 'event foo is registered');
+  eventManager.once('dblclick', () => {});
+  t.ok(eventManager.events.get('doubletap'), 'event doubletap is registered');
   t.equal(
     toggleRecSpy.callCount,
     1,
@@ -143,8 +148,8 @@ test('eventManager#once', t => {
 
   toggleRecSpy.reset();
   eventManager.once({
-    bar: () => {},
-    baz: () => {}
+    click: () => {},
+    dblclick: () => {}
   });
   t.equal(
     toggleRecSpy.callCount,
@@ -162,7 +167,7 @@ test('eventManager#off', t => {
 
   eventManager.on('click', handler1);
   eventManager.on('tap', handler2);
-  eventManager.on('pointermove', handler1);
+  eventManager.on('dblclick', handler1);
   eventManager.on('panstart', handler1);
   eventManager.on('panmove', handler2);
 
@@ -178,7 +183,7 @@ test('eventManager#off', t => {
   eventManager.off({
     tap: handler1,
     panstart: handler1,
-    pointermove: handler1
+    dblclick: handler1
   });
   t.equal(
     toggleRecSpy.callCount,

@@ -33,7 +33,9 @@
     "start": "(cd examples/main && (path-exists node_modules || npm i) && npm run start-local)",
     "build": "ocular-clean && ocular-build",
     "lint": "ocular-lint",
-    "cover": "ocular-test cover",
+    "cover:node": "nyc --silent ocular-test node",
+    "cover:browser": "MOCK_BROWSER=true nyc --silent --no-clean ocular-test node",
+    "cover": "npm run cover:node && npm run cover:browser && nyc report --reporter=lcov",
     "publish-prod": "ocular-publish prod",
     "publish-beta": "ocular-publish beta",
     "test": "ocular-test"
