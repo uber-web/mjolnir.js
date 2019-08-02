@@ -5,6 +5,8 @@ dist: trusty
 node_js:
   - '10'
 install:
-  - yarn
+  - yarn bootstrap
 script:
-  - npm run test
+  - yarn test ci
+after_success:
+  - cat coverage/lcov.info | coveralls
