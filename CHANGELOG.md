@@ -1,5 +1,10 @@
 # Change Log
 
+#### [2.3.0] - Aug 2, 2019
+
+- Use ocular-dev-tools (#43)
+- Add EventManager.once (#46)
+
 #### [2.2.2] - June 5, 2019
 
 - Fix undefind userAgent (#40)
