@@ -1,4 +1,50 @@
-body {margin: 0}
-#container {width: 50vw; height: 80vh; margin-left: 10vw; margin-top: 10vh; background: #e8e8e8; padding: 20px; position: relative; overflow: hidden;}
-#options {position: absolute; right: 0; top: 0; height: 100%; overflow-y: auto; padding: 20px;}
-#red-box {position: absolute; width: 100px; height: 100px; left: 40%; top: 40%; background: red;}
+body {
+  margin: 0;
+}
+* {
+  box-sizing: border-box;
+}
+#container {
+  left: 20%;
+  width: 80%;
+  height: 60%;
+  background: #e8e8e8;
+  padding: 20px;
+  position: absolute;
+  overflow: hidden;
+}
+#logs {
+  text-align: center;
+  font-size: 0.9em;
+  line-height: 1.2;
+  position: absolute;
+  left: 20%;
+  top: 60%;
+  width: 80%;
+  height: 40%;
+  overflow-y: hidden;
+  padding: 20px;
+}
+#logs span {
+  text-align: left;
+  display: inline-block;
+  width: 100px;
+}
+#options {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 20px;
+}
+#red-box {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: red;
+}

@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {render} from 'react-dom';
 import {EventManager} from 'mjolnir.js';
 
@@ -97,7 +97,7 @@ export default class App extends Component {
           id={id}
           type="checkbox"
           name={eventName}
-          checked={options[eventName]}
+          checked={options[eventName] || false}
           onChange={this._onUpdateOption}
         />
         <label htmlFor={id}>{eventName}</label>
@@ -106,23 +106,22 @@ export default class App extends Component {
   }
 
   _renderEvent(evt, index) {
-    const fields = [
-      evt.type,
-      evt.offsetCenter && evt.offsetCenter.x.toFixed(0),
-      evt.offsetCenter && evt.offsetCenter.y.toFixed(0),
-      evt.key,
-      evt.leftButton && 'left',
-      evt.middleButton && 'middle',
-      evt.rightButton && 'right',
-      evt.target.id
-    ].filter(Boolean);
-
     return (
-      <tr key={index}>
-        {fields.map((f, i) => (
-          <td key={i}>{f}</td>
-        ))}
-      </tr>
+      <div key={index}>
+        <span key="type">{evt.type}</span>
+        <span key="position">
+          {evt.offsetCenter
+            ? `(${evt.offsetCenter.x.toFixed(0)}, ${evt.offsetCenter.y.toFixed(0)})`
+            : ''}
+        </span>
+        <span key="button">
+          {evt.key ||
+            (evt.leftButton && 'left button') ||
+            (evt.middleButton && 'middle button') ||
+            (evt.rightButton && 'right button')}
+        </span>
+        <span key="target">{evt.target.id}</span>
+      </div>
     );
   }
 
@@ -130,15 +129,15 @@ export default class App extends Component {
     const {events} = this.state;
 
     return (
-      <div id="container" ref={this._onLoad}>
-        <div id="red-box" ref={this._onLoadRedBox} />
+      <Fragment>
+        <div id="container" ref={this._onLoad}>
+          <div id="red-box" ref={this._onLoadRedBox} />
+        </div>
 
-        <table>
-          <tbody>{events.map(this._renderEvent)}</tbody>
-        </table>
+        <div id="logs">{events.map(this._renderEvent)}</div>
 
         <div id="options">{EVENTS.map(this._renderCheckbox)}</div>
-      </div>
+      </Fragment>
     );
   }
 }
