@@ -122,7 +122,31 @@ test('eventManager#on', t => {
   });
   t.equal(
     addEHSpy.callCount,
-    2,
+    3,
+    '_addEventHandler should be called once for each entry in an event:handler map'
+  );
+  t.end();
+});
+
+test('eventManager#once', t => {
+  const eventManager = new EventManager(createEventRegistrarMock());
+  const addEHSpy = spy(eventManager, '_addEventHandler');
+
+  eventManager.once('foo', () => {});
+  t.equal(
+    addEHSpy.callCount,
+    1,
+    '_addEventHandler should be called once when passing a single event and handler'
+  );
+
+  addEHSpy.reset();
+  eventManager.once({
+    bar: () => {},
+    baz: () => {}
+  });
+  t.equal(
+    addEHSpy.callCount,
+    3,
     '_addEventHandler should be called once for each entry in an event:handler map'
   );
   t.end();
@@ -146,7 +170,7 @@ test('eventManager#off', t => {
   });
   t.equal(
     removeEHSpy.callCount,
-    2,
+    3,
     '_removeEventHandler should be called once for each entry in an event:handler map'
   );
   t.end();

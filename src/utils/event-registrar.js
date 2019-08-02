@@ -14,13 +14,13 @@ export default class EventRegistrar {
     return this.handlers.length === 0;
   }
 
-  add(type, handler, srcElement = 'root') {
+  add(type, handler, srcElement = 'root', once = false) {
     const {handlers, handlersByElement} = this;
 
     if (!handlersByElement.has(srcElement)) {
       handlersByElement.set(srcElement, []);
     }
-    const entry = {type, handler, srcElement};
+    const entry = {type, handler, srcElement, once};
     handlers.push(entry);
     handlersByElement.get(srcElement).push(entry);
   }
@@ -81,8 +81,10 @@ export default class EventRegistrar {
         event.handled = true;
         immediatePropagationStopped = true;
       };
+      const entriesToRemove = [];
+
       for (let i = 0; i < entries.length; i++) {
-        const {type, handler} = entries[i];
+        const {type, handler, once} = entries[i];
         handler(
           Object.assign({}, event, {
             type,
@@ -90,9 +92,17 @@ export default class EventRegistrar {
             stopImmediatePropagation
           })
         );
+        if (once) {
+          entriesToRemove.push(entries[i]);
+        }
         if (immediatePropagationStopped) {
           break;
         }
+      }
+
+      for (let i = 0; i < entriesToRemove.length; i++) {
+        const {type, handler} = entriesToRemove[i];
+        this.remove(type, handler);
       }
     }
   }
