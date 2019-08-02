@@ -54,6 +54,7 @@ test('keyInput#destroy', t => {
   t.end();
 });
 
+/* eslint-disable max-statements */
 test('keyInput#enableEventType', t => {
   const eventRegistrar = createEventRegistrarMock();
   const keyDownMock = {
@@ -65,6 +66,10 @@ test('keyInput#enableEventType', t => {
     type: 'keyup',
     key: 'a',
     target: eventRegistrar
+  };
+  const keyUpMock2 = {
+    type: 'keyup',
+    key: 'a'
   };
 
   let callbackSpy = spy();
@@ -88,6 +93,20 @@ test('keyInput#enableEventType', t => {
   keyInput.enableEventType('keyup', true);
   keyInput.handleEvent(keyUpMock);
   t.ok(callbackSpy.called, 'callback should be called on key up when enabled...');
+
+  callbackSpy.reset();
+  keyUpMock2.srcElement = {
+    tagName: 'TEXTAREA'
+  };
+  keyInput.handleEvent(keyUpMock2);
+  t.notOk(callbackSpy.called, 'callback should not be called when typing into a text box');
+
+  keyUpMock2.srcElement = {
+    tagName: 'INPUT',
+    type: 'text'
+  };
+  keyInput.handleEvent(keyUpMock2);
+  t.notOk(callbackSpy.called, 'callback should not be called when typing into a text box');
 
   t.end();
 });

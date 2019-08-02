@@ -18,27 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// Enables ES2015 import/export in Node.js
-require('reify');
+import test from 'tape-catch';
+import {global, window, document, userAgent, passiveSupported} from 'mjolnir.js/utils/globals';
 
-// eslint-disable-next-line
-if (process.env.MOCK_BROWSER) {
-  // eslint-disable-next-line
-  console.log('Loading hammer.js with JSDOM...');
+test('globals', t => {
+  t.ok(global, 'global is an object');
+  t.ok(window, 'window is an object');
+  t.ok(document, 'document is an object');
+  t.is(typeof userAgent, 'string', 'userAgent is a string');
+  t.is(typeof passiveSupported, 'boolean', 'passiveSupported is a boolean');
 
-  const {JSDOM} = require('jsdom');
-  const dom = new JSDOM('');
-  /* global global */
-  global.window = dom.window;
-  global.navigator = dom.window.navigator;
-  global.document = dom.window.document;
-
-  const moduleAlias = require('module-alias');
-  const {resolve} = require('path');
-  moduleAlias.addAliases({
-    './utils/hammer': resolve(__dirname, '../src/utils/hammer.browser.js')
-  });
-}
-
-// Run the tests
-require('./index');
+  t.end();
+});
