@@ -161,28 +161,12 @@ export default class EventManager {
 
   // Register an event handler function to be called on `event`.
   on(event, handler, srcElement) {
-    if (typeof event === 'string') {
-      this._addEventHandler(event, handler, srcElement);
-    } else {
-      srcElement = handler;
-      // If `event` is a map, call `on()` for each entry.
-      for (const eventName in event) {
-        this.on(eventName, event[eventName], srcElement);
-      }
-    }
+    this._addEventHandler(event, handler, srcElement, false);
   }
 
   // Register an event handler function to be called on `event`, then remove it
   once(event, handler, srcElement) {
-    if (typeof event === 'string') {
-      this._addEventHandler(event, handler, srcElement, true);
-    } else {
-      srcElement = handler;
-      // If `event` is a map, call `once()` for each entry.
-      for (const eventName in event) {
-        this.once(eventName, event[eventName], srcElement);
-      }
-    }
+    this._addEventHandler(event, handler, srcElement, true);
   }
 
   /**
@@ -191,14 +175,7 @@ export default class EventManager {
    * @param {Function} [handler]    The function to be called on `event`.
    */
   off(event, handler) {
-    if (typeof event === 'string') {
-      this._removeEventHandler(event, handler);
-    } else {
-      // If `event` is a map, call `off()` for each entry.
-      for (const eventName in event) {
-        this._removeEventHandler(eventName, event[eventName]);
-      }
-    }
+    this._removeEventHandler(event, handler);
   }
 
   /*
@@ -247,6 +224,15 @@ export default class EventManager {
    * Process the event registration for a single event + handler.
    */
   _addEventHandler(event, handler, srcElement, once) {
+    if (typeof event !== 'string') {
+      srcElement = handler;
+      // If `event` is a map, call `on()` for each entry.
+      for (const eventName in event) {
+        this._addEventHandler(eventName, event[eventName], srcElement, once);
+      }
+      return;
+    }
+
     const {manager, events} = this;
     // Alias to a recognized gesture as necessary.
     const eventAlias = GESTURE_EVENT_ALIASES[event] || event;
@@ -270,6 +256,14 @@ export default class EventManager {
    * Process the event deregistration for a single event + handler.
    */
   _removeEventHandler(event, handler) {
+    if (typeof event !== 'string') {
+      // If `event` is a map, call `off()` for each entry.
+      for (const eventName in event) {
+        this._removeEventHandler(eventName, event[eventName]);
+      }
+      return;
+    }
+
     const {events} = this;
     // Alias to a recognized gesture as necessary.
     const eventAlias = GESTURE_EVENT_ALIASES[event] || event;

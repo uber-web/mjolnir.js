@@ -122,7 +122,7 @@ test('eventManager#on', t => {
   });
   t.equal(
     addEHSpy.callCount,
-    2,
+    3,
     '_addEventHandler should be called once for each entry in an event:handler map'
   );
   t.end();
@@ -146,7 +146,7 @@ test('eventManager#once', t => {
   });
   t.equal(
     addEHSpy.callCount,
-    2,
+    3,
     '_addEventHandler should be called once for each entry in an event:handler map'
   );
   t.end();
@@ -170,7 +170,7 @@ test('eventManager#off', t => {
   });
   t.equal(
     removeEHSpy.callCount,
-    2,
+    3,
     '_removeEventHandler should be called once for each entry in an event:handler map'
   );
   t.end();
