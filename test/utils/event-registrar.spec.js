@@ -124,6 +124,17 @@ test('EventRegistrar#propagation', t => {
   });
   const eventRegistrar = new EventRegistrar({element: rootNode});
 
+  t.doesNotThrow(
+    () =>
+      eventRegistrar.handleEvent({
+        type: 'foo',
+        srcEvent: {
+          target: rootNode
+        }
+      }),
+    'event without handlers'
+  );
+
   const handlerCalls = [];
 
   const fooHandler = (

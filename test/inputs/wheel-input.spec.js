@@ -75,7 +75,7 @@ test('moveInput#enableEventType', t => {
 
 test('wheelInput#handleEvent', t => {
   const eventRegistrar = createEventRegistrarMock();
-  const callbackSpy = spy();
+
   const wheelEventMock = {
     type: 'foo',
     preventDefault: () => {},
@@ -84,26 +84,28 @@ test('wheelInput#handleEvent', t => {
     clientY: 456,
     target: eventRegistrar
   };
-  const wheelInput = new WheelInput(eventRegistrar, callbackSpy, {
+
+  let callbackParams = null;
+  const callback = evt => (callbackParams = evt);
+
+  const wheelInput = new WheelInput(eventRegistrar, callback, {
     enable: false
   });
-  t.notOk(callbackSpy.called, 'callback should not be called when disabled');
+
+  wheelInput.handleEvent(wheelEventMock);
+  t.notOk(callbackParams, 'callback should not be called when disabled');
+
   wheelInput.options.enable = true;
   wheelInput.handleEvent(wheelEventMock);
+  t.ok(callbackParams, 'callback should be called on wheel event when enabled');
+  t.is(callbackParams.delta, -1, 'callback contains the correct delta');
+  t.deepEquals(callbackParams.center, {x: 123, y: 456}, 'callback contains the correct position');
 
-  t.ok(callbackSpy.called, 'callback should be called on wheel event when enabled...');
-  // TODO fix spy
-  // const EVENT_TYPE = 'wheel';  // wheel-input.EVENT_TYPE
-  // t.deepEqual(callbackSpy.calls[0].arguments[0], {
-  //   type: EVENT_TYPE,
-  //   center: {
-  //     x: wheelEventMock.clientX,
-  //     y: wheelEventMock.clientY
-  //   },
-  //   delta: -wheelEventMock.deltaY,
-  //   pointerType: 'mouse',
-  //   srcEvent: wheelEventMock,
-  //   target: eventRegistrar
-  // }, '...and should be called with correct params');
+  callbackParams = null;
+  wheelEventMock.deltaY = 4.000244140625;
+  wheelEventMock.shiftKey = true;
+  wheelInput.handleEvent(wheelEventMock);
+  t.is(callbackParams.delta, -0.25, 'callback contains the correct delta');
+
   t.end();
 });

@@ -57,7 +57,12 @@ test('contextmenuInput#handleEvent', t => {
   const contextmenuInput = new ContextmenuInput(eventRegistrar, callbackSpy);
   contextmenuInput.handleEvent(contextmenuEventMock);
 
-  t.ok(callbackSpy.callCount, 'callback should be called once');
+  t.is(callbackSpy.callCount, 1, 'callback should be called once');
+
+  contextmenuInput.enableEventType('contextmenu');
+  contextmenuInput.handleEvent(contextmenuEventMock);
+
+  t.is(callbackSpy.callCount, 1, 'callback should not be called on disabled input');
 
   t.end();
 });

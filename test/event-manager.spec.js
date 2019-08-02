@@ -106,72 +106,84 @@ test('eventManager#setElement', t => {
 
 test('eventManager#on', t => {
   const eventManager = new EventManager(createEventRegistrarMock());
-  const addEHSpy = spy(eventManager, '_addEventHandler');
+  const toggleRecSpy = spy(eventManager, '_toggleRecognizer');
 
   eventManager.on('foo', () => {});
+  t.ok(eventManager.events.get('foo'), 'event foo is registered');
   t.equal(
-    addEHSpy.callCount,
+    toggleRecSpy.callCount,
     1,
-    '_addEventHandler should be called once when passing a single event and handler'
+    '_toggleRecognizer should be called once when passing a single event and handler'
   );
 
-  addEHSpy.reset();
+  toggleRecSpy.reset();
   eventManager.on({
     bar: () => {},
     baz: () => {}
   });
   t.equal(
-    addEHSpy.callCount,
-    3,
-    '_addEventHandler should be called once for each entry in an event:handler map'
+    toggleRecSpy.callCount,
+    2,
+    '_toggleRecognizer should be called once for each entry in an event:handler map'
   );
   t.end();
 });
 
 test('eventManager#once', t => {
   const eventManager = new EventManager(createEventRegistrarMock());
-  const addEHSpy = spy(eventManager, '_addEventHandler');
+  const toggleRecSpy = spy(eventManager, '_toggleRecognizer');
 
   eventManager.once('foo', () => {});
+  t.ok(eventManager.events.get('foo'), 'event foo is registered');
   t.equal(
-    addEHSpy.callCount,
+    toggleRecSpy.callCount,
     1,
-    '_addEventHandler should be called once when passing a single event and handler'
+    '_toggleRecognizer should be called once when passing a single event and handler'
   );
 
-  addEHSpy.reset();
+  toggleRecSpy.reset();
   eventManager.once({
     bar: () => {},
     baz: () => {}
   });
   t.equal(
-    addEHSpy.callCount,
-    3,
-    '_addEventHandler should be called once for each entry in an event:handler map'
+    toggleRecSpy.callCount,
+    2,
+    '_toggleRecognizer should be called once for each entry in an event:handler map'
   );
   t.end();
 });
 
 test('eventManager#off', t => {
   const eventManager = new EventManager(createEventRegistrarMock());
-  const removeEHSpy = spy(eventManager, '_removeEventHandler');
+
+  const handler1 = () => {};
+  const handler2 = () => {};
+
+  eventManager.on('click', handler1);
+  eventManager.on('tap', handler2);
+  eventManager.on('pointermove', handler1);
+  eventManager.on('panstart', handler1);
+  eventManager.on('panmove', handler2);
+
+  const toggleRecSpy = spy(eventManager, '_toggleRecognizer');
 
   eventManager.off('foo', () => {});
   t.equal(
-    removeEHSpy.callCount,
-    1,
-    '_removeEventHandler should be called once when passing a single event and handler'
+    toggleRecSpy.callCount,
+    0,
+    '_toggleRecognizer should not be called on an unrecognized event'
   );
 
-  removeEHSpy.reset();
   eventManager.off({
-    bar: () => {},
-    baz: () => {}
+    tap: handler1,
+    panstart: handler1,
+    pointermove: handler1
   });
   t.equal(
-    removeEHSpy.callCount,
-    3,
-    '_removeEventHandler should be called once for each entry in an event:handler map'
+    toggleRecSpy.callCount,
+    1,
+    '_toggleRecognizer should be called once for each event that has no more handlers'
   );
   t.end();
 });
