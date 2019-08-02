@@ -81,7 +81,6 @@ export default class EventRegistrar {
         event.handled = true;
         immediatePropagationStopped = true;
       };
-      const entriesToRemove = [];
 
       for (let i = 0; i < entries.length; i++) {
         const {type, handler, once} = entries[i];
@@ -93,16 +92,13 @@ export default class EventRegistrar {
           })
         );
         if (once) {
-          entriesToRemove.push(entries[i]);
+          this.remove(type, handler);
+          // remove() mutates the entries array by deleting the current entry
+          i--;
         }
         if (immediatePropagationStopped) {
           break;
         }
-      }
-
-      for (let i = 0; i < entriesToRemove.length; i++) {
-        const {type, handler} = entriesToRemove[i];
-        this.remove(type, handler);
       }
     }
   }
