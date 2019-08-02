@@ -18,15 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// Enables ES2015 import/export in Node.js
-require('reify');
+import test from 'tape-catch';
+import Hammer from 'mjolnir.js/utils/hammer.browser';
 
-const {JSDOM} = require('jsdom');
-const dom = new JSDOM(`<!DOCTYPE html>`);
-/* global global */
-global.window = dom.window;
-global.navigator = dom.window.navigator;
-global.document = dom.window.document;
+test('Hammer', t => {
+  t.ok(Hammer, 'hammer.js imported');
 
-// Run the tests
-require('./index');
+  t.end();
+});
