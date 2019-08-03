@@ -1,5 +1,9 @@
 # Change Log
 
+#### [2.3.1] - Aug 3, 2019
+
+- Revert "Avoid crash if imported in a web worker (#29)" (#49)
+
 #### [2.3.0] - Aug 2, 2019
 
 - Use ocular-dev-tools (#43)
