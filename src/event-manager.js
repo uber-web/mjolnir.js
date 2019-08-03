@@ -18,8 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Hammer from './utils/hammer';
-import HammerManagerMock from './utils/hammer-manager-mock';
+import {Manager} from './utils/hammer';
 
 import WheelInput from './inputs/wheel-input';
 import MoveInput from './inputs/move-input';
@@ -44,7 +43,7 @@ const DEFAULT_OPTIONS = {
   recognizers: null,
   recognizerOptions: {},
   // Manager class
-  Manager: Hammer ? Hammer.Manager : HammerManagerMock,
+  Manager,
   // allow browser default touch action
   // https://github.com/uber/react-map-gl/issues/506
   touchAction: 'none'

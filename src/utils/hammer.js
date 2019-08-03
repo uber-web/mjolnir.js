@@ -18,6 +18,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// This is replaced with hammer.browser.js when bundled in a browser environment
-// See `browser` field in package.json
+// Hammer.Manager mock for use in environments without `document` / `window`.
+function HammerManagerMock(m) {
+  const instance = {};
+  const chainedNoop = () => instance;
+  instance.get = () => null;
+  instance.set = chainedNoop;
+  instance.on = chainedNoop;
+  instance.off = chainedNoop;
+  instance.destroy = chainedNoop;
+  instance.emit = chainedNoop;
+  return instance;
+}
+
+export const Manager = HammerManagerMock;
+
 export default null;
