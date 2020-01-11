@@ -4,7 +4,7 @@
     {
       "title": "Overview",
       "entries": [
-        {"entry": "docs/README"},
+        {"entry": "docs"},
         {"entry": "docs/get-started"},
         {"entry": "docs/upgrade-guide"}
       ]

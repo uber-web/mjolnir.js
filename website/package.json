@@ -16,13 +16,12 @@
     "clean-examples": "rm -rf examples ; (find ../examples -name node_modules -exec rm -rf {} \\; || true)"
   },
   "dependencies": {
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
-    "react-table": "^6.10.0"
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
   },
   "devDependencies": {
-    "gatsby": "^2.13.0",
-    "gatsby-theme-ocular": "^1.0.3",
+    "gatsby": "^2.18.0",
+    "gatsby-theme-ocular": "^1.1.0",
     "gh-pages": "^2.0.1",
     "sharp": "^0.23.0"
   }
