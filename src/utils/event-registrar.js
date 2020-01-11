@@ -22,7 +22,7 @@ export default class EventRegistrar {
   add(type, handler, opts, once = false) {
     const {handlers, handlersByElement} = this;
 
-    if (opts && opts.addEventListener) {
+    if (opts && (typeof opts !== 'object' || opts.addEventListener)) {
       // is DOM element, backward compatibility
       opts = {srcElement: opts};
     }
@@ -36,7 +36,8 @@ export default class EventRegistrar {
     const entry = {type, handler, srcElement: opts.srcElement, priority: opts.priority, once};
     handlers.push(entry);
 
-    // Sort by priority
+    // Sort handlers by descending priority
+    // Handlers with the same priority are excuted in the order of registration
     let insertPosition = entries.length - 1;
     while (insertPosition >= 0) {
       if (entries[insertPosition].priority >= entry.priority) {

@@ -22,10 +22,13 @@ import test from 'tape-catch';
 import EventRegistrar from 'mjolnir.js/utils/event-registrar';
 import {createEventRegistrarMock} from '../test-utils';
 
+/* eslint-disable max-statements */
 test('EventRegistrar#add, remove', t => {
   const eventRegistrar = new EventRegistrar();
   const handler1 = () => {};
   const handler2 = () => {};
+  const handler3 = () => {};
+  const handler4 = () => {};
 
   t.ok(eventRegistrar.handlers, 'event handler is created');
   t.ok(eventRegistrar.isEmpty(), 'event handler is empty');
@@ -37,12 +40,12 @@ test('EventRegistrar#add, remove', t => {
   t.is(eventRegistrar.handlers.length, 1, 'event handler is added');
   t.deepEquals(
     eventRegistrar.handlers[0],
-    {type: 'click', handler: handler1, srcElement: 'root', once: false},
+    {type: 'click', handler: handler1, srcElement: 'root', once: false, priority: 0},
     'event handler is added'
   );
   t.deepEquals(
     eventRegistrar.handlersByElement.get('root'),
-    [{type: 'click', handler: handler1, srcElement: 'root', once: false}],
+    [{type: 'click', handler: handler1, srcElement: 'root', once: false, priority: 0}],
     'event elements map is updated'
   );
 
@@ -51,26 +54,41 @@ test('EventRegistrar#add, remove', t => {
   t.is(eventRegistrar.handlers.length, 2, 'event handler is added');
   t.deepEquals(
     eventRegistrar.handlers[1],
-    {type: 'click', handler: handler2, srcElement: 'child-0', once: false},
+    {type: 'click', handler: handler2, srcElement: 'child-0', once: false, priority: 0},
     'event handler is added'
   );
   t.deepEquals(
     eventRegistrar.handlersByElement.get('child-0'),
-    [{type: 'click', handler: handler2, srcElement: 'child-0', once: false}],
+    [{type: 'click', handler: handler2, srcElement: 'child-0', once: false, priority: 0}],
+    'event elements map is updated'
+  );
+
+  eventRegistrar.add('click', handler3, {srcElement: 'child-0'});
+  eventRegistrar.add('click', handler4, {srcElement: 'child-0', priority: 1});
+
+  t.deepEquals(
+    eventRegistrar.handlersByElement.get('child-0'),
+    [
+      {type: 'click', handler: handler4, srcElement: 'child-0', once: false, priority: 1},
+      {type: 'click', handler: handler2, srcElement: 'child-0', once: false, priority: 0},
+      {type: 'click', handler: handler3, srcElement: 'child-0', once: false, priority: 0}
+    ],
     'event elements map is updated'
   );
 
   eventRegistrar.remove('click', handler1);
 
-  t.is(eventRegistrar.handlers.length, 1, 'event handler is removed');
+  t.is(eventRegistrar.handlers.length, 3, 'event handler is removed');
   t.deepEquals(
     eventRegistrar.handlers[0],
-    {type: 'click', handler: handler2, srcElement: 'child-0', once: false},
+    {type: 'click', handler: handler2, srcElement: 'child-0', once: false, priority: 0},
     'event handler is removed'
   );
   t.notOk(eventRegistrar.handlersByElement.has('root'), 'event elements map is updated');
 
   eventRegistrar.remove('click', handler2);
+  eventRegistrar.remove('click', handler3);
+  eventRegistrar.remove('click', handler4);
 
   t.ok(eventRegistrar.isEmpty(), 'event handler is empty');
   t.notOk(eventRegistrar.handlersByElement.has('child-0'), 'event elements map is updated');
