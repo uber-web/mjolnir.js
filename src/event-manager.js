@@ -159,13 +159,13 @@ export default class EventManager {
   }
 
   // Register an event handler function to be called on `event`.
-  on(event, handler, srcElement) {
-    this._addEventHandler(event, handler, srcElement, false);
+  on(event, handler, opts) {
+    this._addEventHandler(event, handler, opts, false);
   }
 
   // Register an event handler function to be called on `event`, then remove it
-  once(event, handler, srcElement) {
-    this._addEventHandler(event, handler, srcElement, true);
+  once(event, handler, opts) {
+    this._addEventHandler(event, handler, opts, true);
   }
 
   /**
@@ -222,12 +222,12 @@ export default class EventManager {
   /**
    * Process the event registration for a single event + handler.
    */
-  _addEventHandler(event, handler, srcElement, once) {
+  _addEventHandler(event, handler, opts, once) {
     if (typeof event !== 'string') {
-      srcElement = handler;
+      opts = handler;
       // If `event` is a map, call `on()` for each entry.
       for (const eventName in event) {
-        this._addEventHandler(eventName, event[eventName], srcElement, once);
+        this._addEventHandler(eventName, event[eventName], opts, once);
       }
       return;
     }
@@ -248,7 +248,7 @@ export default class EventManager {
       }
     }
     this._toggleRecognizer(eventRegistrar.recognizerName, true);
-    eventRegistrar.add(event, handler, srcElement, once);
+    eventRegistrar.add(event, handler, opts, once);
   }
 
   /**
