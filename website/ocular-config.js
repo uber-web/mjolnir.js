@@ -22,27 +22,27 @@ module.exports = {
 
   PATH_PREFIX: '/mjolnir.js',
 
-  DOC_FOLDER: '../docs/',
-  ROOT_FOLDER: '..',
+  DOC_FOLDER: `${__dirname}/../docs/`,
+  ROOT_FOLDER: `${__dirname}/../`,
   DIR_NAME: __dirname,
 
   DOCS,
 
   PROJECTS: [
     {
-      name: 'deck.gl',
+      title: 'deck.gl',
       url: 'https://deck.gl'
     },
     {
-      name: 'luma.gl',
+      title: 'luma.gl',
       url: 'https://luma.gl'
     },
     {
-      name: 'react-map-gl',
+      title: 'react-map-gl',
       url: 'https://uber.github.io/react-map-gl'
     },
     {
-      name: 'nebula.gl',
+      title: 'nebula.gl',
       url: 'https://nebula.gl/'
     }
   ], // Other linked projects
