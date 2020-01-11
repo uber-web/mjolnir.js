@@ -5,15 +5,15 @@
       "title": "Overview",
       "entries": [
         {"entry": "docs/README"},
-        {"entry": "docs/get-started.md"},
+        {"entry": "docs/get-started"},
         {"entry": "docs/upgrade-guide"}
       ]
     },
     {
       "title": "API Reference",
       "entries": [
-        {"entry": "docs/api-reference/event-manager.md"},
-        {"entry": "docs/api-reference/event.md"}
+        {"entry": "docs/api-reference/event-manager"},
+        {"entry": "docs/api-reference/event"}
       ]
     }
   ]

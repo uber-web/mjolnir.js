@@ -1,33 +1,14 @@
-// NOTE: It is possible to override the ocular-provided callbacks
-// and this take control any aspect of gatsby:
-
-// exports.onCreateNode = ({ node, actions, getNode }) =>
-//   ocular.onCreateNode({ node, actions, getNode });
-
-// exports.setFieldsOnGraphQLNodeType = ({ type, actions }) =>
-//   ocular.setFieldsOnGraphQLNodeType({ type, actions });
-
-// // This is a main gatsby entry point
-// // Here we get to programmatically create pages after all nodes are created
-// // by gatsby.
-// // We use graphgl to query for nodes and iterate
-// exports.createPages = ({ graphql, actions }) =>
-//   ocular.createPages({ graphql, actions });
+const {setOcularConfig} = require('gatsby-theme-ocular');
+const {onCreateWebpackConfig} = require('gatsby-theme-ocular/gatsby-node');
 
 const ocularConfig = require('./ocular-config');
-const getGatsbyNodeCallbacks = require('ocular-gatsby/gatsby-node');
+setOcularConfig(ocularConfig);
 
-const callbacks = getGatsbyNodeCallbacks(ocularConfig);
-
-module.exports = callbacks;
-
-const onCreateWebpackConfig = callbacks.onCreateWebpackConfig;
-
-callbacks.onCreateWebpackConfig = function onCreateWebpackConfigOverride(opts) {
+module.exports.onCreateWebpackConfig = function onCreateWebpackConfigOverride(opts) {
   onCreateWebpackConfig(opts);
 
   const {
-    // stage, // build stage: ‘develop’, ‘develop-html’, ‘build-javascript’, or ‘build-html’
+    stage, // build stage: ‘develop’, ‘develop-html’, ‘build-javascript’, or ‘build-html’
     // rules, // Object (map): set of preconfigured webpack config rules
     // plugins, // Object (map): A set of preconfigured webpack config plugins
     // getConfig, // Function that returns the current webpack config
@@ -55,32 +36,26 @@ callbacks.onCreateWebpackConfig = function onCreateWebpackConfigOverride(opts) {
     test: /\.jsx?$/,
 
     // Exclude all node_modules from transpilation, except for ocular
-    exclude: modulePath => {
-      const excluded = /\/modules/.test(modulePath) ||
-        (/node_modules/.test(modulePath) &&
-        !/node_modules\/(ocular|ocular-gatsby|gatsby-plugin-ocular)/.test(modulePath));
-      if (!/\/website/.test(modulePath)) {
-        console.log(modulePath, excluded);
-      }
-      return excluded;
-    }
+    exclude: modulePath =>
+      /node_modules/.test(modulePath) &&
+      !/node_modules\/(ocular|ocular-gatsby|gatsby-theme-ocular)/.test(modulePath)
   });
+
+  // Omit the default rule where test === '\.jsx?$'
+  const rules = [newJSRule];
 
   const newConfig = {
     module: {
-      rules: [
-        // Omit the default rule where test === '\.jsx?$'
-        newJSRule
-      ]
+      rules
     },
     node: {
       fs: 'empty'
-    },
-    resolve: {
-      alias: Object.assign(ocularConfig.webpack.resolve.alias)
     }
   };
 
-  // Merges into the webpack config
+  // Completely replace the webpack config for the current stage.
+  // This can be dangerous and break Gatsby if certain configuration options are changed.
+  // Generally only useful for cases where you need to handle config merging logic yourself,
+  // in which case consider using webpack-merge.
   actions.setWebpackConfig(newConfig);
 };
