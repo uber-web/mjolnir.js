@@ -65,7 +65,7 @@ Register an event handler function to be called on `event`.
 - `[handler]` {Function} - The function to be called on `event`.
 - `[options]` {Object}
   - `[srcElement]` {Node} - The source element of this event. If provided, only events that are targeting this element or its decendants will invoke the handler. If ignored, default to the root element of the event manager. Events are propagated up the DOM tree.
-  - `[priority]` {Number} - Hanlders targeting the same `srcElement` will be executed by their priorities (higher priorities first). Hanlders with the same priority will be executed in the order of registration.
+  - `[priority]` {Number} - Handlers targeting the same `srcElement` will be executed by their priorities (higher numbers first). Handlers with the same priority will be executed in the order of registration.
 
 ** Note: Unlike the DOM event system, developers are responsible of deregistering event handlers when `srcElement` is removed. **
 
@@ -79,7 +79,7 @@ Register a one-time event handler function to be called on `event`. The handler 
 - `[handler]` {Function} - The function to be called on `event`.
 - `[options]` {Object}
   - `[srcElement]` {Node} - The source element of this event. If provided, only events that are targeting this element or its decendants will invoke the handler. If ignored, default to the root element of the event manager. Events are propagated up the DOM tree.
-  - `[priority]` {Number} - Hanlders targeting the same `srcElement` will be executed by their priorities (higher priorities first). Hanlders with the same priority will be executed in the order of registration.
+  - `[priority]` {Number} - Handlers targeting the same `srcElement` will be executed by their priorities (higher numbers first). Handlers with the same priority will be executed in the order of registration.
 
 ### off
 
