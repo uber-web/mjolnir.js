@@ -1,15 +1,19 @@
 # Change Log
 
-#### [2.3.1] - Aug 3, 2019
+#### [2.3.0] - Aug 3, 2019
+
+- Add priority option to event handlers (#54)
+
+#### [2.2.1] - Aug 3, 2019
 
 - Revert "Avoid crash if imported in a web worker (#29)" (#49)
 
-#### [2.3.0] - Aug 2, 2019
+#### [2.2.0] - Aug 2, 2019
 
 - Use ocular-dev-tools (#43)
 - Add EventManager.once (#46)
 
-#### [2.2.2] - June 5, 2019
+#### [2.1.2] - June 5, 2019
 
 - Fix undefind userAgent (#40)
 
