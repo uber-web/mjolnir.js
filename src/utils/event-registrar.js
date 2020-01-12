@@ -1,5 +1,10 @@
 import {whichButtons, getOffsetPosition} from './event-utils';
 
+const DEFAULT_OPTIONS = {
+  srcElement: 'root',
+  priority: 0
+};
+
 export default class EventRegistrar {
   constructor(eventManager) {
     this.eventManager = eventManager;
@@ -14,15 +19,33 @@ export default class EventRegistrar {
     return this.handlers.length === 0;
   }
 
-  add(type, handler, srcElement = 'root', once = false) {
+  add(type, handler, opts, once = false) {
     const {handlers, handlersByElement} = this;
 
-    if (!handlersByElement.has(srcElement)) {
-      handlersByElement.set(srcElement, []);
+    if (opts && (typeof opts !== 'object' || opts.addEventListener)) {
+      // is DOM element, backward compatibility
+      opts = {srcElement: opts};
     }
-    const entry = {type, handler, srcElement, once};
+    opts = opts ? Object.assign({}, DEFAULT_OPTIONS, opts) : DEFAULT_OPTIONS;
+
+    let entries = handlersByElement.get(opts.srcElement);
+    if (!entries) {
+      entries = [];
+      handlersByElement.set(opts.srcElement, entries);
+    }
+    const entry = {type, handler, srcElement: opts.srcElement, priority: opts.priority, once};
     handlers.push(entry);
-    handlersByElement.get(srcElement).push(entry);
+
+    // Sort handlers by descending priority
+    // Handlers with the same priority are excuted in the order of registration
+    let insertPosition = entries.length - 1;
+    while (insertPosition >= 0) {
+      if (entries[insertPosition].priority >= entry.priority) {
+        break;
+      }
+      insertPosition--;
+    }
+    entries.splice(insertPosition + 1, 0, entry);
   }
 
   remove(type, handler) {
