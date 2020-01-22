@@ -46,7 +46,8 @@ const DEFAULT_OPTIONS = {
   Manager,
   // allow browser default touch action
   // https://github.com/uber/react-map-gl/issues/506
-  touchAction: 'none'
+  touchAction: 'none',
+  tabIndex: 0
 };
 
 // Unified API for subscribing to events about both
@@ -122,7 +123,8 @@ export default class EventManager {
       enable: false
     });
     this.keyInput = new KeyInput(element, this._onOtherEvent, {
-      enable: false
+      enable: false,
+      tabIndex: options.tabIndex
     });
     this.contextmenuInput = new ContextmenuInput(element, this._onOtherEvent, {
       enable: false
