@@ -134,6 +134,16 @@ test('eventManager#on', t => {
   t.end();
 });
 
+test('eventManager#watch', t => {
+  const eventManager = new EventManager(createEventRegistrarMock());
+  const toggleRecSpy = spy(eventManager, '_toggleRecognizer');
+
+  eventManager.watch('dblclick', () => {});
+  t.equal(toggleRecSpy.callCount, 0, '_toggleRecognizer should not be called for passive handler');
+
+  t.end();
+});
+
 test('eventManager#once', t => {
   const eventManager = new EventManager(createEventRegistrarMock());
   const toggleRecSpy = spy(eventManager, '_toggleRecognizer');

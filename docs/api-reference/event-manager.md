@@ -32,12 +32,12 @@ Creates a new `EventManager` instance.
 
 - `element` {DOM Element, optional} - DOM element on which event handlers will be registered. Default `null`.
 - `options` {Object, optional} - Options
-- `options.events` {Object} - Map of {event name: handler} to register on init.
-- `options.recognizers` - {Object} Gesture recognizers from Hammer.js to register, as an Array in [Hammer.Recognizer format](http://hammerjs.github.io/api/#hammermanager). If not provided, a default set of recognizers will be used. See "Gesture Events" section below for more details.
-- `options.recognizerOptions` - {Object} Override the default options of `recognizers`. Keys are recognizer names and values are recognizer options. For a list of default recognizers, see "Gesture Events" section below.
-- `options.rightButton` - {Boolean} Recognizes click and drag from pressing the right mouse button. Default `false`. If turned on, the context menu will be disabled.
-- `options.touchAction` - {String} Allow browser default touch actions. Default `none`. See [hammer.js doc](http://hammerjs.github.io/touch-action/).
-- `options.tabIndex` - {Number} The [tabindex](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex) of the root element. Default `0`.
+  - `events` {Object} - A map from event names to their handler functions, to register on init.
+  - `recognizers` - {Object} Gesture recognizers from Hammer.js to register, as an Array in [Hammer.Recognizer format](http://hammerjs.github.io/api/#hammermanager). If not provided, a default set of recognizers will be used. See "Gesture Events" section below for more details.
+  - `recognizerOptions` - {Object} Override the default options of `recognizers`. Keys are recognizer names and values are recognizer options. For a list of default recognizers, see "Gesture Events" section below.
+  - `rightButton` - {Boolean} Recognizes click and drag from pressing the right mouse button. Default `false`. If turned on, the context menu will be disabled.
+  - `touchAction` - {String} Allow browser default touch actions. Default `none`. See [hammer.js doc](http://hammerjs.github.io/touch-action/).
+  - `tabIndex` - {Number} The [tabindex](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex) of the root element. Default `0`.
 
 ### destroy
 
@@ -59,13 +59,17 @@ Set the DOM element on which event handlers will be registered. If element has b
 
 Register an event handler function to be called on `event`.
 
-`eventManager.on(event, handler, options)`
+```js
+eventManager.on(event, handler, options);
+eventManager.on(eventMap, options);
+```
 
-- `event` {string|Object} - An event name (`String`) or map of event names to handlers.
-- `[handler]` {Function} - The function to be called on `event`.
-- `[options]` {Object}
-  - `[srcElement]` {Node} - The source element of this event. If provided, only events that are targeting this element or its decendants will invoke the handler. If ignored, default to the root element of the event manager. Events are propagated up the DOM tree.
-  - `[priority]` {Number} - Handlers targeting the same `srcElement` will be executed by their priorities (higher numbers first). Handlers with the same priority will be executed in the order of registration.
+- `event` {String} - An event name
+- `handler` {Function} - The function to be called on `event`.
+- `eventMap` {Object} - A map from event names to their handler functions
+- `options` {Object, optional}
+  - `srcElement` {Node} - The source element of this event. If provided, only events that are targeting this element or its decendants will invoke the handler. If ignored, default to the root element of the event manager. Events are propagated up the DOM tree.
+  - `priority` {Number} - Handlers targeting the same `srcElement` will be executed by their priorities (higher numbers first). Handlers with the same priority will be executed in the order of registration. Default `0`.
 
 ** Note: Unlike the DOM event system, developers are responsible of deregistering event handlers when `srcElement` is removed. **
 
@@ -73,22 +77,46 @@ Register an event handler function to be called on `event`.
 
 Register a one-time event handler function to be called on `event`. The handler is removed once it has been called.
 
-`eventManager.once(event, handler, options)`
+```js
+eventManager.once(event, handler, options);
+eventManager.once(eventMap, options);
+```
 
-- `event` {string|Object} - An event name (`String`) or map of event names to handlers.
-- `[handler]` {Function} - The function to be called on `event`.
-- `[options]` {Object}
-  - `[srcElement]` {Node} - The source element of this event. If provided, only events that are targeting this element or its decendants will invoke the handler. If ignored, default to the root element of the event manager. Events are propagated up the DOM tree.
-  - `[priority]` {Number} - Handlers targeting the same `srcElement` will be executed by their priorities (higher numbers first). Handlers with the same priority will be executed in the order of registration.
+Expects the same arguments as [on](#on).
+
+### watch
+
+Register an event handler function to be called on `event`. This handler does not ask the event to be recognized from user input; rather, it "intercepts" the event if some other handler is getting it.
+
+```js
+eventManager.watch(event, handler, options);
+eventManager.watch(eventMap, options);
+```
+
+Expects the same arguments as [on](#on).
+
+For example, we want a child element to block any `dblclick` event from bubbling up to root. The root may or may not be actually listening to `dblclick`. If the root did not register a handler, and we use
+
+```js
+eventManager.on('dblClick', evt => evt.stopPropagation(), {srcElement: <child>});
+```
+
+It will enable the `DoubleTapRecognizer`. Recognizers for gestures add additional overhead, and may cause subtle behavioral changes. In this case, recognizing `dblclick` events will cause the `click` events to be fired with a small delay. Since we only want to be notified _if_ a `dblclick` event is fired, it is safer to use:
+
+```js
+eventManager.watch('dblClick', evt => evt.stopPropagation(), {srcElement: <child>});
+```
 
 ### off
 
 - Deregister a previously-registered event handler.
 
 `eventManager.off(event, handler)`
+`eventManager.off(eventMap)`
 
-- `event` {string|Object} - An event name (String) or map of event names to handlers
-- `[handler]` {Function} - The function to be called on `event`.
+- `event` {String} - An event name
+- `handler` {Function} - The function to be called on `event`.
+- `eventMap` {Object} - A map from event names to their handler functions
 
 ## Supported Events and Gestures
 

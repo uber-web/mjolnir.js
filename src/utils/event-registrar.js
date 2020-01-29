@@ -13,13 +13,15 @@ export default class EventRegistrar {
     this.handlersByElement = new Map();
 
     this.handleEvent = this.handleEvent.bind(this);
+    this._active = false;
   }
 
+  // Returns true if there are no non-passive handlers
   isEmpty() {
-    return this.handlers.length === 0;
+    return !this._active;
   }
 
-  add(type, handler, opts, once = false) {
+  add(type, handler, opts, once = false, passive = false) {
     const {handlers, handlersByElement} = this;
 
     if (opts && (typeof opts !== 'object' || opts.addEventListener)) {
@@ -33,8 +35,15 @@ export default class EventRegistrar {
       entries = [];
       handlersByElement.set(opts.srcElement, entries);
     }
-    const entry = {type, handler, srcElement: opts.srcElement, priority: opts.priority, once};
+    const entry = {type, handler, srcElement: opts.srcElement, priority: opts.priority};
+    if (once) {
+      entry.once = true;
+    }
+    if (passive) {
+      entry.passive = true;
+    }
     handlers.push(entry);
+    this._active = this._active || !entry.passive;
 
     // Sort handlers by descending priority
     // Handlers with the same priority are excuted in the order of registration
@@ -63,6 +72,7 @@ export default class EventRegistrar {
         }
       }
     }
+    this._active = handlers.some(entry => !entry.passive);
   }
 
   /**
