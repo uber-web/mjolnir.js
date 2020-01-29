@@ -37,7 +37,7 @@ Creates a new `EventManager` instance.
 - `options.recognizerOptions` - {Object} Override the default options of `recognizers`. Keys are recognizer names and values are recognizer options. For a list of default recognizers, see "Gesture Events" section below.
 - `options.rightButton` - {Boolean} Recognizes click and drag from pressing the right mouse button. Default `false`. If turned on, the context menu will be disabled.
 - `options.touchAction` - {String} Allow browser default touch actions. Default `none`. See [hammer.js doc](http://hammerjs.github.io/touch-action/).
-- `options.legacyBlockScroll` - {Boolean} Blocks default page scroll behavior on wheel events. Default `true`. Set to `false` to enable scrolling. This option is for backward compatibility and will be removed in the next major release.
+- `options.tabIndex` - {Number} The [tabindex](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex) of the root element. Default `0`.
 
 ### destroy
 

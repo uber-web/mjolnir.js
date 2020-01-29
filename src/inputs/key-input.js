@@ -37,7 +37,7 @@ export default class KeyInput {
 
     this.handleEvent = this.handleEvent.bind(this);
 
-    element.tabIndex = 1;
+    element.tabIndex = options.tabIndex || 0;
     element.style.outline = 'none';
     this.events.forEach(event => element.addEventListener(event, this.handleEvent));
   }
