@@ -170,6 +170,13 @@ export default class EventManager {
     this._addEventHandler(event, handler, opts, true);
   }
 
+  // Register an event handler function to be called on `event`
+  // This handler does not ask the event to be recognized at all times.
+  // Instead, it only "intercepts" the event if some other handler is getting it.
+  watch(event, handler, opts) {
+    this._addEventHandler(event, handler, opts, false, true);
+  }
+
   /**
    * Deregister a previously-registered event handler.
    * @param {string|Object} event   An event name (String) or map of event names to handlers
@@ -224,12 +231,12 @@ export default class EventManager {
   /**
    * Process the event registration for a single event + handler.
    */
-  _addEventHandler(event, handler, opts, once) {
+  _addEventHandler(event, handler, opts, once, passive) {
     if (typeof event !== 'string') {
       opts = handler;
       // If `event` is a map, call `on()` for each entry.
       for (const eventName in event) {
-        this._addEventHandler(eventName, event[eventName], opts, once);
+        this._addEventHandler(eventName, event[eventName], opts, once, passive);
       }
       return;
     }
@@ -249,8 +256,10 @@ export default class EventManager {
         manager.on(eventAlias, eventRegistrar.handleEvent);
       }
     }
-    this._toggleRecognizer(eventRegistrar.recognizerName, true);
-    eventRegistrar.add(event, handler, opts, once);
+    eventRegistrar.add(event, handler, opts, once, passive);
+    if (!eventRegistrar.isEmpty()) {
+      this._toggleRecognizer(eventRegistrar.recognizerName, true);
+    }
   }
 
   /**
