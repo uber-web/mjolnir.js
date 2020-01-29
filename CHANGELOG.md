@@ -1,6 +1,11 @@
 # Change Log
 
-#### [2.3.0] - Aug 3, 2019
+#### [2.4.0] - Jan 29, 2020
+
+- Add tabIndex option; change default to 0 (#55)
+- Add `eventManager.watch` (#56)
+
+#### [2.3.0] - Jan 13, 2020
 
 - Add priority option to event handlers (#54)
 
