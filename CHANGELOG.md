@@ -1,5 +1,9 @@
 # Change Log
 
+#### [2.4.1] - Apr 20, 2020
+
+- Unblock pinch gesture when panning (#59)
+
 #### [2.4.0] - Jan 29, 2020
 
 - Add tabIndex option; change default to 0 (#55)
