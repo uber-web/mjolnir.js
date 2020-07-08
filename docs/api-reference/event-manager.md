@@ -5,7 +5,7 @@ Provides a unified API for subscribing to events about both basic input events (
 ## Usage
 
 ```js
-import EventManager from 'mjolnir.js';
+import {EventManager} from 'mjolnir.js';
 
 const eventManager = new EventManager(document.getElementById('container'));
 function onClick(event) {}
