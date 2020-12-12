@@ -24,6 +24,7 @@ import Hammer from './utils/hammer';
 // due to `window`/`document` references downstream.
 export const RECOGNIZERS = Hammer
   ? [
+      [Hammer.Pan, {event: 'tripan', pointers: 3, threshold: 0, enable: false}],
       [Hammer.Rotate, {enable: false}],
       [Hammer.Pinch, {enable: false}],
       [Hammer.Swipe, {enable: false}],
@@ -38,6 +39,7 @@ export const RECOGNIZERS = Hammer
 
 // Recognize the following gestures even if a given recognizer succeeds
 export const RECOGNIZER_COMPATIBLE_MAP = {
+  tripan: ['rotate', 'pinch', 'pan'],
   rotate: ['pinch'],
   pinch: ['pan'],
   pan: ['press', 'doubletap', 'anytap', 'tap'],
@@ -105,6 +107,15 @@ export const EVENT_RECOGNIZER_MAP = {
   rotatemove: 'rotate',
   rotateend: 'rotate',
   rotatecancel: 'rotate',
+  tripan: 'tripan',
+  tripanstart: 'tripan',
+  tripanmove: 'tripan',
+  tripanup: 'tripan',
+  tripandown: 'tripan',
+  tripanleft: 'tripan',
+  tripanright: 'tripan',
+  tripanend: 'tripan',
+  tripancancel: 'tripan',
   pan: 'pan',
   panstart: 'pan',
   panmove: 'pan',
