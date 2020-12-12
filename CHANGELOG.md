@@ -1,5 +1,9 @@
 # Change Log
 
+#### [2.5.0] - Apr 20, 2020
+
+- Support 3-finger pan events (#69)
+
 #### [2.4.1] - Apr 20, 2020
 
 - Unblock pinch gesture when panning (#59)
