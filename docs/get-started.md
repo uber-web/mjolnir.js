@@ -9,7 +9,7 @@ npm install mjolnir.js
 # Usage
 
 ```js
-import EventManager from 'mjolnir.js';
+import {EventManager} from 'mjolnir.js';
 
 const eventManager = new EventManager(document.getElementById('container'));
 function onClick(event) {}
@@ -29,7 +29,7 @@ eventManager.destroy();
 The `EventManager` can be initialized with an empty root:
 
 ```js
-import EventManager from 'mjolnir.js';
+import {EventManager} from 'mjolnir.js';
 
 const eventManager = new EventManager();
 // Events can be registered now, but they will have no effect until
