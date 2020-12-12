@@ -8,7 +8,7 @@
   "scripts": {
     "start": "yarn clean-examples && yarn clean && yarn develop",
     "clean": "rm -rf ./.cache ./public",
-    "develop": "gatsby develop --port=8002 --no-uglify",
+    "develop": "gatsby develop",
     "debug": "node --inspect-brk --no-lazy node_modules/gatsby/dist/bin/gatsby develop",
     "build": "yarn clean-examples && yarn clean && gatsby build --verbose --prefix-paths",
     "serve": "gatsby serve --prefix-paths",
@@ -20,9 +20,8 @@
     "react-dom": "^16.9.0"
   },
   "devDependencies": {
-    "gatsby": "^2.18.0",
-    "gatsby-theme-ocular": "^1.1.0",
-    "gh-pages": "^2.0.1",
-    "sharp": "^0.23.0"
+    "gatsby": "^2.20.0",
+    "gatsby-theme-ocular": "^1.2.3",
+    "gh-pages": "^2.2.0"
   }
 }
