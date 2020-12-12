@@ -162,6 +162,16 @@ The following events are generated with [hammer.js](http://hammerjs.github.io/)r
   - `'swiperight'`
   - `'swipeup'`
   - `'swipedown'`
+- The following events are controlled by the `tripan` ([Hammer.Pan](https://hammerjs.github.io/recognizer-pan/)) recognizer (3-finger pan):
+  - `'tripan'`
+  - `'tripanstart'`
+  - `'tripanmove'`
+  - `'tripanup'`
+  - `'tripandown'`
+  - `'tripanleft'`
+  - `'tripanright'`
+  - `'tripanend'`
+  - `'tripancancel'`
 - The following events are controlled by the `pan` ([Hammer.Pan](https://hammerjs.github.io/recognizer-pan/)) recognizer:
   - `'pan'`
   - `'panstart'`
