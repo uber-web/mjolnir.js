@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import {render} from 'react-dom';
 import {EventManager} from 'mjolnir.js';
 
@@ -129,15 +129,15 @@ export default class App extends Component {
     const {events} = this.state;
 
     return (
-      <Fragment>
-        <div id="container" ref={this._onLoad}>
+      <div id="container">
+        <div id="background" ref={this._onLoad}>
           <div id="red-box" ref={this._onLoadRedBox} />
         </div>
 
         <div id="logs">{events.map(this._renderEvent)}</div>
 
         <div id="options">{EVENTS.map(this._renderCheckbox)}</div>
-      </Fragment>
+      </div>
     );
   }
 }

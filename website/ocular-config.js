@@ -27,6 +27,10 @@ module.exports = {
   DIR_NAME: __dirname,
 
   DOCS,
+  SOURCE: [
+    resolve('./static'),
+    resolve('./src')
+  ],
 
   PROJECTS: [
     {
@@ -55,7 +59,7 @@ module.exports = {
 
   FOOTER_LOGO: '',
 
-  HOME_PATH: '/',
+  HOME_PATH: '',
   HOME_HEADING: 'Event and Gesture Handling for Evergreen Browsers',
   HOME_RIGHT: null,
   HOME_BULLETS: [
