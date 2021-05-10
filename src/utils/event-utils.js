@@ -82,8 +82,8 @@ export function getOffsetPosition(event, rootElement) {
 
   // Fix scale for map affected by a CSS transform.
   // See https://stackoverflow.com/a/26893663/3528533
-  const scaleX = rect.width / rootElement.offsetWidth;
-  const scaleY = rect.height / rootElement.offsetHeight;
+  const scaleX = rect.width / rootElement.offsetWidth || 1;
+  const scaleY = rect.height / rootElement.offsetHeight || 1;
 
   // Calculate center relative to the root element
   const offsetCenter = {
