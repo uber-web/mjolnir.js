@@ -28,7 +28,7 @@ test('wheelInput#constructor', t => {
   t.ok(wheelInput, 'WheelInput created without optional params');
 
   const events = ['foo', 'bar'];
-  const numWheelEvents = 3; // WHEEL_EVENTS.length
+  const numWheelEvents = 2; // WHEEL_EVENTS.length
   const addELSpy = spy(eventRegistrar, 'addEventListener');
   wheelInput = new WheelInput(eventRegistrar, () => {}, {events});
   t.equal(
@@ -42,7 +42,7 @@ test('wheelInput#constructor', t => {
 test('wheelInput#destroy', t => {
   const eventRegistrar = createEventRegistrarMock();
   const events = ['foo', 'bar'];
-  const numWheelEvents = 3; // WHEEL_EVENTS.length
+  const numWheelEvents = 2; // WHEEL_EVENTS.length
   const removeELSpy = spy(eventRegistrar, 'removeEventListener');
   const wheelInput = new WheelInput(eventRegistrar, () => {}, {events});
   wheelInput.destroy();
