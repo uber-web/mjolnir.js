@@ -1,5 +1,10 @@
 # Change Log
 
+#### [2.5.1] - May 10, 2021
+
+- Remove deprecated Firefox scroll event (#81)
+- Fix event.offsetCenter when root element is 0x0 (#82)
+
 #### [2.5.0] - Apr 20, 2020
 
 - Support 3-finger pan events (#69)
