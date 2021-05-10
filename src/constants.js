@@ -78,9 +78,7 @@ export const INPUT_EVENT_TYPES = {
     // Chrome, Safari
     'wheel',
     // IE
-    'mousewheel',
-    // legacy Firefox
-    'DOMMouseScroll'
+    'mousewheel'
   ]
 };
 
