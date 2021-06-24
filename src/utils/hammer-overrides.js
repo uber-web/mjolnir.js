@@ -37,7 +37,7 @@ export function enhancePointerEventInput(PointerEventInput) {
     const store = this.store;
 
     // Allow non-left mouse buttons through
-    if (ev.button > 0) {
+    if (ev.button > 0 && ev.type === 'pointerdown') {
       if (!some(store, e => e.pointerId === ev.pointerId)) {
         store.push(ev);
       }
