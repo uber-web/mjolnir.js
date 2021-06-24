@@ -1,5 +1,9 @@
 # Change Log
 
+#### [2.5.2] - Jun 24, 2021
+
+- Fix duplicate right click events when using multiple managers (#86)
+
 #### [2.5.1] - May 10, 2021
 
 - Remove deprecated Firefox scroll event (#81)
