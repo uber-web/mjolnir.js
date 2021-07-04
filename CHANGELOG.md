@@ -1,5 +1,9 @@
 # Change Log
 
+#### [2.6.0] - Jul 3, 2021
+
+- Drop esnext entry point (#87)
+
 #### [2.5.2] - Jun 24, 2021
 
 - Fix duplicate right click events when using multiple managers (#86)
