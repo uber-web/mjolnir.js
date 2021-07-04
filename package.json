@@ -17,11 +17,9 @@
   "license": "MIT",
   "main": "dist/es5/index.js",
   "module": "dist/esm/index.js",
-  "esnext": "dist/es6/index.js",
   "browser": {
     "./src/utils/hammer.js": "./src/utils/hammer.browser.js",
     "./dist/es5/utils/hammer.js": "./dist/es5/utils/hammer.browser.js",
-    "./dist/es6/utils/hammer.js": "./dist/es6/utils/hammer.browser.js",
     "./dist/esm/utils/hammer.js": "./dist/esm/utils/hammer.browser.js"
   },
   "files": [
@@ -52,7 +50,7 @@
     "eslint-config-uber-jsx": "^3.0.0",
     "eslint-plugin-react": "~7.11.1",
     "jsdom": "^15.0.0",
-    "ocular-dev-tools": "^0.1.0",
+    "ocular-dev-tools": "^0.3.1",
     "pre-commit": "^1.2.2",
     "reify": "^0.18.1"
   },
