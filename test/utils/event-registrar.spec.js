@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import test from 'tape-catch';
+import test from 'tape-promise/tape';
 import EventRegistrar from 'mjolnir.js/utils/event-registrar';
 import {createEventRegistrarMock} from '../test-utils';
 
@@ -157,19 +157,17 @@ test('EventRegistrar#propagation', t => {
 
   const handlerCalls = [];
 
-  const fooHandler = (
-    message,
-    stopPropagation = false,
-    stopImmediatePropagation = false
-  ) => evt => {
-    handlerCalls.push(message);
-    if (stopPropagation) {
-      evt.stopPropagation();
-    }
-    if (stopImmediatePropagation) {
-      evt.stopImmediatePropagation();
-    }
-  };
+  const fooHandler =
+    (message, stopPropagation = false, stopImmediatePropagation = false) =>
+    evt => {
+      handlerCalls.push(message);
+      if (stopPropagation) {
+        evt.stopPropagation();
+      }
+      if (stopImmediatePropagation) {
+        evt.stopImmediatePropagation();
+      }
+    };
 
   // Should not be called (propagation stopped)
   eventRegistrar.add('foo', fooHandler('foo@root', false, true), 'root', true);

@@ -1,3 +1,3 @@
-const getBabelConfig = require('ocular-dev-tools/config/babel.config');
+const {getBabelConfig} = require('ocular-dev-tools');
 
 module.exports = api => getBabelConfig(api);

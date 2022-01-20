@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import test from 'tape-catch';
+import test from 'tape-promise/tape';
 import EventManager from 'mjolnir.js/event-manager';
 import {spy, createEventRegistrarMock, HammerManagerMock} from './test-utils';
 
@@ -267,12 +267,14 @@ test('eventManager#propagation', t => {
 
   const handlerCalls = [];
 
-  const fooHandler = (message, stopPropagation = false) => evt => {
-    handlerCalls.push(message);
-    if (stopPropagation) {
-      evt.stopPropagation();
-    }
-  };
+  const fooHandler =
+    (message, stopPropagation = false) =>
+    evt => {
+      handlerCalls.push(message);
+      if (stopPropagation) {
+        evt.stopPropagation();
+      }
+    };
 
   // Should not be called (propagation stopped)
   eventManager.on('foo', fooHandler('foo@root'), rootNode);
