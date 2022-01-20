@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 // Inspired by https://github.com/popomore/spy
-export default function(obj, func) {
+export default function (obj, func) {
   let methodName;
 
   if (!obj && !func) {
