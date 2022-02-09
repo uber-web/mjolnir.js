@@ -1,5 +1,10 @@
 # Change Log
 
+#### [2.7.0-alpha.1] - Feb 8, 2022
+
+- Migrate to TypeScript (#95)
+- Bootstrap for typescript migration (#93)
+
 #### [2.6.0] - Jul 3, 2021
 
 - Drop esnext entry point (#87)
