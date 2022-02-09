@@ -1,31 +1,19 @@
-// Copyright (c) 2017 Uber Technologies, Inc.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 import {Manager} from './utils/hammer';
+import type {
+  HammerManager,
+  HammerManagerConstructor,
+  MjolnirEventRaw,
+  RecognizerOptions,
+  RecognizerTuple,
+  MjolnirEventHandler
+} from './types';
 
 import WheelInput from './inputs/wheel-input';
 import MoveInput from './inputs/move-input';
 import KeyInput from './inputs/key-input';
 import ContextmenuInput from './inputs/contextmenu-input';
 
-import EventRegistrar from './utils/event-registrar';
+import EventRegistrar, {HandlerOptions} from './utils/event-registrar';
 
 import {
   BASIC_EVENT_ALIASES,
@@ -36,7 +24,16 @@ import {
   RECOGNIZER_FALLBACK_MAP
 } from './constants';
 
-const DEFAULT_OPTIONS = {
+export type EventManagerOptions = {
+  events?: {[type: string]: MjolnirEventHandler};
+  recognizers?: RecognizerTuple[];
+  recognizerOptions?: {[type: string]: RecognizerOptions};
+  Manager?: HammerManagerConstructor;
+  touchAction?: string;
+  tabIndex?: number;
+};
+
+const DEFAULT_OPTIONS: EventManagerOptions = {
   // event handlers
   events: null,
   // custom recognizers
@@ -55,23 +52,35 @@ const DEFAULT_OPTIONS = {
 // and gestural input (e.g. 'click', 'tap', 'panstart').
 // Delegates gesture related event registration and handling to Hammer.js.
 export default class EventManager {
-  constructor(element = null, options = {}) {
-    this.options = Object.assign({}, DEFAULT_OPTIONS, options);
-    this.events = new Map();
+  private manager: HammerManager;
+  private element: HTMLElement;
+  private options: EventManagerOptions;
+  private events: Map<string, EventRegistrar>;
 
-    this._onBasicInput = this._onBasicInput.bind(this);
-    this._onOtherEvent = this._onOtherEvent.bind(this);
+  // Custom handlers
+  private wheelInput: WheelInput;
+  private moveInput: MoveInput;
+  private contextmenuInput: ContextmenuInput;
+  private keyInput: KeyInput;
+
+  constructor(element: HTMLElement = null, options: EventManagerOptions) {
+    this.options = {...DEFAULT_OPTIONS, ...options};
+    this.events = new Map();
 
     this.setElement(element);
 
     // Register all passed events.
-    const {events} = options;
+    const {events} = this.options;
     if (events) {
       this.on(events);
     }
   }
 
-  setElement(element) {
+  getElement(): HTMLElement {
+    return this.element;
+  }
+
+  setElement(element: HTMLElement): void {
     if (this.element) {
       // unregister all events
       this.destroy();
@@ -141,7 +150,7 @@ export default class EventManager {
   }
 
   // Tear down internal event management implementations.
-  destroy() {
+  destroy(): void {
     if (this.element) {
       // wheelInput etc. are created in setElement() and therefore
       // cannot exist if there is no element
@@ -160,45 +169,58 @@ export default class EventManager {
     }
   }
 
-  // Register an event handler function to be called on `event`.
-  on(event, handler, opts) {
+  /** Register multiple event handlers */
+  on(events: {[eventType: string]: MjolnirEventHandler}, opts?: HandlerOptions): void;
+  on(event: string, handler: MjolnirEventHandler, opts?: HandlerOptions): void;
+
+  /** Register an event handler function to be called on `event` */
+  on(event, handler, opts?: any) {
     this._addEventHandler(event, handler, opts, false);
   }
 
-  // Register an event handler function to be called on `event`, then remove it
-  once(event, handler, opts) {
+  /** Register an event handler function to be called on `event`, then remove it */
+  once(events: {[eventType: string]: MjolnirEventHandler}, opts?: HandlerOptions): void;
+  once(event: string, handler: MjolnirEventHandler, opts?: HandlerOptions): void;
+
+  once(event: any, handler: any, opts?: any) {
     this._addEventHandler(event, handler, opts, true);
   }
 
-  // Register an event handler function to be called on `event`
-  // This handler does not ask the event to be recognized at all times.
-  // Instead, it only "intercepts" the event if some other handler is getting it.
-  watch(event, handler, opts) {
+  /** Register an event handler function to be called on `event`
+   * This handler does not ask the event to be recognized at all times.
+   * Instead, it only "intercepts" the event if some other handler is getting it.
+   */
+  watch(events: {[eventType: string]: MjolnirEventHandler}, opts?: HandlerOptions): void;
+  watch(event: string, handler: MjolnirEventHandler, opts?: HandlerOptions): void;
+
+  watch(event: any, handler: any, opts?: any) {
     this._addEventHandler(event, handler, opts, false, true);
   }
 
   /**
    * Deregister a previously-registered event handler.
-   * @param {string|Object} event   An event name (String) or map of event names to handlers
-   * @param {Function} [handler]    The function to be called on `event`.
    */
-  off(event, handler) {
+  off(events: {[eventType: string]: MjolnirEventHandler}): void;
+  off(event: string, handler: MjolnirEventHandler): void;
+
+  off(event: any, handler?: any) {
     this._removeEventHandler(event, handler);
   }
 
   /*
    * Enable/disable recognizer for the given event
    */
-  _toggleRecognizer(name, enabled) {
+  private _toggleRecognizer(name: string, enabled: boolean): void {
     const {manager} = this;
     if (!manager) {
       return;
     }
     const recognizer = manager.get(name);
+    // @ts-ignore
     if (recognizer && recognizer.options.enable !== enabled) {
       recognizer.set({enable: enabled});
 
-      const fallbackRecognizers = RECOGNIZER_FALLBACK_MAP[name];
+      const fallbackRecognizers: string[] = RECOGNIZER_FALLBACK_MAP[name];
       if (fallbackRecognizers && !this.options.recognizers) {
         // Set default require failures
         // http://hammerjs.github.io/require-failure/
@@ -231,8 +253,15 @@ export default class EventManager {
   /**
    * Process the event registration for a single event + handler.
    */
-  _addEventHandler(event, handler, opts, once, passive) {
+  private _addEventHandler(
+    event: string | {[type: string]: MjolnirEventHandler},
+    handler: MjolnirEventHandler,
+    opts?: HandlerOptions,
+    once?: boolean,
+    passive?: boolean
+  ) {
     if (typeof event !== 'string') {
+      // @ts-ignore
       opts = handler;
       // If `event` is a map, call `on()` for each entry.
       for (const eventName in event) {
@@ -243,7 +272,7 @@ export default class EventManager {
 
     const {manager, events} = this;
     // Alias to a recognized gesture as necessary.
-    const eventAlias = GESTURE_EVENT_ALIASES[event] || event;
+    const eventAlias: string = GESTURE_EVENT_ALIASES[event] || event;
 
     let eventRegistrar = events.get(eventAlias);
     if (!eventRegistrar) {
@@ -265,7 +294,10 @@ export default class EventManager {
   /**
    * Process the event deregistration for a single event + handler.
    */
-  _removeEventHandler(event, handler) {
+  private _removeEventHandler(
+    event: string | {[type: string]: MjolnirEventHandler},
+    handler?: MjolnirEventHandler
+  ) {
     if (typeof event !== 'string') {
       // If `event` is a map, call `off()` for each entry.
       for (const eventName in event) {
@@ -309,21 +341,21 @@ export default class EventManager {
    * aliased to the "class" of event received.
    * See constants.BASIC_EVENT_CLASSES basic event class definitions.
    */
-  _onBasicInput(event) {
+  private _onBasicInput = (event: MjolnirEventRaw) => {
     const {srcEvent} = event;
     const alias = BASIC_EVENT_ALIASES[srcEvent.type];
     if (alias) {
       // fire all events aliased to srcEvent.type
       this.manager.emit(alias, event);
     }
-  }
+  };
 
   /**
    * Handle events not supported by Hammer.js,
    * and pipe back out through same (Hammer) channel used by other events.
    */
-  _onOtherEvent(event) {
+  private _onOtherEvent = (event: MjolnirEventRaw) => {
     // console.log('onotherevent', event.type, event)
     this.manager.emit(event.type, event);
-  }
+  };
 }

@@ -25,8 +25,14 @@
 const resolve = require('path').resolve;
 
 const config = {
+  mode: 'development',
+
+  devServer: {
+    static: '.'
+  },
+
   entry: {
-    app: './app.js'
+    app: './app.tsx'
   },
 
   output: {
@@ -38,10 +44,20 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
+        test: /\.(ts|js)x?$/,
         include: [resolve('.')],
-        exclude: [/node_modules/]
+        exclude: [/node_modules/],
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/env', '@babel/react']
+            }
+          },
+          {
+            loader: 'ts-loader'
+          }
+        ]
       },
       {
         test: /\.css$/,
@@ -51,6 +67,7 @@ const config = {
   },
 
   resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.json'],
     alias: {}
   }
 };

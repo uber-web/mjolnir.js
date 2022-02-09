@@ -1,28 +1,9 @@
-// Copyright (c) 2017 Uber Technologies, Inc.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 import Hammer from './utils/hammer';
+import {RecognizerTuple} from './types';
 
 // This module contains constants that must be conditionally required
 // due to `window`/`document` references downstream.
-export const RECOGNIZERS = Hammer
+export const RECOGNIZERS: RecognizerTuple[] = Hammer
   ? [
       [Hammer.Pan, {event: 'tripan', pointers: 3, threshold: 0, enable: false}],
       [Hammer.Rotate, {enable: false}],
@@ -45,12 +26,12 @@ export const RECOGNIZER_COMPATIBLE_MAP = {
   pan: ['press', 'doubletap', 'anytap', 'tap'],
   doubletap: ['anytap'],
   anytap: ['tap']
-};
+} as const;
 
 // Recognize the folling gestures only if a given recognizer fails
 export const RECOGNIZER_FALLBACK_MAP = {
   doubletap: ['tap']
-};
+} as const;
 
 /**
  * Only one set of basic input events will be fired by Hammer.js:
@@ -69,7 +50,7 @@ export const BASIC_EVENT_ALIASES = {
   mousedown: 'pointerdown',
   mousemove: 'pointermove',
   mouseup: 'pointerup'
-};
+} as const;
 
 export const INPUT_EVENT_TYPES = {
   KEY_EVENTS: ['keydown', 'keyup'],
@@ -80,7 +61,7 @@ export const INPUT_EVENT_TYPES = {
     // IE
     'mousewheel'
   ]
-};
+} as const;
 
 /**
  * "Gestural" events are those that have semantic meaning beyond the basic input event,
@@ -128,7 +109,7 @@ export const EVENT_RECOGNIZER_MAP = {
   swiperight: 'swipe',
   swipeup: 'swipe',
   swipedown: 'swipe'
-};
+} as const;
 
 /**
  * Map gestural events typically provided by browsers
@@ -145,4 +126,4 @@ export const GESTURE_EVENT_ALIASES = {
   mouseover: 'pointerover',
   mouseout: 'pointerout',
   mouseleave: 'pointerleave'
-};
+} as const;

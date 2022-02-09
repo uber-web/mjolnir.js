@@ -40,6 +40,7 @@ const LOCAL_DEVELOPMENT_CONFIG = {
   },
 
   resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.json'],
     alias: {
       // Imports the mjolnir.js library from the src directory in this repo
       'mjolnir.js': SRC_DIR,
@@ -47,7 +48,24 @@ const LOCAL_DEVELOPMENT_CONFIG = {
     }
   },
   module: {
-    rules: []
+    rules: [
+      {
+        test: /\.(ts|js)x?$/,
+        include: [SRC_DIR],
+        exclude: [/node_modules/],
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/env', '@babel/react']
+            }
+          },
+          {
+            loader: 'ts-loader'
+          }
+        ]
+      }
+    ]
   }
 };
 

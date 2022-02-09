@@ -1,29 +1,12 @@
-// Copyright (c) 2017 Uber Technologies, Inc.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
+import type {MjolnirPointerEventRaw} from '../types';
+import Input, {InputOptions} from './input';
 import {INPUT_EVENT_TYPES} from '../constants';
 
 const {MOUSE_EVENTS} = INPUT_EVENT_TYPES;
 const MOVE_EVENT_TYPE = 'pointermove';
 const OVER_EVENT_TYPE = 'pointerover';
 const OUT_EVENT_TYPE = 'pointerout';
+const ENTER_EVENT_TYPE = 'pointerenter';
 const LEAVE_EVENT_TYPE = 'pointerleave';
 
 /**
@@ -34,21 +17,34 @@ const LEAVE_EVENT_TYPE = 'pointerleave';
  * move events across input types, e.g. storing multiple simultaneous
  * pointer/touch events, calculating speed/direction, etc.
  */
-export default class MoveInput {
-  constructor(element, callback, options = {}) {
-    this.element = element;
-    this.callback = callback;
+export default class MoveInput extends Input<MjolnirPointerEventRaw, InputOptions> {
+  pressed: boolean;
+  enableMoveEvent: boolean;
+  enableEnterEvent: boolean;
+  enableLeaveEvent: boolean;
+  enableOutEvent: boolean;
+  enableOverEvent: boolean;
+
+  events: string[];
+
+  constructor(
+    element: HTMLElement,
+    callback: (event: MjolnirPointerEventRaw) => void,
+    options: InputOptions
+  ) {
+    super(element, callback, options);
+
     this.pressed = false;
+    const {enable} = this.options;
 
-    this.options = Object.assign({enable: true}, options);
-    this.enableMoveEvent = this.options.enable;
-    this.enableLeaveEvent = this.options.enable;
-    this.enableOutEvent = this.options.enable;
-    this.enableOverEvent = this.options.enable;
+    this.enableMoveEvent = enable;
+    this.enableLeaveEvent = enable;
+    this.enableEnterEvent = enable;
+    this.enableOutEvent = enable;
+    this.enableOverEvent = enable;
 
-    this.events = MOUSE_EVENTS.concat(options.events || []);
+    this.events = (this.options.events || []).concat(MOUSE_EVENTS);
 
-    this.handleEvent = this.handleEvent.bind(this);
     this.events.forEach(event => element.addEventListener(event, this.handleEvent));
   }
 
@@ -60,7 +56,7 @@ export default class MoveInput {
    * Enable this input (begin processing events)
    * if the specified event type is among those handled by this input.
    */
-  enableEventType(eventType, enabled) {
+  enableEventType(eventType: string, enabled: boolean) {
     if (eventType === MOVE_EVENT_TYPE) {
       this.enableMoveEvent = enabled;
     }
@@ -70,58 +66,75 @@ export default class MoveInput {
     if (eventType === OUT_EVENT_TYPE) {
       this.enableOutEvent = enabled;
     }
+    if (eventType === ENTER_EVENT_TYPE) {
+      this.enableEnterEvent = enabled;
+    }
     if (eventType === LEAVE_EVENT_TYPE) {
       this.enableLeaveEvent = enabled;
     }
   }
 
-  handleEvent(event) {
+  handleEvent = (event: PointerEvent) => {
     this.handleOverEvent(event);
     this.handleOutEvent(event);
+    this.handleEnterEvent(event);
     this.handleLeaveEvent(event);
     this.handleMoveEvent(event);
-  }
+  };
 
-  handleOverEvent(event) {
+  handleOverEvent(event: PointerEvent) {
     if (this.enableOverEvent) {
       if (event.type === 'mouseover') {
         this.callback({
           type: OVER_EVENT_TYPE,
           srcEvent: event,
           pointerType: 'mouse',
-          target: event.target
+          target: event.target as HTMLElement
         });
       }
     }
   }
 
-  handleOutEvent(event) {
+  handleOutEvent(event: PointerEvent) {
     if (this.enableOutEvent) {
       if (event.type === 'mouseout') {
         this.callback({
           type: OUT_EVENT_TYPE,
           srcEvent: event,
           pointerType: 'mouse',
-          target: event.target
+          target: event.target as HTMLElement
         });
       }
     }
   }
 
-  handleLeaveEvent(event) {
+  handleEnterEvent(event: PointerEvent) {
+    if (this.enableEnterEvent) {
+      if (event.type === 'mouseenter') {
+        this.callback({
+          type: ENTER_EVENT_TYPE,
+          srcEvent: event,
+          pointerType: 'mouse',
+          target: event.target as HTMLElement
+        });
+      }
+    }
+  }
+
+  handleLeaveEvent(event: PointerEvent) {
     if (this.enableLeaveEvent) {
       if (event.type === 'mouseleave') {
         this.callback({
           type: LEAVE_EVENT_TYPE,
           srcEvent: event,
           pointerType: 'mouse',
-          target: event.target
+          target: event.target as HTMLElement
         });
       }
     }
   }
 
-  handleMoveEvent(event) {
+  handleMoveEvent(event: PointerEvent) {
     if (this.enableMoveEvent) {
       switch (event.type) {
         case 'mousedown':
@@ -143,7 +156,7 @@ export default class MoveInput {
               type: MOVE_EVENT_TYPE,
               srcEvent: event,
               pointerType: 'mouse',
-              target: event.target
+              target: event.target as HTMLElement
             });
           }
           break;

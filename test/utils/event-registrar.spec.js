@@ -110,7 +110,7 @@ test('EventRegistrar#normalizeEvent', t => {
   };
 
   let normalizedEvent;
-  const eventRegistrar = new EventRegistrar({element: elementMock});
+  const eventRegistrar = new EventRegistrar({getElement: () => elementMock});
   eventRegistrar.add('foo', evt => {
     normalizedEvent = evt;
   });
@@ -142,7 +142,7 @@ test('EventRegistrar#propagation', t => {
       {id: 'child-1'}
     ]
   });
-  const eventRegistrar = new EventRegistrar({element: rootNode});
+  const eventRegistrar = new EventRegistrar({getElement: () => rootNode});
 
   t.doesNotThrow(
     () =>
