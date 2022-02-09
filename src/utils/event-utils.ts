@@ -1,3 +1,5 @@
+import type {MjolnirEventRaw, HammerInput, Point} from '../types';
+
 /* Constants */
 const DOWN_EVENT = 1;
 const MOVE_EVENT = 2;
@@ -27,14 +29,18 @@ const MOUSE_EVENT_BUTTONS_MIDDLE_MASK = 4;
 /**
  * Extract the involved mouse button
  */
-export function whichButtons(event) {
+export function whichButtons(event: MjolnirEventRaw): {
+  leftButton: boolean;
+  middleButton: boolean;
+  rightButton: boolean;
+} {
   const eventType = MOUSE_EVENTS[event.srcEvent.type];
   if (!eventType) {
     // Not a mouse evet
     return null;
   }
 
-  const {buttons, button, which} = event.srcEvent;
+  const {buttons, button, which} = event.srcEvent as PointerEvent;
   let leftButton = false;
   let middleButton = false;
   let rightButton = false;
@@ -64,16 +70,23 @@ export function whichButtons(event) {
 /**
  * Calculate event position relative to the root element
  */
-export function getOffsetPosition(event, rootElement) {
-  const {srcEvent} = event;
+export function getOffsetPosition(
+  event: MjolnirEventRaw,
+  rootElement: HTMLElement
+): {
+  center: Point;
+  offsetCenter: Point;
+} {
+  let center = (event as HammerInput).center;
+  const srcEvent = event.srcEvent as PointerEvent;
 
   // `center` is a hammer.js event property
-  if (!event.center && !Number.isFinite(srcEvent.clientX)) {
+  if (!center && !Number.isFinite(srcEvent.clientX)) {
     // Not a gestural event
     return null;
   }
 
-  const center = event.center || {
+  center = center || {
     x: srcEvent.clientX,
     y: srcEvent.clientY
   };

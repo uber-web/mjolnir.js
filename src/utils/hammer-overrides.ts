@@ -2,6 +2,7 @@
  * This file contains overrides the default
  * hammer.js functions to add our own utility
  */
+/* eslint-disable */
 
 /* Hammer.js constants */
 const INPUT_START = 1;

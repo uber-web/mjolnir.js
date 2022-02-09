@@ -1,41 +1,74 @@
+import type EventManager from '../event-manager';
 import {whichButtons, getOffsetPosition} from './event-utils';
+import type {MjolnirEventRaw, MjolnirEventWrapper, MjolnirEventHandler} from '../types';
 
-const DEFAULT_OPTIONS = {
+export type HandlerOptions = {
+  srcElement?: 'root' | HTMLElement;
+  priority?: number;
+};
+
+type EventHandler = {
+  type: string;
+  handler: MjolnirEventHandler;
+  once?: boolean;
+  passive?: boolean;
+} & HandlerOptions;
+
+const DEFAULT_OPTIONS: HandlerOptions = {
   srcElement: 'root',
   priority: 0
 };
 
 export default class EventRegistrar {
-  constructor(eventManager) {
+  eventManager: EventManager;
+  recognizerName: string;
+  handlers: EventHandler[];
+  handlersByElement: Map<'root' | HTMLElement, EventHandler[]>;
+  _active: boolean;
+
+  constructor(eventManager: EventManager) {
     this.eventManager = eventManager;
     this.handlers = [];
     // Element -> handler map
     this.handlersByElement = new Map();
 
-    this.handleEvent = this.handleEvent.bind(this);
     this._active = false;
   }
 
   // Returns true if there are no non-passive handlers
-  isEmpty() {
+  isEmpty(): boolean {
     return !this._active;
   }
 
-  add(type, handler, opts, once = false, passive = false) {
+  add(
+    type: string,
+    handler: MjolnirEventHandler,
+    options: HTMLElement | HandlerOptions,
+    once: boolean = false,
+    passive: boolean = false
+  ) {
     const {handlers, handlersByElement} = this;
+    let opts: HandlerOptions = DEFAULT_OPTIONS;
 
-    if (opts && (typeof opts !== 'object' || opts.addEventListener)) {
+    if (typeof options === 'string' || (options && (options as HTMLElement).addEventListener)) {
       // is DOM element, backward compatibility
-      opts = {srcElement: opts};
+      // @ts-ignore
+      opts = {...DEFAULT_OPTIONS, srcElement: options};
+    } else if (options) {
+      opts = {...DEFAULT_OPTIONS, ...options};
     }
-    opts = opts ? Object.assign({}, DEFAULT_OPTIONS, opts) : DEFAULT_OPTIONS;
 
     let entries = handlersByElement.get(opts.srcElement);
     if (!entries) {
       entries = [];
       handlersByElement.set(opts.srcElement, entries);
     }
-    const entry = {type, handler, srcElement: opts.srcElement, priority: opts.priority};
+    const entry: EventHandler = {
+      type,
+      handler,
+      srcElement: opts.srcElement,
+      priority: opts.priority
+    };
     if (once) {
       entry.once = true;
     }
@@ -57,7 +90,7 @@ export default class EventRegistrar {
     entries.splice(insertPosition + 1, 0, entry);
   }
 
-  remove(type, handler) {
+  remove(type: string, handler: MjolnirEventHandler) {
     const {handlers, handlersByElement} = this;
 
     for (let i = handlers.length - 1; i >= 0; i--) {
@@ -78,28 +111,31 @@ export default class EventRegistrar {
   /**
    * Handles hammerjs event
    */
-  handleEvent(event) {
+  handleEvent = (event: MjolnirEventRaw) => {
     if (this.isEmpty()) {
       return;
     }
 
     const mjolnirEvent = this._normalizeEvent(event);
-    let target = event.srcEvent.target;
+    let target = event.srcEvent.target as HTMLElement;
 
     while (target && target !== mjolnirEvent.rootElement) {
       this._emit(mjolnirEvent, target);
       if (mjolnirEvent.handled) {
         return;
       }
-      target = target.parentNode;
+      target = target.parentNode as HTMLElement;
     }
     this._emit(mjolnirEvent, 'root');
-  }
+  };
 
   /**
    * Invoke handlers on a particular element
    */
-  _emit(event, srcElement) {
+  _emit<T extends MjolnirEventRaw>(
+    event: MjolnirEventWrapper<T>,
+    srcElement: 'root' | HTMLElement
+  ) {
     const entries = this.handlersByElement.get(srcElement);
 
     if (entries) {
@@ -114,17 +150,17 @@ export default class EventRegistrar {
         event.handled = true;
         immediatePropagationStopped = true;
       };
-      const entriesToRemove = [];
+      const entriesToRemove: EventHandler[] = [];
 
       for (let i = 0; i < entries.length; i++) {
         const {type, handler, once} = entries[i];
-        handler(
-          Object.assign({}, event, {
-            type,
-            stopPropagation,
-            stopImmediatePropagation
-          })
-        );
+        handler({
+          ...event,
+          // @ts-ignore
+          type,
+          stopPropagation,
+          stopImmediatePropagation
+        });
         if (once) {
           entriesToRemove.push(entries[i]);
         }
@@ -143,12 +179,17 @@ export default class EventRegistrar {
   /**
    * Normalizes hammerjs and custom events to have predictable fields.
    */
-  _normalizeEvent(event) {
-    const rootElement = this.eventManager.element;
+  _normalizeEvent<T extends MjolnirEventRaw>(event: T): MjolnirEventWrapper<T> {
+    const rootElement = this.eventManager.getElement();
 
-    return Object.assign({}, event, whichButtons(event), getOffsetPosition(event, rootElement), {
+    return {
+      ...event,
+      ...whichButtons(event),
+      ...getOffsetPosition(event, rootElement),
+      stopImmediatePropagation: null,
+      stopPropagation: null,
       handled: false,
       rootElement
-    });
+    };
   }
 }

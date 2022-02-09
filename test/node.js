@@ -18,8 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// Enables ES2015 import/export in Node.js
-require('reify');
+const register = require('@babel/register').default;
+
+register({extensions: ['.ts', '.js']});
 
 // eslint-disable-next-line
 if (process.env.MOCK_BROWSER) {
@@ -36,7 +37,7 @@ if (process.env.MOCK_BROWSER) {
   const moduleAlias = require('module-alias');
   const {resolve} = require('path');
   moduleAlias.addAliases({
-    './utils/hammer': resolve(__dirname, '../src/utils/hammer.browser.js')
+    './utils/hammer': resolve(__dirname, '../src/utils/hammer.browser')
   });
 }
 
