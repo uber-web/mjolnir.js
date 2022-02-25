@@ -85,12 +85,7 @@ export default class MoveInput extends Input<MjolnirPointerEventRaw, InputOption
   handleOverEvent(event: PointerEvent) {
     if (this.enableOverEvent) {
       if (event.type === 'mouseover') {
-        this.callback({
-          type: OVER_EVENT_TYPE,
-          srcEvent: event,
-          pointerType: 'mouse',
-          target: event.target as HTMLElement
-        });
+        this._emit(OVER_EVENT_TYPE, event);
       }
     }
   }
@@ -98,12 +93,7 @@ export default class MoveInput extends Input<MjolnirPointerEventRaw, InputOption
   handleOutEvent(event: PointerEvent) {
     if (this.enableOutEvent) {
       if (event.type === 'mouseout') {
-        this.callback({
-          type: OUT_EVENT_TYPE,
-          srcEvent: event,
-          pointerType: 'mouse',
-          target: event.target as HTMLElement
-        });
+        this._emit(OUT_EVENT_TYPE, event);
       }
     }
   }
@@ -111,12 +101,7 @@ export default class MoveInput extends Input<MjolnirPointerEventRaw, InputOption
   handleEnterEvent(event: PointerEvent) {
     if (this.enableEnterEvent) {
       if (event.type === 'mouseenter') {
-        this.callback({
-          type: ENTER_EVENT_TYPE,
-          srcEvent: event,
-          pointerType: 'mouse',
-          target: event.target as HTMLElement
-        });
+        this._emit(ENTER_EVENT_TYPE, event);
       }
     }
   }
@@ -124,12 +109,7 @@ export default class MoveInput extends Input<MjolnirPointerEventRaw, InputOption
   handleLeaveEvent(event: PointerEvent) {
     if (this.enableLeaveEvent) {
       if (event.type === 'mouseleave') {
-        this.callback({
-          type: LEAVE_EVENT_TYPE,
-          srcEvent: event,
-          pointerType: 'mouse',
-          target: event.target as HTMLElement
-        });
+        this._emit(LEAVE_EVENT_TYPE, event);
       }
     }
   }
@@ -152,12 +132,7 @@ export default class MoveInput extends Input<MjolnirPointerEventRaw, InputOption
           if (!this.pressed) {
             // Drag events are emitted by hammer already
             // we just need to emit the move event on hover
-            this.callback({
-              type: MOVE_EVENT_TYPE,
-              srcEvent: event,
-              pointerType: 'mouse',
-              target: event.target as HTMLElement
-            });
+            this._emit(MOVE_EVENT_TYPE, event);
           }
           break;
         case 'mouseup':
@@ -166,5 +141,21 @@ export default class MoveInput extends Input<MjolnirPointerEventRaw, InputOption
         default:
       }
     }
+  }
+
+  _emit(
+    type: 'pointermove' | 'pointerover' | 'pointerout' | 'pointerenter' | 'pointerleave',
+    event: PointerEvent
+  ) {
+    this.callback({
+      type,
+      center: {
+        x: event.clientX,
+        y: event.clientY
+      },
+      srcEvent: event,
+      pointerType: 'mouse',
+      target: event.target as HTMLElement
+    });
   }
 }

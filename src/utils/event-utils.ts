@@ -77,19 +77,13 @@ export function getOffsetPosition(
   center: Point;
   offsetCenter: Point;
 } {
-  let center = (event as HammerInput).center;
-  const srcEvent = event.srcEvent as PointerEvent;
+  const center = (event as HammerInput).center;
 
   // `center` is a hammer.js event property
-  if (!center && !Number.isFinite(srcEvent.clientX)) {
+  if (!center) {
     // Not a gestural event
     return null;
   }
-
-  center = center || {
-    x: srcEvent.clientX,
-    y: srcEvent.clientY
-  };
 
   const rect = rootElement.getBoundingClientRect();
 

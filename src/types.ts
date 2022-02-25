@@ -208,8 +208,7 @@ export interface MjolnirEventRaw {
 
 export type MjolnirEventWrapper<T extends MjolnirEventRaw> = T & {
   rootElement: HTMLElement;
-  center?: Point;
-  offsetCenter?: Point;
+  offsetCenter: Point;
   leftButton?: boolean;
   rightButton?: boolean;
   middleButton?: boolean;
@@ -227,6 +226,7 @@ export type MjolnirPointerEventRaw = MjolnirEventRaw & {
     | 'pointerenter'
     | 'pointerleave';
   pointerType: 'mouse' | 'touch';
+  center: Point;
   srcEvent: TouchEvent | MouseEvent | PointerEvent;
 };
 
@@ -244,10 +244,21 @@ export type MjolnirKeyEventRaw = MjolnirEventRaw & {
   srcEvent: KeyboardEvent;
 };
 
+export type MjolnirKeyEvent = MjolnirKeyEventRaw & {
+  rootElement: HTMLElement;
+  handled: boolean;
+  stopPropagation: () => void;
+  stopImmediatePropagation: () => void;
+};
+
+export type MjolnirGestureEvent = MjolnirEventWrapper<HammerInput>;
+export type MjolnirPointerEvent = MjolnirEventWrapper<MjolnirPointerEventRaw>;
+export type MjolnirWheelEvent = MjolnirEventWrapper<MjolnirWheelEventRaw>;
+
 export type MjolnirEvent =
-  | MjolnirEventWrapper<HammerInput>
-  | MjolnirEventWrapper<MjolnirPointerEventRaw>
-  | MjolnirEventWrapper<MjolnirWheelEventRaw>
-  | MjolnirEventWrapper<MjolnirKeyEventRaw>;
+  | MjolnirGestureEvent
+  | MjolnirPointerEvent
+  | MjolnirWheelEvent
+  | MjolnirKeyEvent;
 
 export type MjolnirEventHandler = (event: MjolnirEvent) => void;

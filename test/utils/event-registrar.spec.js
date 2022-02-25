@@ -102,6 +102,7 @@ test('EventRegistrar#normalizeEvent', t => {
   const elementMock = createEventRegistrarMock();
   const eventMock = {
     type: 'foo',
+    center: {x: 0, y: 0},
     srcEvent: {
       clientX: 0,
       clientY: 0,

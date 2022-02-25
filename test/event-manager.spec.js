@@ -224,6 +224,7 @@ test('eventManager#normalizeEvent', t => {
   const eventRegistrar = createEventRegistrarMock();
   const eventMock = {
     type: 'foo',
+    center: {x: 0, y: 0},
     srcEvent: {
       clientX: 0,
       clientY: 0,

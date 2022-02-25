@@ -35,6 +35,10 @@ export default class ContextmenuInput extends Input<MjolnirPointerEventRaw, Inpu
 
     this.callback({
       type: EVENT_TYPE,
+      center: {
+        x: event.clientX,
+        y: event.clientY
+      },
       srcEvent: event,
       pointerType: 'mouse',
       target: event.target as HTMLElement
