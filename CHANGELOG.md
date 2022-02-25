@@ -1,5 +1,9 @@
 # Change Log
 
+#### [2.7.0-alpha.2] - Feb 25, 2022
+
+- Export additional types
+
 #### [2.7.0-alpha.1] - Feb 8, 2022
 
 - Migrate to TypeScript (#95)
