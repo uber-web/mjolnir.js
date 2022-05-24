@@ -1,5 +1,9 @@
 # Change Log
 
+#### [2.7.0-alpha.3] - May 23, 2022
+
+- Better types for event handler
+
 #### [2.7.0-alpha.2] - Feb 25, 2022
 
 - Export additional types
