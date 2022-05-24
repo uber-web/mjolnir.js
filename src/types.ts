@@ -123,7 +123,11 @@ export type HammerInput = {
     | 'swipeleft'
     | 'swiperight'
     | 'swipeup'
-    | 'swipedown';
+    | 'swipedown'
+    // Aliases
+    | 'click'
+    | 'anyclick'
+    | 'dblclick';
 
   /** Movement of the X axis. */
   deltaX: number;
@@ -193,9 +197,6 @@ export type HammerInput = {
 
   /** Timestamp of a gesture */
   timeStamp: number;
-
-  /** Reference to the srcEvent.preventDefault() method. Only for experts! */
-  preventDefault: () => void;
 };
 
 /* mjolnir.js */
@@ -215,10 +216,13 @@ export type MjolnirEventWrapper<T extends MjolnirEventRaw> = T & {
   handled: boolean;
   stopPropagation: () => void;
   stopImmediatePropagation: () => void;
+  preventDefault: () => void;
 };
 
 export type MjolnirPointerEventRaw = MjolnirEventRaw & {
   type:
+    | 'pointerup'
+    | 'pointerdown'
     | 'contextmenu'
     | 'pointermove'
     | 'pointerover'
@@ -261,4 +265,9 @@ export type MjolnirEvent =
   | MjolnirWheelEvent
   | MjolnirKeyEvent;
 
-export type MjolnirEventHandler = (event: MjolnirEvent) => void;
+export type MjolnirEventHandlers = {
+  [type in MjolnirGestureEvent['type']]?: (event: MjolnirGestureEvent) => void;
+} &
+  {[type in MjolnirPointerEvent['type']]?: (event: MjolnirPointerEvent) => void} &
+  {[type in MjolnirWheelEvent['type']]?: (event: MjolnirWheelEvent) => void} &
+  {[type in MjolnirKeyEvent['type']]?: (event: MjolnirKeyEvent) => void};

@@ -1,6 +1,6 @@
 import type EventManager from '../event-manager';
 import {whichButtons, getOffsetPosition} from './event-utils';
-import type {MjolnirEventRaw, MjolnirEventWrapper, MjolnirEventHandler} from '../types';
+import type {MjolnirEventRaw, MjolnirEventWrapper, MjolnirEvent} from '../types';
 
 export type HandlerOptions = {
   srcElement?: 'root' | HTMLElement;
@@ -9,7 +9,7 @@ export type HandlerOptions = {
 
 type EventHandler = {
   type: string;
-  handler: MjolnirEventHandler;
+  handler: (event: MjolnirEvent) => void;
   once?: boolean;
   passive?: boolean;
 } & HandlerOptions;
@@ -42,7 +42,7 @@ export default class EventRegistrar {
 
   add(
     type: string,
-    handler: MjolnirEventHandler,
+    handler: (event: MjolnirEvent) => void,
     options: HTMLElement | HandlerOptions,
     once: boolean = false,
     passive: boolean = false
@@ -90,7 +90,7 @@ export default class EventRegistrar {
     entries.splice(insertPosition + 1, 0, entry);
   }
 
-  remove(type: string, handler: MjolnirEventHandler) {
+  remove(type: string, handler: (event: MjolnirEvent) => void) {
     const {handlers, handlersByElement} = this;
 
     for (let i = handlers.length - 1; i >= 0; i--) {
@@ -186,6 +186,9 @@ export default class EventRegistrar {
       ...event,
       ...whichButtons(event),
       ...getOffsetPosition(event, rootElement),
+      preventDefault: () => {
+        event.srcEvent.preventDefault();
+      },
       stopImmediatePropagation: null,
       stopPropagation: null,
       handled: false,

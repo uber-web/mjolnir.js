@@ -3,9 +3,10 @@ import type {
   HammerManager,
   HammerManagerConstructor,
   MjolnirEventRaw,
+  MjolnirEvent,
   RecognizerOptions,
   RecognizerTuple,
-  MjolnirEventHandler
+  MjolnirEventHandlers
 } from './types';
 
 import WheelInput from './inputs/wheel-input';
@@ -25,7 +26,7 @@ import {
 } from './constants';
 
 export type EventManagerOptions = {
-  events?: {[type: string]: MjolnirEventHandler};
+  events?: MjolnirEventHandlers;
   recognizers?: RecognizerTuple[];
   recognizerOptions?: {[type: string]: RecognizerOptions};
   Manager?: HammerManagerConstructor;
@@ -170,8 +171,12 @@ export default class EventManager {
   }
 
   /** Register multiple event handlers */
-  on(events: {[eventType: string]: MjolnirEventHandler}, opts?: HandlerOptions): void;
-  on(event: string, handler: MjolnirEventHandler, opts?: HandlerOptions): void;
+  on(events: MjolnirEventHandlers, opts?: HandlerOptions): void;
+  on<EventT extends MjolnirEvent>(
+    event: EventT['type'],
+    handler: (event: EventT) => void,
+    opts?: HandlerOptions
+  ): void;
 
   /** Register an event handler function to be called on `event` */
   on(event, handler, opts?: any) {
@@ -179,8 +184,12 @@ export default class EventManager {
   }
 
   /** Register an event handler function to be called on `event`, then remove it */
-  once(events: {[eventType: string]: MjolnirEventHandler}, opts?: HandlerOptions): void;
-  once(event: string, handler: MjolnirEventHandler, opts?: HandlerOptions): void;
+  once(events: MjolnirEventHandlers, opts?: HandlerOptions): void;
+  once<EventT extends MjolnirEvent>(
+    event: EventT['type'],
+    handler: (event: EventT) => void,
+    opts?: HandlerOptions
+  ): void;
 
   once(event: any, handler: any, opts?: any) {
     this._addEventHandler(event, handler, opts, true);
@@ -190,8 +199,12 @@ export default class EventManager {
    * This handler does not ask the event to be recognized at all times.
    * Instead, it only "intercepts" the event if some other handler is getting it.
    */
-  watch(events: {[eventType: string]: MjolnirEventHandler}, opts?: HandlerOptions): void;
-  watch(event: string, handler: MjolnirEventHandler, opts?: HandlerOptions): void;
+  watch(events: MjolnirEventHandlers, opts?: HandlerOptions): void;
+  watch<EventT extends MjolnirEvent>(
+    event: EventT['type'],
+    handler: (event: EventT) => void,
+    opts?: HandlerOptions
+  ): void;
 
   watch(event: any, handler: any, opts?: any) {
     this._addEventHandler(event, handler, opts, false, true);
@@ -200,8 +213,8 @@ export default class EventManager {
   /**
    * Deregister a previously-registered event handler.
    */
-  off(events: {[eventType: string]: MjolnirEventHandler}): void;
-  off(event: string, handler: MjolnirEventHandler): void;
+  off(events: MjolnirEventHandlers): void;
+  off<EventT extends MjolnirEvent>(event: EventT['type'], handler: (event: EventT) => void): void;
 
   off(event: any, handler?: any) {
     this._removeEventHandler(event, handler);
@@ -254,8 +267,8 @@ export default class EventManager {
    * Process the event registration for a single event + handler.
    */
   private _addEventHandler(
-    event: string | {[type: string]: MjolnirEventHandler},
-    handler: MjolnirEventHandler,
+    event: string | MjolnirEventHandlers,
+    handler: (event: MjolnirEvent) => void,
     opts?: HandlerOptions,
     once?: boolean,
     passive?: boolean
@@ -295,8 +308,8 @@ export default class EventManager {
    * Process the event deregistration for a single event + handler.
    */
   private _removeEventHandler(
-    event: string | {[type: string]: MjolnirEventHandler},
-    handler?: MjolnirEventHandler
+    event: string | MjolnirEventHandlers,
+    handler?: (event: MjolnirEvent) => void
   ) {
     if (typeof event !== 'string') {
       // If `event` is a map, call `off()` for each entry.
