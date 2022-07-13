@@ -1,4 +1,4 @@
-import hammerjs from 'hammerjs';
+import * as hammerjs from 'hammerjs';
 import {enhancePointerEventInput, enhanceMouseInput} from './hammer-overrides';
 
 enhancePointerEventInput(hammerjs.PointerEventInput);
