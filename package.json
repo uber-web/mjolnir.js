@@ -50,7 +50,7 @@
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@probe.gl/test-utils": "^3.2.1",
     "coveralls": "^3.0.0",
-    "jsdom": "^15.0.0",
+    "jsdom": "^16.5.0",
     "ocular-dev-tools": "beta",
     "pre-commit": "^1.2.2",
     "ts-loader": "^9.2.6",
