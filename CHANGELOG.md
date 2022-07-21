@@ -1,5 +1,9 @@
 # Change Log
 
+#### [2.7.1] - Jul 21, 2022
+
+- Fix hammerjs import (#103)
+
 #### [2.7.0] - Jun 9, 2022
 
 #### [2.7.0-alpha.3] - May 23, 2022
